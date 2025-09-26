@@ -1,0 +1,87 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+    /* Colors */
+    --color-primary: #FF6123;
+    --color-primary-dark: #FF6123;
+    --color-surface-background: #0A0A0A;
+    --color-surface-card: #45434357;
+    --color-surface-input: #121212;
+    --color-text-base: #FFFFFF;
+    --color-text-secondary: #ADADAD;
+    --color-status-active: #34A853;
+    --color-active: #FAFAFA;
+    --color-grey: #A1A1A1;
+    --color-input-placeholder: #706A6A;
+    /* Spacing */
+    --space-layout-x: 2rem;
+    /* 32px */
+    --radius-md: 0.5rem;
+    /* 8px */
+    --border-color: #262626;
+    /* button */
+    --grey-button: #262626;
+    --small-text: #A6A6A6;
+
+}
+
+* {
+    box-sizing: border-box;
+
+
+}
+
+body {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 4px solid #FFF;
+    border-right: 4px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border-bottom: 4px solid #FF3D00;
+    border-left: 4px solid transparent;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@import "tailwindcss"

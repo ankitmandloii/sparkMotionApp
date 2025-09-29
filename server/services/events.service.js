@@ -143,7 +143,7 @@ exports.updateEvent = async (eventId, eventDetails) => {
 exports.getMyEvents = async (createdBy, page, limit) => {
   try {
     const events = await eventSchema.find({ createdBy })
-      .populate('organizers', 'userName email')
+      .populate('organizers', 'userName email phoneNumber status') // Populate organizers with selected fields
       .skip((page - 1) * limit)
       .limit(limit);
     return events;

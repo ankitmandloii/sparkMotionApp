@@ -16,14 +16,14 @@ router.get('/get-active-organizers-list', organizervalidation.verifyToken, organ
 // Fetch organizer by ID
 router.get('/get-organizer/:id', organizervalidation.verifyToken, organizerController.getOrganizerById);
 // Update organizer by ID
-router.put('/update-organizer/:id',organizervalidation.verifyToken, organizervalidation.updateOrganizer, organizerController.updateOrganizer);
+router.put('/update-organizer/:id',organizervalidation.verifyToken, organizervalidation.updateOrganizer,organizervalidation.checkAdminPermission, organizerController.updateOrganizer);
 // Delete Organizer by ID
-router.delete('/delete-organizer/:id',organizervalidation.verifyToken, organizervalidation.deleteOrganizer, organizerController.deleteOrganizer);
+router.delete('/delete-organizer/:id',organizervalidation.verifyToken, organizervalidation.deleteOrganizer,organizervalidation.checkAdminPermission, organizerController.deleteOrganizer);
 // Fetch all organizers
 router.get('/get-organizers-list',organizervalidation.verifyToken,organizervalidation.checkAdminPermission, organizerController.getOrganizers);
 
 // Route to assign organizers to an event
-router.put('/assign-organizers',organizervalidation.verifyToken, organizervalidation.checkAdminPermission, organizerController.assignOrganizers);
+router.put('/assign-organizers',organizervalidation.verifyToken, organizervalidation.checkAdminPermission,organizervalidation.checkAdminPermission, organizerController.assignOrganizers);
 
 
 module.exports = router;

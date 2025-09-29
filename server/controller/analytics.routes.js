@@ -11,7 +11,7 @@ const moment = require('moment');  // Useful for formatting dates and grouping c
 exports.trackClick = async (req, res) => {
   try {
     const { eventId } = req.params;  // Event ID from the URL (e.g., /e/123)
-    console.log(`Tracking click for eventId: ${eventId}`);
+    // console.log(`Tracking click for eventId: ${eventId}`);
     // Get the user's IP address from the request
     const ipAddress = req.headers['x-forwarded-for'] || req.ip || req.connection.remoteAddress;
 
@@ -35,14 +35,12 @@ exports.trackClick = async (req, res) => {
     const destinationUrl = eventDetails.destinationUrl;  // Get the destination URL from the event
     const eventEndDate = eventDetails.eventEndDate;
     
-    if (!destinationUrl) {
-      return sendResponse(res, statusCode.BAD_REQUEST, false, 'Destination URL not set for this event');
-    }
+   
 
     // Get the user's geolocation data from IP (using a third-party service like ipstack or ipinfo)
     const geoData = await getGeolocationData(ipAddress);
 
-    console.log("GeoData:", geoData); // Debugging line to check the geolocation data
+    // Debugging line to check the geolocation data
     // Get the referrer (the page from which the click originated)
     const referrer = req.get('Referrer') || 'Direct';
 
@@ -86,8 +84,9 @@ exports.trackClick = async (req, res) => {
     await eventSchema.findByIdAndUpdate(eventId, { $inc: { clickCount: 1 } });
 
   
+  
     // Redirect the user to the destination URL
-    res.redirect(destinationUrl);
+    res.redirect(destinationUrl || 'https://sparkmotion.net/');
     // sendResponse(res, statusCode.OK, true, 'Click tracked successfully', { redirectURL: destinationUrl });
   } catch (error) {
     console.error('Error tracking click:', error);

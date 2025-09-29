@@ -107,7 +107,7 @@ exports.deleteOrganizer = async (req, res) => {
       return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
     }
 
-    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_DELETE_SUCCESS);
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_DELETE_SUCCESS, deletedOrganizer);
   } catch (error) {
     return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
   }

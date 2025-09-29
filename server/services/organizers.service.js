@@ -30,7 +30,7 @@ exports.sendWelcomeOrganizerEmail = async (details) => {
 // Service for fetching organizer by ID
 exports.findOrganizerById = async (id) => {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).select('-password'); // Exclude password field
     return user || null;
   } catch (error) {
     console.error("Find Organizer By ID Error:", error);
@@ -46,7 +46,7 @@ exports.updateOrganizerById = async (id, userName, email, phoneNumber, role, sta
       id,
       { userName, email, phoneNumber, role, status },
       { new: true }  // Return the updated organizer document
-    );
+    ).select('-password'); // Exclude password field
     return updatedOrganizer;
   } catch (error) {
     console.error("Update Organizer Error:", error);
@@ -58,7 +58,7 @@ exports.updateOrganizerById = async (id, userName, email, phoneNumber, role, sta
 // Service for deleting organizer by ID
 exports.deleteOrganizerById = async (id) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(id).select('-password'); // Exclude password field
     return deletedUser;
   } catch (error) {
     console.error("Delete User Error:", error);
@@ -72,12 +72,12 @@ exports.findAllOrganizers = async (page, limit) => {
     page = parseInt(page);
     limit = parseInt(limit);
 
-    console.log("Pagination Params:", { page, limit });  // Debugging line to check pagination params
+   
     const skip = (page - 1) * limit;
 
 
-    const organizers = await User.find({ role: "organizer" }).sort({ createdAt: -1 }).skip(skip).limit(limit);
-    console.log("Fetched Organizers:", organizers.length);  // Debugging line to check fetched organizers
+    const organizers = await User.find({ role: "organizer" }).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit);
+  
     // Count total organizers (for frontend pagination info)
     const total = await User.countDocuments({ role: "organizer" });
     return {
@@ -98,7 +98,7 @@ exports.findAllOrganizers = async (page, limit) => {
 exports.findActiveOrganizers = async () => {
   try {
     // Fetch only active organizers (status = "active")
-    const organizers = await User.find({ role: "organizer", status: "active" });
+    const organizers = await User.find({ role: "organizer", status: "active" }).select('-password');
 
     return organizers;
   } catch (error) {

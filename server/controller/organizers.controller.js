@@ -55,94 +55,117 @@ exports.createOrganizer = async (req, res) => {
 
 
 exports.getOrganizerById = async (req, res) => {
-    try {
-        const { id } = req.params;  // Get organizer ID from the route params
+  try {
+    const { id } = req.params;  // Get organizer ID from the route params
 
-        // Fetch the organizer by ID
-        const organizer = await organizersService.findOrganizerById(id);
-        if (!organizer) {
-            return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
-        }
-
-        // Fetch events where the organizer is assigned
-        const assignedEvents = await eventSchema.find({ organizers: id });
-
-        return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_FETCH_SUCCESS, {
-            organizer,
-            assignedEvents  // Return the events the organizer is assigned to
-        });
-    } catch (error) {
-        console.error('Error fetching organizer details:', error);
-        return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    // Fetch the organizer by ID
+    const organizer = await organizersService.findOrganizerById(id);
+    if (!organizer) {
+      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
     }
+
+    // Fetch events where the organizer is assigned
+    const assignedEvents = await eventSchema.find({ organizers: id });
+
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_FETCH_SUCCESS, {
+      organizer,
+      assignedEvents  // Return the events the organizer is assigned to
+    });
+  } catch (error) {
+    console.error('Error fetching organizer details:', error);
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+  }
 };
 
 
 
 // Controller for Update Organizer
 exports.updateOrganizer = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { userName, email, phoneNumber, role, status } = req.body;
+  try {
+    const { id } = req.params;
+    const { userName, email, phoneNumber, role, status } = req.body;
 
-        // Find the organizer and update
-        const updatedOrganizer = await organizersService.updateOrganizerById(id, userName, email, phoneNumber, role, status);
-        if (!updatedOrganizer) {
-            return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
-        }
-
-        return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_UPDATE_SUCCESS, updatedOrganizer);
-    } catch (error) {
-        return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    // Find the organizer and update
+    const updatedOrganizer = await organizersService.updateOrganizerById(id, userName, email, phoneNumber, role, status);
+    if (!updatedOrganizer) {
+      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
     }
+
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_UPDATE_SUCCESS, updatedOrganizer);
+  } catch (error) {
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+  }
 };
 
 // Controller for Delete Organizer
 exports.deleteOrganizer = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const deletedOrganizer = await organizersService.deleteOrganizerById(id);
-        if (!deletedOrganizer) {
-            return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
-        }
-
-        return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_DELETE_SUCCESS);
-    } catch (error) {
-        return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    const deletedOrganizer = await organizersService.deleteOrganizerById(id);
+    if (!deletedOrganizer) {
+      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.ORGANIZER_NOT_FOUND);
     }
+
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_DELETE_SUCCESS);
+  } catch (error) {
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+  }
 };
 
 
 // Controller for getting all organizers
 exports.getOrganizers = async (req, res) => {
   try {
-    // Fetch all organizers
-    const organizers = await organizersService.findAllOrganizers();
+    // You can take pagination params from req.query instead of req.body (more common in APIs)
+    const { page = 1, limit = 10 } = req.query;
 
-    if (organizers.length === 0) {
-      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_ORGANIZERS_FOUND);
+    // Fetch organizers with pagination
+    const organizersResult = await organizersService.findAllOrganizers(page, limit);
+
+    // If no organizers found
+    if (organizersResult.data.length === 0) {
+      return sendResponse(
+        res,
+        statusCode.NOT_FOUND,
+        false,
+        ErrorMessage.NO_ORGANIZERS_FOUND
+      );
     }
 
-    // For each organizer, find the events they are assigned to
-    const organizersWithEvents = await Promise.all(organizers.map(async (organizer) => {
-      // Fetch events assigned to the current organizer
-      const assignedEvents = await eventSchema.find({ organizers: organizer._id });
+    // For each organizer, fetch their assigned events
+    const organizersWithEvents = await Promise.all(
+      organizersResult.data.map(async (organizer) => {
+        const assignedEvents = await eventSchema.find({ organizers: organizer._id });
+        return {
+          ...organizer.toObject(),
+          assignedEvents,
+        };
+      })
+    );
 
-      // Attach events to the organizer object
-      return {
-        ...organizer.toObject(),  // Convert mongoose document to plain object
-        assignedEvents,           // Add assigned events to the organizer
-      };
-    }));
-
-    // Return the organizers along with their assigned events
-    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZERS_FETCH_SUCCESS, organizersWithEvents);
+    // Return organizers, events, and pagination metadata
+    return sendResponse(
+      res,
+      statusCode.OK,
+      true,
+      SuccessMessage.ORGANIZERS_FETCH_SUCCESS,
+      {
+        organizers: organizersWithEvents,
+        pagination: organizersResult.pagination,
+      }
+    );
   } catch (error) {
-    console.error('Error fetching organizers and events:', error);
-    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    console.error("Error fetching organizers and events:", error);
+    return sendResponse(
+      res,
+      statusCode.INTERNAL_SERVER_ERROR,
+      false,
+      ErrorMessage.INTERNAL_SERVER_ERROR
+    );
   }
 };
+
 
 exports.getActiveOrganizers = async (req, res) => {
   try {
@@ -175,16 +198,16 @@ exports.getActiveOrganizers = async (req, res) => {
 
 // Controller function to assign organizers to an event
 exports.assignOrganizers = async (req, res) => {
-    try {
-       // Event ID from URL
-        const { eventId, organizerIds } = req.body;  // Array of organizer IDs from request body
+  try {
+    // Event ID from URL
+    const { eventId, organizerIds } = req.body;  // Array of organizer IDs from request body
 
-        // Call the service function to assign organizers to the event
-        const updatedEvent = await organizersService.assignOrganizers(eventId, organizerIds);
+    // Call the service function to assign organizers to the event
+    const updatedEvent = await organizersService.assignOrganizers(eventId, organizerIds);
 
-        return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZERS_ASSIGNED, updatedEvent);
-    } catch (error) {
-        console.error('Error in controller:', error);
-        return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
-    }
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZERS_ASSIGNED, updatedEvent);
+  } catch (error) {
+    console.error('Error in controller:', error);
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+  }
 };

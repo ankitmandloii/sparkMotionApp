@@ -67,10 +67,28 @@ exports.deleteOrganizerById = async (id) => {
 };
 
 // Service for fetching all organizers
-exports.findAllOrganizers = async () => {
+exports.findAllOrganizers = async (page, limit) => {
   try {
-    const organizers = await User.find({ role: "organizer" }).sort({ createdAt: -1 });
-    return organizers;
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    console.log("Pagination Params:", { page, limit });  // Debugging line to check pagination params
+    const skip = (page - 1) * limit;
+
+
+    const organizers = await User.find({ role: "organizer" }).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    console.log("Fetched Organizers:", organizers.length);  // Debugging line to check fetched organizers
+    // Count total organizers (for frontend pagination info)
+    const total = await User.countDocuments({ role: "organizer" });
+    return {
+      data: organizers,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   } catch (error) {
     console.error("Error fetching organizers:", error);
     throw error;

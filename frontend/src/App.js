@@ -38,6 +38,7 @@ const App = () => {
   const [currentTab, setCurrentTab] = useState("overview");
   const navigate = useNavigate();
   const [editUserInfo, setEditUserInfo] = useState(null)
+  const [analyticsPage, setAnalyticsPage] = useState(false)
   const onTabChange = (tab) => {
     navigate(`/${tab.toLowerCase()}`)
     // navigate(`Admin/${tab}`)
@@ -56,8 +57,22 @@ const App = () => {
   }, [isLoggedIn]);
 
   useEffect(() => {
+    const tabs = [
+      "overview",
+      "events",
+      "organizations",
+      "settings"
+    ];
+    const path = location.pathname.split("/")[1];
+    if (tabs.includes(path.toLocaleLowerCase())) {
+      setCurrentTab(path);
+      setAnalyticsPage(false)
+    }
+    else {
+      setAnalyticsPage(true)
+    }
     console.log(location.pathname.split("/")[1])
-    setCurrentTab(location.pathname.split("/")[1]);
+
   }, [location.pathname]);
   return (
 
@@ -73,7 +88,7 @@ const App = () => {
         <Header></Header>
       }
       {
-        userInfo?.user?.role === "superAdmin"
+        userInfo?.user?.role === "superAdmin" && !analyticsPage
         &&
         <div className='bg-[var(--border-color)] p-1 rounded-full mt-1'>
           <TabNavigation {...{ currentTab, onTabChange }}></TabNavigation>

@@ -136,7 +136,7 @@ const showCustomModal = ({
     </div>
   ), {
     position: "bottom-right",
-    duration: !loading && !showAcceptDecline ? 3000 : Infinity, // stays until user clicks
+    duration: !loading && !showAcceptDecline ? 1500 : Infinity, // stays until user clicks
   });
 };
 

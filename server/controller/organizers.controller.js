@@ -173,7 +173,7 @@ exports.getActiveOrganizers = async (req, res) => {
     const organizers = await organizersService.findActiveOrganizers();
 
     if (organizers.length === 0) {
-      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_ACTIVE_ORGANIZERS_FOUND);
+      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_ACTIVE_ORGANIZERS_FOUND, []);
     }
 
     // For each active organizer, find the events they are assigned to

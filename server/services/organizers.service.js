@@ -69,7 +69,7 @@ exports.deleteOrganizerById = async (id) => {
 // Service for fetching all organizers
 exports.findAllOrganizers = async () => {
   try {
-    const organizers = await User.find({ role: "organizer" });
+    const organizers = await User.find({ role: "organizer" }).sort({ createdAt: -1 });
     return organizers;
   } catch (error) {
     console.error("Error fetching organizers:", error);

@@ -9,6 +9,6 @@ const analyticsValidation = require("../middleware/uservalidation/userValidation
 router.get('/events/:eventId',analyticsController.trackClick);
 router.get('/getEventClickCount/:eventId', verifyToken, analyticsValidation.checkOrganizerPermission, analyticsController.getEventClickCount);
 router.get('/getClickAnalytics/:eventId', verifyToken, analyticsValidation.checkAdminPermission, analyticsController.getClickAnalytics);
-router.get('/getClickTimeline/:eventId', verifyToken, analyticsValidation.checkAdminPermission, analyticsController.getClickTimeline);
+router.get('/getClickTimeline/:eventId', verifyToken, analyticsController.getClickTimeline);
 
 module.exports = router;

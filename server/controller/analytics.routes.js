@@ -196,7 +196,7 @@ exports.getClickTimeline = async (req, res) => {
 
     // Fetch all click analytics for the given event
     const clicks = await ClickAnalytics.find({ eventId });
-
+    console.log("Clicks:", clicks); // Debugging line to check the clicks data
     if (clicks.length === 0) {
       return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_CLICKS_FOUND);
     }
@@ -208,7 +208,11 @@ exports.getClickTimeline = async (req, res) => {
     const cityData = groupClicksByCity(clicks);
     const countryData = groupClicksByCountry(clicks);
 
+    const eventData = await eventSchema.findById(eventId);
+    
+
     return sendResponse(res, statusCode.OK, true, SuccessMessage.ANALYTICS_FETCHED, {
+      eventData: eventData || {},
       dailyData,
       hourlyData,
       monthlyData,

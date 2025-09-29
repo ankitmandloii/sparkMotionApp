@@ -11,7 +11,7 @@ const crypto = require('crypto');
 exports.login = async (req, res, next) => {
   const { error } = schema.loginSchema.validate(req.body);
   if (error) {
-    res.status(statusCode.BAD_REQUEST).json({ error: error.details[0].message });
+    sendResponse(res, statusCode.BAD_REQUEST, false, error.details[0].message);
   } else {
     next();
   }
@@ -20,7 +20,7 @@ exports.login = async (req, res, next) => {
 exports.userRegister = async (req, res, next) => {
   const { error } = schema.userRegisterSchema.validate(req.body);
   if (error) {
-    res.status(statusCode.BAD_REQUEST).json({ error: error.details[0].message });
+    sendResponse(res, statusCode.BAD_REQUEST, false, error.details[0].message);
   } else {
     next();
   }
@@ -31,7 +31,7 @@ exports.userRegister = async (req, res, next) => {
 exports.updateOrganizer = async (req, res, next) => {
   const { error } = schema.updateOrganizerSchema.validate(req.body);
   if (error) {
-    res.status(statusCode.BAD_REQUEST).json({ error: error.details[0].message });
+    sendResponse(res, statusCode.BAD_REQUEST, false, error.details[0].message);
   } else {
     next();
   }
@@ -40,7 +40,7 @@ exports.updateOrganizer = async (req, res, next) => {
 exports.deleteOrganizer = async (req, res, next) => {
   const { error } = schema.deleteOrganizerSchema.validate(req.params);
   if (error) {
-    res.status(statusCode.BAD_REQUEST).json({ error: error.details[0].message });
+    sendResponse(res, statusCode.BAD_REQUEST, false, error.details[0].message);
   } else {
     next();
   }
@@ -96,7 +96,8 @@ exports.verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   // console.log("Authorization Header:", authHeader); // Debugging line to check the header
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
+    sendResponse(res, statusCode.UNAUTHORIZED, false, 'Access denied. No token provided.');
+    return;
   }
 
   const token = authHeader.split(' ')[1]; // Get token from Bearer <token>
@@ -110,7 +111,7 @@ exports.verifyToken = async (req, res, next) => {
     // console.log("Decoded User:", req.user); // Debugging line to check the decoded token
     next();
   } catch (err) {
-    return res.status(403).json({ success: false, message: 'Invalid or expired token.' });
+   return sendResponse(res, statusCode.FORBIDDEN, false, 'Invalid or expired token.');
   }
 };
 

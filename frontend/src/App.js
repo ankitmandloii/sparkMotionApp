@@ -84,14 +84,14 @@ const App = () => {
           <Route path="/" element={<Home />} />
           {isLoggedIn ?
             <Route path="/login" element={<Navigate to="/overview" />} /> :
-            <Route path="/login" element={<Login />} /> 
+            <Route path="/login" element={<Login />} />
           }
           <Route path="/events/createEvent" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateEventForm /></PrivateRoute>} />
           <Route path="/organizations/createOrganizer" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateOrganizerForm organizerToUpdate={editUserInfo} /></PrivateRoute>} />
           <Route path="/overview" element={<PrivateRoute isLoggedIn={isLoggedIn}><Overview /></PrivateRoute>} />
           <Route path="/Organizations" element={<PrivateRoute isLoggedIn={isLoggedIn}><Organizer editUserInfo={editUserInfo} setEditUserInfo={setEditUserInfo} /></PrivateRoute>} />
           <Route path="/events" element={<PrivateRoute isLoggedIn={isLoggedIn}><Events /></PrivateRoute>} />
-          <Route path="/analytics" element={<PrivateRoute isLoggedIn={isLoggedIn}><Analytics /></PrivateRoute>} />
+          <Route path="/analytics/:id" element={<PrivateRoute isLoggedIn={isLoggedIn}><Analytics /></PrivateRoute>} />
           <Route path="/organizerDashboard" element={<PrivateRoute isLoggedIn={isLoggedIn}><Settings /></PrivateRoute>} />
 
           <Route path="/settings" element={<PrivateRoute isLoggedIn={isLoggedIn}><Settings /></PrivateRoute>}
@@ -106,7 +106,7 @@ const App = () => {
           />
         </Routes>
       </main>
-        <Toaster position="top-left" richColors />
+      <Toaster position="top-left" richColors />
     </div>
 
   );

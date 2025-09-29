@@ -6,15 +6,26 @@ import ActionButton from './ActionButton';
 import { AnalyticIcon, CalendarIcon, LinkIcon } from '../../assets/icons/icons';
 import { IoSettingsOutline } from "react-icons/io5";
 import Badge from './Badge';
+import { useNavigate } from 'react-router';
 
 const EventCard = ({ event, onEdit }) => {
+    const navigate = useNavigate();
+    // const eventId = event?._id;
+    // console.log("----event", event)
     const engagementRate = event?.expectedAttendees
         ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
         : '0.00';
-
+    const handleAnalyticsClick = (eventId, taps, engagement) => {
+        navigate(`/analytics/${eventId}`, {
+            state: {
+                totalTaps: taps,
+                engagementRate: engagement
+            }
+        });
+    };
     return (
         <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 sm:p-6 md:p-6 lg:p-8 w-full  mx-auto">
-            
+
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center  mb-4">
                 <div className="flex items-center space-x-3 mb-2 sm:mb-0 justify-between">
@@ -29,7 +40,10 @@ const EventCard = ({ event, onEdit }) => {
                     <IconButton
                         icon={AnalyticIcon}
                         label="Analytics"
-                        onClick={() => alert('Analytics clicked')}
+                        // onClick={() => alert('Analytics clicked')}
+                        onClick={() =>
+                            handleAnalyticsClick(event?._id, event?.clickCount, engagementRate)
+                        }
                         hoverColor="hover:bg-gray-600"
                         bgColor="bg-[var(--color-surface-background)]"
                         border={true}
@@ -114,14 +128,14 @@ export default EventCard;
 //   return (
 //     <div
 //       className="
-//         bg-[var(--color-surface-background)] 
-//         rounded-2xl 
-//         border border-[var(--border-color)] 
-//         p-5 sm:p-6 
-//         shadow-md hover:shadow-lg 
-//         transition-all duration-300 ease-in-out 
-//         hover:-translate-y-1 
-//         w-full 
+//         bg-[var(--color-surface-background)]
+//         rounded-2xl
+//         border border-[var(--border-color)]
+//         p-5 sm:p-6
+//         shadow-md hover:shadow-lg
+//         transition-all duration-300 ease-in-out
+//         hover:-translate-y-1
+//         w-full
 //         mx-auto
 //       "
 //     >
@@ -137,7 +151,7 @@ export default EventCard;
 //               event.status === "Active"
 //                 ? "bg-[#fafafa]"
 //                 : event.status === "Completed"
-//                 ? "bg-[#262626]"    
+//                 ? "bg-[#262626]"
 //                 : "bg-transparent"
 //             }
 //             textColor={

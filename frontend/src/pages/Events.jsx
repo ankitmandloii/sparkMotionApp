@@ -63,7 +63,7 @@ const Events = () => {
             setAllEvents(response.data.result);
             setFilteredEvents(response.data.result);
         } catch (err) {
-            setError({title:"Error", message: err?.response?.data?.message ?? err.message});
+            setError({ title: "Error", message: err?.response?.data?.message ?? err.message });
         } finally {
             setLoading(false);
         }
@@ -92,31 +92,31 @@ const Events = () => {
         }, 3000);
     }, [error, success,]);
 
-useEffect(() => {
-    if (searchTerm.trim() === '') {
-        setFilteredEvents(allEvents);
-    } else {
-        const lowerSearch = searchTerm.toLowerCase();
+    useEffect(() => {
+        if (searchTerm.trim() === '') {
+            setFilteredEvents(allEvents);
+        } else {
+            const lowerSearch = searchTerm.toLowerCase();
 
-        const filtered = allEvents.filter(event => {
-            // Organizer matching (for multiple organizers)
-            const organizerMatch = event.organizers?.some(org =>
-                org.userName?.toLowerCase().includes(lowerSearch) ||
-                org.email?.toLowerCase().includes(lowerSearch)
-            );
+            const filtered = allEvents.filter(event => {
+                // Organizer matching (for multiple organizers)
+                const organizerMatch = event.organizers?.some(org =>
+                    org.userName?.toLowerCase().includes(lowerSearch) ||
+                    org.email?.toLowerCase().includes(lowerSearch)
+                );
 
-            // Field matching
-            const matchEventName = event.eventName?.toLowerCase().includes(lowerSearch);
-            const matchLocation = event.location?.toLowerCase().includes(lowerSearch);
-            const matchStatus = event.status?.toLowerCase().includes(lowerSearch); // ✅ added status
+                // Field matching
+                const matchEventName = event.eventName?.toLowerCase().includes(lowerSearch);
+                const matchLocation = event.location?.toLowerCase().includes(lowerSearch);
+                const matchStatus = event.status?.toLowerCase().includes(lowerSearch); // ✅ added status
 
-            // Return true if any match
-            return matchEventName || organizerMatch || matchLocation || matchStatus;
-        });
+                // Return true if any match
+                return matchEventName || organizerMatch || matchLocation || matchStatus;
+            });
 
-        setFilteredEvents(filtered);
-    }
-}, [searchTerm, allEvents]);
+            setFilteredEvents(filtered);
+        }
+    }, [searchTerm, allEvents]);
 
 
     return (
@@ -132,7 +132,7 @@ useEffect(() => {
                     onClick={() => {
                         setShowForm(true)
                         setEventToUpdate(null);
-                    }}  
+                    }}
                     hoverColor="hover:bg-orange-600"
                 />
             </div>

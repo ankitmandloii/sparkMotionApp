@@ -29,7 +29,7 @@ const IconButton = ({
     icon: Icon,
     label,
     onClick,
-    bgColor = 'bg-orange-500',  // Default background color
+    bgColor = 'bg-[var(--color-primary-dark)]',  // Default background color
     hoverColor = 'hover:bg-orange-600',  // Default hover color
     border = false,  // Border prop defaults to false
     color = '', // Default color is empty if no color prop is passed

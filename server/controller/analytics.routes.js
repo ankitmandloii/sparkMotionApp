@@ -204,7 +204,7 @@ exports.getClickTimeline = async (req, res) => {
     // Group clicks by date (daily), hour (hourly), month (monthly), city, and country
     const dailyData = groupClicksByDay(clicks);
     const hourlyData = groupClicksByHour(clicks);
-    const monthlyData = groupClicksByMonth(clicks);
+    // const monthlyData = groupClicksByMonth(clicks);
     const cityData = groupClicksByCity(clicks);
     const countryData = groupClicksByCountry(clicks);
 
@@ -215,7 +215,7 @@ exports.getClickTimeline = async (req, res) => {
       eventData: eventData || {},
       dailyData,
       hourlyData,
-      monthlyData,
+      // monthlyData,
       cityData,
       countryData,
     });
@@ -246,19 +246,19 @@ const groupClicksByHour = (clicks) => {
 };
 
 // Helper function to group clicks by month
-const groupClicksByMonth = (clicks) => {
-  return clicks.reduce((acc, click) => {
-    const month = moment(click.timestamp).format('YYYY-MM');
-    if (!acc[month]) acc[month] = 0;
-    acc[month] += 1;
-    return acc;
-  }, {});
-};
+// const groupClicksByMonth = (clicks) => {
+//   return clicks.reduce((acc, click) => {
+//     const month = moment(click.timestamp).format('YYYY-MM');
+//     if (!acc[month]) acc[month] = 0;
+//     acc[month] += 1;
+//     return acc;
+//   }, {});
+// };
 
 // Helper function to group clicks by city
 const groupClicksByCity = (clicks) => {
   return clicks.reduce((acc, click) => {
-    console.log("sss",click)
+    // console.log("sss",click)
     const city = click.location.city || 'Unknown';  // Default to 'Unknown' if no city data
     if (!acc[city]) acc[city] = 0;
     acc[city] += 1;

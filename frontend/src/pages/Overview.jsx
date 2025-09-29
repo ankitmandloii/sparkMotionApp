@@ -46,8 +46,8 @@ const Overview = () => {
                 destinationUrl: event.destinationUrl || 'https://example.com/default'
             }));
 
-            setAllEvents(events);
-            setFilteredEvents(events);
+            setAllEvents(events.slice(0, 3));
+            setFilteredEvents(events.slice(0, 3));
 
             // Calculate active organizers from the organizers array across all events
             const allOrganizers = response.data.result.flatMap(event => event.organizers || []);
@@ -205,7 +205,7 @@ const Overview = () => {
                                                 {event.braceletUrl}
                                             </a>
                                         </span>
-                                        <span>
+                                        <span className=''>
                                             Destination URL:{' '}
                                             <a
                                                 href={event.destinationUrl}
@@ -302,7 +302,7 @@ const Overview = () => {
                                                 <td className="py-3 px-4 text-gray-300">{event.engagement}</td>
                                                 <td className="py-3 px-4">
                                                     <button
-                                                        className="text-[var(--color-primary-dark)] hover:text-orange-300 text-sm"
+                                                        className="text-[var(--color-primary-dark)] hover:text-orange-300 text-sm cursor-pointer"
                                                         onClick={() =>
                                                             handleAnalyticsClick(event.id, event.taps, event.engagement)
                                                         }

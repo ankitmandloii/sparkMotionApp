@@ -28,6 +28,7 @@ const Overview = () => {
                 null,
                 { authorization: `Bearer ${userInfo.token}` }
             );
+
             console.log('get all events api response', response);
             const events = response.data.result.map(event => ({
                 id: event?._id || `event-${Math.random().toString(36).substr(2, 9)}`,
@@ -47,8 +48,11 @@ const Overview = () => {
                 postClick: event?.postEventClickCount
             }));
 
-            setAllEvents(events.slice(0, 3));
-            setFilteredEvents(events.slice(0, 3));
+            // setAllEvents(events);
+            // setFilteredEvents(events);
+            const limitedEvents = events.slice(0, 3);
+            setAllEvents(limitedEvents);
+            setFilteredEvents(limitedEvents);
 
             // Calculate active organizers from the organizers array across all events
             const allOrganizers = response.data.result.flatMap(event => event.organizers || []);
@@ -60,6 +64,7 @@ const Overview = () => {
             setLoading(false);
         }
     };
+    console.log("---filteredEvents", filteredEvents)
 
     // Handle search functionality
     useEffect(() => {
@@ -85,19 +90,22 @@ const Overview = () => {
         ? ((totalTaps / totalAttendance) * 100).toFixed(1) + '%'
         : '0.0%';
 
-    // const handleAnalyticsClick = (eventId, taps, engagement) => {
+    // const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
     //     navigate(`/analytics/${eventId}`, {
     //         state: {
     //             totalTaps: taps,
-    //             engagementRate: engagement
+    //             engagementRate: engagement,
+    //             // postClick: postClick,
+    //             postClick: (taps / postClick) * 100,
+    //             attendance: attendance
     //         }
     //     });
     // };
     const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
-        // console.log("-----Analyytaps", taps);
-        // console.log("-----Analyytaps2", engagement);
-        // console.log("-----Analyytaps3", postClick);
-        // console.log("-----Analyytaps4", attendance);
+        console.log("-----Analyytaps", taps);
+        console.log("-----Analyytaps2", engagement);
+        console.log("-----Analyytaps3", postClick);
+        console.log("-----Analyytaps4", attendance);
 
         const tapsNum = Number(taps) || 0;
         const postClickNum = Number(postClick) || 0;
@@ -118,6 +126,7 @@ const Overview = () => {
             }
         });
     };
+
     useEffect(() => {
         getAllEventsHandler();
     }, []);
@@ -212,8 +221,8 @@ const Overview = () => {
                                         <div>
                                             <div className="text-gray-400 text-xs">Actions</div>
                                             <button
-                                                className="text-[var(--color-primary-dark)] hover:text-orange-300 text-xs"
-                                            // onClick={() => handleAnalyticsClick(event.id, event.taps, event.engagement)}
+                                                className="text-[var(--color-primary-dark)] hover:text-orange-300 text-xs "
+                                                onClick={() => handleAnalyticsClick(event.id, event.taps, event.engagement)}
                                             >
                                                 View Analytics
                                             </button>
@@ -230,7 +239,7 @@ const Overview = () => {
                                                 {event.braceletUrl}
                                             </a>
                                         </span>
-                                        <span className=''>
+                                        <span>
                                             Destination URL:{' '}
                                             <a
                                                 href={event.destinationUrl}
@@ -247,7 +256,7 @@ const Overview = () => {
 
                     {/* Desktop / Large Table */}
                     <div
-                        className={`hidden lg:block bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-5 overflow-x-auto max-h-[290px] custom-scrollbar ${MAX_HEIGHT_CALC}`}
+                        className={`hidden lg: block bg - [var(--color - surface - background)]rounded - 2xl border border - [var(--border - color)]pt - 3 px - 3 overflow - x - auto max - h - [290px] custom - scrollbar ${MAX_HEIGHT_CALC} `}
                     >
                         <h3 className="text-md text-white mb-1">Recent Events</h3>
                         <p className="text-[var(--color-grey)] text-sm mb-3">
@@ -306,9 +315,9 @@ const Overview = () => {
                                                 key={event.id}
                                                 className="border-b border-[var(--border-color)] hover:bg-gray-750"
                                             >
-                                                <td className="py-4 px-4 text-white font-medium">{event.event}</td>
-                                                <td className="py-4 px-4 text-gray-300">{event.date}</td>
-                                                <td className="py-4 px-4">
+                                                <td className="py-3 px-4 text-white font-medium">{event.event}</td>
+                                                <td className="py-3 px-4 text-gray-300">{event.date}</td>
+                                                <td className="py-3 px-4">
                                                     <Badge
                                                         label={event.status}
                                                         bgColor={
@@ -322,10 +331,10 @@ const Overview = () => {
                                                         borderColor={event.status === 'Upcoming' ? 'border-gray-700' : ''}
                                                     />
                                                 </td>
-                                                <td className="py-4 px-4 text-gray-300">{event.attendance}</td>
-                                                <td className="py-4 px-4 text-gray-300">{event.taps}</td>
-                                                <td className="py-4 px-4 text-gray-300">{event.engagement}</td>
-                                                <td className="py-4 px-4 ">
+                                                <td className="py-3 px-4 text-gray-300">{event.attendance}</td>
+                                                <td className="py-3 px-4 text-gray-300">{event.taps}</td>
+                                                <td className="py-3 px-4 text-gray-300">{event.engagement}</td>
+                                                <td className="py-3 px-4">
                                                     <button
                                                         className="text-[var(--color-primary-dark)] hover:text-orange-300 text-sm cursor-pointer"
                                                         onClick={() =>

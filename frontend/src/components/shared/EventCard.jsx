@@ -11,20 +11,37 @@ import { Link, useNavigate } from 'react-router';
 const EventCard = ({ event, onEdit }) => {
     const navigate = useNavigate();
     // const eventId = event?._id;
-    // console.log("----event", event)
+    console.log("----event", event)
     const engagementRate = event?.expectedAttendees
         ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
         : '0.00';
-    const handleAnalyticsClick = (eventId, taps, engagement) => {
+    const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
+        // console.log("-----Analyytaps", taps);
+        // console.log("-----Analyytaps2", engagement);
+        // console.log("-----Analyytaps3", postClick);
+        // console.log("-----Analyytaps4", attendance);
+
+        const tapsNum = Number(taps) || 0;
+        const postClickNum = Number(postClick) || 0;
+        // const engagementNum = Number(engagement) || 0;
+        // const attendanceNum = Number(attendance) || 0;
+
+        // rate in %
+        const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        console.log("---------postRate", postClickRate);
+
         navigate(`/analytics/${eventId}`, {
             state: {
-                totalTaps: taps,
-                engagementRate: engagement
+                totalTaps: tapsNum,
+                engagementRate: engagement,
+                postClickRate: `${postClickRate} % `, // e.g., 42.86
+                // postClickCount: postClickNum,
+                attendance: attendance,
             }
         });
     };
     return (
-        <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 sm:p-6 md:p-6 lg:p-8 w-full  mx-auto">
+        <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 sm:p-6 md:p-6 lg:p-8 w-full  mx-auto mb-2">
 
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center  mb-4">
@@ -42,7 +59,7 @@ const EventCard = ({ event, onEdit }) => {
                         label="Analytics"
                         // onClick={() => alert('Analytics clicked')}
                         onClick={() =>
-                            handleAnalyticsClick(event?._id, event?.clickCount, engagementRate)
+                            handleAnalyticsClick(event?._id, event?.clickCount, engagementRate, event?.postEventClickCount, event?.expectedAttendees)
                         }
                         hoverColor="hover:bg-gray-600"
                         bgColor="bg-[var(--color-surface-background)]"
@@ -105,7 +122,7 @@ const EventCard = ({ event, onEdit }) => {
                         <ActionButton label={event?.baseUrl.slice(0, 100) + "..." ?? 'N/A'} />
                     </div></Link>
                 <Link to={event?.destinationUrl}>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
                         <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
                         <ActionButton label={event?.destinationUrl ?? 'N/A'} />
                     </div></Link>

@@ -153,7 +153,7 @@ const App = () => {
               <PrivateRoute
                 role={userInfo?.user?.role}
                 isLoggedIn={isLoggedIn}
-                allowedRoles={["superAdmin"]}
+                allowedRoles={["superAdmin", "organizer"]}
               >
                 <Analytics />
               </PrivateRoute>

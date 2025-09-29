@@ -3,13 +3,13 @@ const router = express.Router();
 const eventController = require('../controller/events.controller');  // Import controller functions// Middleware to verify token
 // Middleware to verify token
 const eventsvalidation = require("../middleware/uservalidation/userValidation.js");
-const {eventValidationData} = require("../middleware/eventsValidation/eventsValidation.js");
+const {createEventValidationData, updateEventValidationData} = require("../middleware/eventsValidation/eventsValidation.js");
 
 // Route to create an event (Admin only)
-router.post('/create-event',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission, eventValidationData, eventController.createEvent);
+router.post('/create-event',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission, createEventValidationData, eventController.createEvent);
 
 // Route to update an event by eventId (Admin only)
-router.put('/update-event/:eventId',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission, eventController.updateEvent);
+router.put('/update-event/:eventId',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission,updateEventValidationData, eventController.updateEvent);
 
 // Route to get all events for an organizer //eventsvalidation.checkOrganizerPermission
 router.get('/get-all-events', eventsvalidation.verifyToken,eventsvalidation.checkAdminPermission, eventController.getMyEvents);

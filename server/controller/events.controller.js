@@ -51,23 +51,44 @@ exports.createEvent = async (req, res) => {
 };
 
 // Controller function to update an event (Admin only)
+// controllers/eventController.js
 exports.updateEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { eventName, sparkUrl, status, destinationUrl } = req.body;
 
-    // Call the service to update the event
-    const updatedEvent = await eventService.updateEvent(
-      eventId,
-      { eventName, sparkUrl, status, destinationUrl }
-    );
+    // Full event details from request body
+    const {
+      eventName,
+      eventStartDate,
+      eventEndDate,
+      utmParams,
+      expectedAttendees,
+      location,
+      destinationUrl,
+      status,
+      organizers
+    } = req.body;
+
+    // Call the service with all event fields
+    const updatedEvent = await eventService.updateEvent(eventId, {
+      eventName,
+      eventStartDate,
+      eventEndDate,
+      utmParams,
+      expectedAttendees,
+      location,
+      destinationUrl,
+      status,
+      organizers
+    });
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENT_UPDATED, updatedEvent);
   } catch (error) {
-    console.error('Error in controller:', error);
-    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    console.error('Error in updateEvent controller:', error);
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, error.message || ErrorMessage.INTERNAL_SERVER_ERROR);
   }
 };
+
 
 // Controller function to get all events created by an organizer
 exports.getMyEvents = async (req, res) => {

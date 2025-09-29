@@ -47,7 +47,7 @@ exports.createEvent = async (eventDetails, createdBy) => {
    const eventId = newEvent._id;
    console.log("New Event ID:", eventId, "Base URL:", baseUrl + eventId); // Debugging line to check the new event ID
    const fullUrlForHit = baseUrl + eventId + `?utm_source=${utm_sourceData}&utm_medium=${utm_mediumData}&utm_campaign=${utm_campaignData}&utm_term=${utm_termData}&utm_content=${utm_contentData}`;
-   const UpdatedData = await eventSchema.findByIdAndUpdate(eventId, { baseUrl: fullUrlForHit }, { new: true });
+   const UpdatedData = await eventSchema.findByIdAndUpdate(eventId, { baseUrl: fullUrlForHit }, { new: true }).populate('organizers');
   
     return UpdatedData;  // Return the created event
   } catch (error) {
@@ -118,19 +118,18 @@ exports.assignOrganizers = async (eventId, organizerIds) => {
   }
 };
 // Service function to update an event by eventId (Admin only)
+// services/eventService.js
 exports.updateEvent = async (eventId, eventDetails) => {
   try {
-    const { eventName, sparkUrl, status, destinationUrl } = eventDetails;
-
-    // Find and update the event with the given eventId
+    // Update event with all provided details
     const updatedEvent = await eventSchema.findByIdAndUpdate(
       eventId,
-      { eventName, sparkUrl, status, destinationUrl },
-      { new: true }  // Return the updated event
-    );
+      { $set: eventDetails },   // Update everything passed in body
+      { new: true, runValidators: true }  // Return updated doc + run schema validators
+    ).populate('organizers'); // Populate organizers with selected fields
 
     if (!updatedEvent) {
-      throw new Error('eventSchema not found');  // Throw error if event is not found
+      throw new Error('Event not found');
     }
 
     return updatedEvent;

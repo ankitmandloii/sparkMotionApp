@@ -87,7 +87,8 @@ exports.trackClick = async (req, res) => {
 
   
     // Redirect the user to the destination URL
-    sendResponse(res, statusCode.OK, true, 'Click tracked successfully', { redirectURL: destinationUrl });
+    res.redirect(destinationUrl);
+    // sendResponse(res, statusCode.OK, true, 'Click tracked successfully', { redirectURL: destinationUrl });
   } catch (error) {
     console.error('Error tracking click:', error);
     sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, 'Error tracking click');
@@ -97,7 +98,7 @@ exports.trackClick = async (req, res) => {
 // Function to get geolocation data from an IP address
 const getGeolocationData = async (ipAddress) => {
   try {
-    console.log("Fetching geolocation for IP:", ipAddress); // Debugging line to check the IP address
+    // console.log("Fetching geolocation for IP:", ipAddress); // Debugging line to check the IP address
     const token = process.env.IPINFO_API_TOKEN; // Use your IPinfo API token
     if (!token) {
       console.warn('IPINFO_API_TOKEN is not set. Skipping geolocation lookup.');
@@ -105,7 +106,7 @@ const getGeolocationData = async (ipAddress) => {
     }
     const response = await axios.get(`https://ipinfo.io/${ipAddress}/json?token=${token}`);
     const locationData = response.data;
-    console.log("Location Data:", locationData); // Debugging line to check the location data
+    // console.log("Location Data:", locationData); // Debugging line to check the location data
     return {
       country: locationData?.country,
       city: locationData?.city,

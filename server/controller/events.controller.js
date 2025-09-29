@@ -66,7 +66,7 @@ exports.updateEvent = async (req, res) => {
       location,
       destinationUrl,
       status,
-      organizers
+      organizerIds
     } = req.body;
 
     // Call the service with all event fields
@@ -79,7 +79,7 @@ exports.updateEvent = async (req, res) => {
       location,
       destinationUrl,
       status,
-      organizers
+      organizers: organizerIds
     });
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENT_UPDATED, updatedEvent);

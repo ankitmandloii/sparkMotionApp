@@ -128,6 +128,7 @@ exports.updateEvent = async (eventId, eventDetails) => {
       { new: true, runValidators: true }  // Return updated doc + run schema validators
     ).populate('organizers'); // Populate organizers with selected fields
 
+   
     if (!updatedEvent) {
       throw new Error('Event not found');
     }

@@ -247,7 +247,7 @@ import { useSelector } from 'react-redux';
 import { apiConnecter } from '../../services/apiConnector';
 import { useNavigate } from 'react-router';
 
-const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
+const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, setError }) => {
     const userInfo = useSelector((state) => state.userInfo);
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -256,8 +256,8 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [status, setStatus] = useState('active'); // Default to 'active'
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    // const [error, setError] = useState('');
+    // const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [fieldErrors, setFieldErrors] = useState({});
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -288,9 +288,12 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
             const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_ORGANIZER_END_POINT, {
                 userName: name, email, phoneNumber: number, password, role: "organizer", status: "active"
             }, { authorization: `Bearer ${userInfo.token}` });
-            setSuccess(response.data.message);
+            setSuccess({ "message": response.data.message, title: "Success" });
+            onCancel();
+
         } catch (err) {
-            setError(err?.response?.data?.message ?? err.message);
+            console.log(err, "error");
+            setError({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
         } finally {
             setLoading(false);
         }
@@ -300,58 +303,75 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
     const updateOrganizerHandler = async () => {
         setLoading(true);
         try {
-            const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_ORGANIZER_END_POINT}${organizerToUpdate._id}`, {
+            const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_ORGANIZER_END_POINT}/${organizerToUpdate._id}`, {
                 userName: name, email, phoneNumber: number, role: "organizer", status
             }, { authorization: `Bearer ${userInfo.token}` });
-            setSuccess(response.data.message);
+            setSuccess({ "message": response.data.message, title: "Success" });
+
         } catch (err) {
             console.log(err, "errror")
-            setError(err?.response?.data?.error ?? err.message);
+            setError({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
+
         } finally {
             setLoading(false);
+            onCancel();
         }
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let isValid = true;
-        const newFieldErrors = {};
+   const handleSubmit = (e) => {
+    e.preventDefault();
+    let isValid = true;
+    const newFieldErrors = {};
 
-        // Validation for required fields
-        if (!name.trim()) {
-            newFieldErrors.name = 'Name is required.';
-            isValid = false;
-        }
-        if (!number.trim()) {
-            newFieldErrors.number = 'Number is required.';
-            isValid = false;
-        }
-        if (!email.trim()) {
-            newFieldErrors.email = 'Email is required.';
-            isValid = false;
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newFieldErrors.email = 'Please enter a valid email address.';
-            isValid = false;
-        }
-        if (!password.trim() && !organizerToUpdate) {
-            newFieldErrors.password = 'Password is required.';
-            isValid = false;
-        }
+    // Name validation
+    if (!name.trim()) {
+        newFieldErrors.name = 'Name is required.';
+        isValid = false;
+    }
 
-        setFieldErrors(newFieldErrors);
+    // Number validation
+    if (!number.trim()) {
+        newFieldErrors.number = 'Number is required.';
+        isValid = false;
+    } else if (!/^\d{10}$/.test(number)) { // assuming 10-digit numbers
+        newFieldErrors.number = 'Please enter a valid 10-digit number.';
+        isValid = false;
+    }
 
-        if (!isValid) {
-            console.log("Form has validation errors. Not submitting.");
-            return;
-        }
+    // Email validation
+    if (!email.trim()) {
+        newFieldErrors.email = 'Email is required.';
+        isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+        newFieldErrors.email = 'Please enter a valid email address.';
+        isValid = false;
+    }
 
-        if (organizerToUpdate) {
-            updateOrganizerHandler();
-        } else {
-            createOrganizerHandler();
-        }
-    };
+    // Password validation (only for creation)
+    if (!password.trim() && !organizerToUpdate) {
+        newFieldErrors.password = 'Password is required.';
+        isValid = false;
+    } else if (password && password.length < 6) { // optional strength check
+        newFieldErrors.password = 'Password must be at least 6 characters.';
+        isValid = false;
+    }
+
+    setFieldErrors(newFieldErrors);
+
+    if (!isValid) {
+        console.log("Form has validation errors. Not submitting.");
+        return;
+    }
+
+    // Call the appropriate handler
+    if (organizerToUpdate) {
+        updateOrganizerHandler();
+    } else {
+        createOrganizerHandler();
+    }
+};
+
 
     // Auto-fill the form fields if it's an update
     useEffect(() => {
@@ -367,11 +387,30 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
     const getInputBorderClass = (fieldName) => {
         return fieldErrors[fieldName] ? "border-orange-600 focus:border-orange-600" : "border-transparent focus:border-[var(--color-primary)]";
     };
+    //  useEffect(() => {
+    //     if (error) {
+    //         Modal({
+    //             title: error.title || "Error"   ,
+    //             message: error.message,
+    //         });
+    //     }
+    //     if (success) {
+    //         Modal({
+    //             title: success.title || "Success",
+    //             message: success.message,
+    //         });   
+    //     }
+    //     setTimeout(() => {
+    //             setSuccess('');
+    //             setError('');
+    //         }, 3000);
+    // }, [error, success]);
 
     return (
-        <div className="min-h-screen font-[Inter] w-full flex justify-center items-center p-4 text-gray-200">
-            <div className="flex flex-col justify-center items-center p-4 w-full max-w-[517px]">
-                <div className="flex bg-[var(--color-surface-card)] w-full rounded-[12px] border-[#454343] border pb-4 shadow-2xl mx-auto flex-col justify-center items-center">
+        //i want to place in center of the screen
+        <div className=" absolute  inset-0 backdrop-blur-xs z-50  min-h-screen font-[Inter] w-full flex justify-center items-center p-4 text-gray-200">
+            <div className="flex absolute top-1/2 transform -translate-y-1/2 flex-col  justify-center items-center p-4 w-full max-w-[517px]">
+                <div className="flex bg-[var(--color-surface-background)] w-full rounded-[12px] border-[#454343] border pb-4 shadow-2xl mx-auto flex-col justify-center items-center">
                     <div className="p-[20px] w-full">
                         <div className="w-full mb-2">
                             <h2 className="text-start text-[23px] font-bold tracking-tight text-[var(--color-text-base)]">
@@ -508,7 +547,8 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
                             <div className="mt-3 flex justify-end  space-x-4 w-full">
                                 <button
                                     type="button"
-                                    onClick={() => navigate("/organizations")}
+                                    // onClick={() => navigate("/organizations")}
+                                    onClick={() => { onCancel() }}
                                     className={`px-6 py-2 text-sm cursor-pointer font-semibold rounded-md border border-[#454343] text-[var(--color-text-base)] transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-[#333333]'}`}
                                 >
                                     Cancel
@@ -525,8 +565,7 @@ const CreateOrganizerForm = ({ organizerToUpdate = null }) => {
                 </div>
             </div>
 
-            {error && <Modal title="Failed" message={error} onClose={() => setError('')} />}
-            {success && <Modal title="Success" message={success} onClose={() => setSuccess('')} />}
+
         </div>
     );
 };

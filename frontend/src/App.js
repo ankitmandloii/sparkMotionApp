@@ -16,6 +16,8 @@ import Settings from './pages/Settings.jsx';
 import CreateEventForm from './components/forms/CreateEventForm.jsx';
 import CreateOrganizerForm from './components/forms/CreateOrganizerForm.jsx';
 import OrganizerDashboard from "./pages/OrganizerDashboard.jsx"
+import { useLocation } from "react-router";
+
 import { Toaster } from 'sonner';
 // import Login from './pages/Auth/Login';
 // --- Page Components ---
@@ -29,26 +31,37 @@ const Home = () => (
 
 
 const App = () => {
+  const location = useLocation();
+  const userInfo = useSelector((state) => state.userInfo);
   const isLoggedIn = useSelector((state) => state.userInfo?.isLoggedIn);
   const dispatch = useDispatch();
+  const [currentTab, setCurrentTab] = useState("overview");
   const navigate = useNavigate();
-  const [currentTab, setCurrentTab] = useState("Overview");
   const [editUserInfo, setEditUserInfo] = useState(null)
   const onTabChange = (tab) => {
-    navigate(`/${tab}`)
+    navigate(`/${tab.toLowerCase()}`)
     // navigate(`Admin/${tab}`)
     setCurrentTab(tab)
   }
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login")
+      navigate("/login");
     } else {
-      navigate("/overview")
+      if (userInfo?.user?.role === "superAdmin") {
+        navigate("/overview");
+      } else if (userInfo?.user?.role === "organizer") {
+        navigate("/org");
+      }
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    console.log(location.pathname.split("/")[1])
+    setCurrentTab(location.pathname.split("/")[1]);
+  }, [location.pathname]);
   return (
 
-    <div className="bg-[var(--color-surface-background)] min-h-screen font-sans antialiased " style={{
+    <div className="bg-[var(--color-surface-background)] min-h-screen font-sans antialiased custom-scrollbar" style={{
       backgroundColor: 'var(--color-surface-background)',
       // backfaceVisibility:"visible",
       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${bgDashboard})`,
@@ -57,54 +70,108 @@ const App = () => {
     }}>
       {
         isLoggedIn &&
-        <> <Header></Header>
-          <div className='bg-[var(--border-color)] p-1 rounded-full mt-1'>
-            <TabNavigation {...{ currentTab, onTabChange }}></TabNavigation>
-          </div></>
+        <Header></Header>
       }
-
-      {/* <nav className="mb-8 flex justify-center space-x-4">
-          <Link to="/" className="text-indigo-600 hover:text-indigo-800 font-medium">Home</Link>
-          <Link to="/dashboard" className="text-indigo-600 hover:text-indigo-800 font-medium">Dashboard</Link>
-          {!isLoggedIn ? (
-            <Link to="/login" className="text-indigo-600 hover:text-indigo-800 font-medium">Login</Link>
-          ) : (
-            <button
-              onClick={() => dispatch(logout())}
-              className="text-red-500 hover:text-red-700 font-medium"
-            >
-              Logout
-            </button>
-          )}
-        </nav> */}
+      {
+        userInfo?.user?.role === "superAdmin"
+        &&
+        <div className='bg-[var(--border-color)] p-1 rounded-full mt-1'>
+          <TabNavigation {...{ currentTab, onTabChange }}></TabNavigation>
+        </div>
+      }
 
 
       <main className="flex justify-center ">
         <Routes>
-          <Route path="/" element={<Home />} />
-          {isLoggedIn ?
-            <Route path="/login" element={<Navigate to="/overview" />} /> :
+          {/* login redirect */}
+          {isLoggedIn ? (
+            userInfo?.user?.role === "superAdmin" ?
+              <Route path="/login" element={<Navigate to="/overview" />} /> :
+              <Route path="/login" element={<Navigate to="/org" />} />
+          ) : (
             <Route path="/login" element={<Login />} />
-          }
-          <Route path="/events/createEvent" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateEventForm /></PrivateRoute>} />
-          <Route path="/organizations/createOrganizer" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateOrganizerForm organizerToUpdate={editUserInfo} /></PrivateRoute>} />
-          <Route path="/overview" element={<PrivateRoute isLoggedIn={isLoggedIn}><Overview /></PrivateRoute>} />
-          <Route path="/Organizations" element={<PrivateRoute isLoggedIn={isLoggedIn}><Organizer editUserInfo={editUserInfo} setEditUserInfo={setEditUserInfo} /></PrivateRoute>} />
-          <Route path="/events" element={<PrivateRoute isLoggedIn={isLoggedIn}><Events /></PrivateRoute>} />
-          <Route path="/analytics/:id" element={<PrivateRoute isLoggedIn={isLoggedIn}><Analytics /></PrivateRoute>} />
-          <Route path="/organizerDashboard" element={<PrivateRoute isLoggedIn={isLoggedIn}><Settings /></PrivateRoute>} />
+          )}
 
-          <Route path="/settings" element={<PrivateRoute isLoggedIn={isLoggedIn}><Settings /></PrivateRoute>}
+          {/* superAdmin-only routes */}
+          <Route
+            path="/overview"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <Overview />
+              </PrivateRoute>
+            }
           />
           <Route
-            path="/dashboard"
+            path="/organizations"
             element={
-              <PrivateRoute>
-                {/* <Dashboard /> */}
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <Organizer
+                  editUserInfo={editUserInfo}
+                  setEditUserInfo={setEditUserInfo}
+                />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/events"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <Events />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics/:id"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <Analytics />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <Settings />
+              </PrivateRoute>
+            }
+          />
+
+          {/* organizer-only route */}
+          <Route
+            path="/org"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["organizer"]}
+              >
+                <OrganizerDashboard />
               </PrivateRoute>
             }
           />
         </Routes>
+
       </main>
       <Toaster position="top-left" richColors />
     </div>

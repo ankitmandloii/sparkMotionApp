@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import Modal from '../components/shared/ErrorModal';
 
 const Settings = () => {
-    const userInfo = useSelector((state) => state.userInfor);
+    const userInfo = useSelector((state) => state.userInfo);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const Settings = () => {
     const [fieldErrors, setFieldErrors] = useState({ oldPassword: '', newPassword: '' });
 
     const handleChangePassword = async () => {
-        setMessage(''); 
+        setMessage('');
         setFieldErrors({ oldPassword: '', newPassword: '' });
         // Simple validation
         if (!oldPassword) {
@@ -29,19 +29,21 @@ const Settings = () => {
         try {
             setLoading(true);
             const payload = {
+                email: userInfo.user.email,
                 oldPassword,
                 newPassword,
             };
 
-           const response = await apiConnecter("PUT", "/Admin/change-password", payload,{Authorization: `Bearer ${userInfo.token}`});
-                Modal({
-                    title: "Success",
-                    message: "Password changed successfully.",
-                });
-                setOldPassword('');
-                setNewPassword('');
-                setFieldErrors({ oldPassword: '', newPassword: '' });
-         
+            const response = await apiConnecter("POST", process.env.REACT_APP_CHANGE_PASSWORD_END_POINT, payload, { Authorization: `Bearer ${userInfo.token}` });
+            console.log(response, "response")
+            Modal({
+                title: "Success",
+                message: "Password changed successfully.",
+            });
+            setOldPassword('');
+            setNewPassword('');
+            setFieldErrors({ oldPassword: '', newPassword: '' });
+
         } catch (error) {
             Modal({
                 title: "Error",

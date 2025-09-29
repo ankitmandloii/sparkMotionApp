@@ -1,8 +1,17 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router';
-function PrivateRoute({ children, isLoggedIn }) {
-    return isLoggedIn ? children : <Navigate to="/login" />;
-}
+// components/PrivateRoute.jsx
+import { Navigate } from "react-router";
 
-export default PrivateRoute
+const PrivateRoute = ({ children, isLoggedIn, role, allowedRoles }) => {
+    if (!isLoggedIn) {
+        return <Navigate to="/login" />;
+    }
+
+    // // check if user's role is in allowedRoles
+    if (allowedRoles && !allowedRoles.includes(role)) {
+        return; // redirect if not allowed
+    }
+
+    return children;
+};
+
+export default PrivateRoute;

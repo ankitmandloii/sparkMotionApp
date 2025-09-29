@@ -6,7 +6,7 @@ import ActionButton from './ActionButton';
 import { AnalyticIcon, CalendarIcon, LinkIcon } from '../../assets/icons/icons';
 import { IoSettingsOutline } from "react-icons/io5";
 import Badge from './Badge';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const EventCard = ({ event, onEdit }) => {
     const navigate = useNavigate();
@@ -99,14 +99,16 @@ const EventCard = ({ event, onEdit }) => {
 
             {/* URLs */}
             <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
-                    <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
-                    <ActionButton label={event?.braceletUrl ?? 'N/A'} onClick={() => alert('Bracelet URL clicked')} />
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
-                    <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
-                    <ActionButton label={event?.destinationUrl ?? 'N/A'} onClick={() => alert('Destination URL clicked')} />
-                </div>
+                <Link to={event?.baseUrl}>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
+                        <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
+                        <ActionButton label={event?.baseUrl.slice(0, 100) + "..." ?? 'N/A'} />
+                    </div></Link>
+                <Link to={event?.destinationUrl}>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
+                        <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
+                        <ActionButton label={event?.destinationUrl ?? 'N/A'} />
+                    </div></Link>
             </div>
         </div>
     );

@@ -1,208 +1,235 @@
-// // EventCard.js
-// import React from 'react';
-
-// import { IoLocationOutline } from "react-icons/io5";
-// import IconButton from './IconButton';
-// import ActionButton from './ActionButton';
-// import { AnalyticIcon, CalendarIcon, DownloadIcon, LinkIcon, SettingsIcon, ShareIcon } from '../../assets/icons/icons';
-// import { IoSettingsOutline } from "react-icons/io5";
-
-// import Badge from './Badge';
-// import UrlInput from './UrlInput';
-// const EventCardOrganizer = ({ event }) => {
-//     return (
-//         <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-6">
-//             <div className="flex items-center justify-between mb-2">
-//                 <div className="flex items-center space-x-3">
-//                     <h3 className="text-md  text-[#fafafa]">{event.title}</h3>
-//                     <Badge label={event.status} bgColor={event.status === 'Active' ? 'bg-[#fafafa]' : 'bg-[#262626]'} textColor={event.status === 'Active' ? 'text-black' : 'text-[#fafafa]'} />
-//                 </div>
-//                 <div className="flex items-center space-x-2">
-//                     <IconButton
-//                         icon={DownloadIcon}
-//                         label="Export"
-//                         onClick={() => alert('Analytics clicked')}
-//                         hoverColor="hover:bg-gray-600"
-//                         bgColor="bg-[var(--color-surface-background)]"
-//                         border={true}
-//                     />
-//                     <IconButton
-//                         // icon={IoSettingsOutline}
-//                         label="View Analytics"
-//                         onClick={() => alert('Edit clicked')}
-//                         hoverColor="hover:bg-gray-600"
-//                         bgColor="bg-[var(--color-surface-background)]"
-//                         border={true}
-//                     />
-//                 </div>
-//             </div>
-
-//             <div className="flex items-center space-x-4 text-sm text-gray-400 mb-4">
-//                 <div className="flex items-center space-x-1">
-//                     <CalendarIcon className="w-4 h-4" />
-//                     <span>{event.date}</span>
-//                 </div>
-//                 <div className="flex items-center space-x-1">
-//                     <span><IoLocationOutline /></span>
-//                     <span>{event.location}</span>
-//                 </div>
-//             </div>
-
-//             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
-//                 <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded-2xl'>
-//                     <div className="text-xl text-[var(--color-primary)] font-semibold">{event.attendance}</div>
-
-//                     <div className="text-gray-400 text-sm mb-1">Attendance</div>
-//                 </div>
-//                 <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded-2xl'>
-//                     <div className="text-xl text-[var(--color-primary)] font-semibold">{event.taps}</div>
-
-//                     <div className="text-gray-400 text-sm mb-1">Total Taps</div>
-//                 </div>
-//                 <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded-2xl'>
-//                     <div className="text-xl text-[var(--color-primary)] font-semibold">{event.engagementRate}</div>
-
-//                     <div className="text-gray-400 text-sm mb-1">Engagement Rate</div>
-//                 </div>
-//                 <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded-2xl'>
-//                     <div className="text-xl text-[var(--color-primary)] font-semibold">{event.engagementRate}</div>
-
-//                     <div className="text-gray-400 text-sm mb-1">Post-Event Retention</div>
-//                 </div>
-//                 {/* <div>
-//                     <div className="text-gray-400 text-sm mb-1">Total Taps</div>
-//                     <div className="text-white text-xl font-semibold">{event.taps}</div>
-//                 </div>
-//                 <div>
-//                     <div className="text-gray-400 text-sm mb-1">Engagement Rate</div>
-//                     <div className="text-white text-xl font-semibold">{event.engagementRate}</div>
-//                 </div>
-//                 <div>
-//                     <div className="text-gray-400 text-sm mb-1">Organizer</div>
-//                     <div className="text-white text-sm">{event.organizer}</div>
-//                 </div> */}
-//             </div>
-
-//             <div className="space-y-2">
-//                 <div className="flex  flex-col  space-x-2 text-sm">
-//                     <span className="text-gray-400 flex gap-1 items-center mb-2"> Bracelet URL:</span>
-//                     <div className='flex '>
-//                         <UrlInput label={event.braceletUrl} onClick={() => alert('Bracelet URL clicked')} />
-//                         <span className='bg-gray-400 p-2 flex justify-center align-middle rounded'><ShareIcon /></span>
-
-
-//                     </div>
-//                     <div className='text-white'>This URL is encoded in your NFC bracelets (read-only)</div>
-//                 </div>
-//                 <div className="flex items-center space-x-2 text-sm">
-//                     <span className="text-gray-400 flex gap-1 items-center"><LinkIcon /> Destination URL:</span>
-//                     <ActionButton label={event.destinationUrl} onClick={() => alert('Destination URL clicked')} />
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default EventCardOrganizer;
-
 // EventCardOrganizer.js
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { IoLocationOutline } from "react-icons/io5";
 import IconButton from './IconButton';
-import ActionButton from './ActionButton';
-import { CalendarIcon, DownloadIcon, EditIcon, LinkIcon, ShareIcon } from '../../assets/icons/icons';
+import { FaCheck } from "react-icons/fa";
+import { MdOutlineCancel } from "react-icons/md";
+import { CalendarIcon, DownloadIcon, EditIcon, ShareIcon } from '../../assets/icons/icons';
 import Badge from './Badge';
+import { useReactToPrint } from "react-to-print";
 import UrlInput from './UrlInput';
+import { apiConnecter } from '../../services/apiConnector';
+import Modal from "./ErrorModal";
+import { Link } from "react-router";
+import { exportEventAsReport } from './exportEventAsTable';
 
-const EventCardOrganizer = ({ event }) => (
-    <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-6">
-        <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center space-x-3">
-                <h3 className="text-md text-[#fafafa]">Platform Configuration</h3>
-                {/* <Badge label={event.status} bgColor={event.status === 'Active' ? 'bg-[#fafafa]' : 'bg-[#262626]'} textColor={event.status === 'Active' ? 'text-black' : 'text-[#fafafa]'} /> */}
-            </div>
-            <div className="flex items-center space-x-2">
-                <IconButton
-                    icon={DownloadIcon}
-                    label="Export"
-                    onClick={() => alert('Export clicked')}
-                    hoverColor="hover:bg-gray-600"
-                    bgColor="bg-[var(--color-surface-background)]"
-                    border={true}
-                />
-                <IconButton
-                    color="text-[var(--color-primary)]"
-                    label="View Analytics"
-                    onClick={() => alert('View Analytics clicked')}
-                    hoverColor="hover:bg-gray-600"
-                    bgColor="bg-[var(--color-surface-background)]"
-                    border={true}
-                />
-            </div>
-        </div>
 
-        <div className="flex items-center space-x-4 text-sm text-gray-400 mb-4">
-            <div className="flex items-center space-x-1">
-                {/* <CalendarIcon className="w-4 h-4" /> */}
-                {/* <span>{event.date}. {event.location}</span>
-                <span>{event.date}. {event.location}</span> */}
-                <span>2024-06-15 • Austin, TX</span>
+const EventCardOrganizer = ({ event, userInfo }) => {
+    // safely handle undefined props
+    const expectedAttendees = event?.expectedAttendees ?? 0;
+    const clickCount = event?.clickCount ?? 0;
+    const postEventClickCount = event?.postEventClickCount ?? 0;
 
-            </div>
+    const engagementRate = expectedAttendees
+        ? ((clickCount / expectedAttendees) * 100).toFixed(2)
+        : "0.00";
 
-        </div>
+    const postEventEngagementRate = expectedAttendees
+        ? ((postEventClickCount / expectedAttendees) * 100).toFixed(2)
+        : "0.00";
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
-            <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded'>
-                <div className="text-2xl text-[var(--color-primary)] font-semibold">{event.attendance}</div>
-                <div className="text-gray-400 text-sm mb-1">Attendance</div>
-            </div>
-            <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded'>
-                <div className="text-2xl text-[var(--color-primary)] font-semibold">{event.taps}</div>
-                <div className="text-gray-400 text-sm mb-1">Total Taps</div>
-            </div>
-            <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded'>
-                <div className="text-2xl text-[var(--color-primary)] font-semibold">{event.engagementRate}</div>
-                <div className="text-gray-400 text-sm mb-1">Engagement Rate</div>
-            </div>
-            <div className='bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-2 rounded'>
-                <div className="text-2xl text-[var(--color-primary)] font-semibold">{event.engagementRate}</div>
-                <div className="text-gray-400 text-sm mb-1">Post-Event Retention</div>
-            </div>
-        </div>
+    // state for editing destination URL
+    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl ?? "");
+    const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-        <div className="space-y-2">
-            <div className="flex flex-col space-x-2 text-sm">
-                <span className="text-[#FAFAFA] flex gap-1 items-center mb-2 ">Bracelet URL:</span>
-                <div className='flex gap-2'>
-                    <div className='flex-1 w-full'> <UrlInput label={event.braceletUrl} />
-                    </div>
-                    <span className=' border border-[var(--border-color)] p-2 flex justify-center align-middle rounded hover:bg-gray-600 cursor-pointer'><ShareIcon /></span>
+    const cardRef = useRef(null);
+
+    // react-to-print handler
+    const handlePrint = () => {
+        exportEventAsReport(event);
+    }
+
+
+    // save API handler
+    const handleSave = async () => {
+        if(loading) return
+        try {
+            setLoading(true);
+            const response = await apiConnecter(
+                "PUT",
+                `${process.env.REACT_APP_UPDATE_DESTINATION_URL_END_POINT}/${event._id}`,
+                { destinationUrl: newDestinationUrl },
+                { authorization: `Bearer ${userInfo.token}` }
+            );
+            Modal({
+                title: "Success",
+                message: response.data.message,
+            });
+            setIsEditing(false);
+        } catch (error) {
+            console.error(error);
+            Modal({
+                title: "Error",
+                message: error.message,
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => setIsEditing(false);
+
+    return (
+        <div
+            ref={cardRef}
+            className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 sm:p-6 w-full"
+        >
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <div className="flex flex-wrap items-center gap-2 justify-between">
+                    <h3 className="text-lg font-semibold text-[#fafafa] break-words">
+                        {event?.title ?? "Platform Configuration"}
+                    </h3>
+                    {event?.status && (
+                        <Badge
+                            label={event.status}
+                            bgColor={event.status === "Active" ? "bg-[#fafafa]" : "bg-[#262626]"}
+                            textColor={event.status === "Active" ? "text-black" : "text-[#fafafa]"}
+                        />
+                    )}
                 </div>
-                <div className='text-[var(--color-grey)] text-xs mt-2'>This URL is encoded in your NFC bracelets (read-only)</div>
-            </div>
-            <div className="flex flex-col space-x-2 text-sm">
-                <span className="text-white flex gap-1 items-center mb-2">Destination URL:</span>
-                <div className='flex gap-2'>
-                    <div className='flex-1 w-full'> <UrlInput label={event.braceletUrl} />
-                    </div>
-                    <span className=' border border-[var(--border-color)] p-2 flex justify-center align-middle rounded hover:bg-gray-600 cursor-pointer'><EditIcon /></span>
-
-                    <span className=' border border-[var(--border-color)] p-2 flex justify-center align-middle rounded hover:bg-gray-600 cursor-pointer'><ShareIcon /></span>
+                <div className="flex gap-2 flex-wrap">
+                    <IconButton
+                        icon={DownloadIcon}
+                        label="Export"
+                        onClick={handlePrint}
+                        hoverColor="hover:bg-gray-600"
+                        bgColor="bg-[var(--color-surface-background)]"
+                        border={true}
+                        disabled={loading}
+                    />
+                    <IconButton
+                        color="text-[var(--color-primary)]"
+                        label="View Analytics"
+                        onClick={() => alert("View Analytics clicked")}
+                        hoverColor="hover:bg-gray-600"
+                        bgColor="bg-[var(--color-surface-background)]"
+                        border={true}
+                    />
                 </div>
-                <div className='text-[var(--color-grey)] text-xs mt-2'>Where attendees are redirected when they tap their bracelet</div>
             </div>
-            {/* <div className="flex items-center space-x-2 text-sm">
-                <span className="text-gray-400 flex gap-1 items-center"><LinkIcon /> Destination URL:</span>
-                <ActionButton label={event.destinationUrl} onClick={() => alert('Destination URL clicked')} />
-            </div> */}
+
+            {/* Date + Location */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 text-sm text-gray-400 mb-4">
+                <div className="flex items-center gap-1">
+                    <CalendarIcon className="w-4 h-4 shrink-0" />
+                    <span className="truncate">
+                        {event?.date ?? "TBD"} • {event?.location ?? "Location TBD"}
+                    </span>
+                </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                <div className="bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-3 rounded-xl">
+                    <div className="text-xl sm:text-2xl text-[var(--color-primary)] font-semibold">
+                        {expectedAttendees}
+                    </div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Attendance</div>
+                </div>
+                <div className="bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-3 rounded-xl">
+                    <div className="text-xl sm:text-2xl text-[var(--color-primary)] font-semibold">
+                        {clickCount}
+                    </div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Total Taps</div>
+                </div>
+                <div className="bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-3 rounded-xl">
+                    <div className="text-xl sm:text-2xl text-[var(--color-primary)] font-semibold">
+                        {engagementRate}%
+                    </div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Engagement Rate</div>
+                </div>
+                <div className="bg-[var(--color-surface-input)] flex flex-col items-center justify-center p-3 rounded-xl">
+                    <div className="text-xl sm:text-2xl text-[var(--color-primary)] font-semibold">
+                        {postEventEngagementRate}%
+                    </div>
+                    <div className="text-gray-400 text-xs sm:text-sm">Post-Event Retention</div>
+                </div>
+            </div>
+
+            {/* URLs */}
+            <div className="space-y-6">
+                {/* Bracelet URL */}
+                <div className="flex flex-col text-sm">
+                    <span className="text-[#FAFAFA] mb-2">Bracelet URL:</span>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex-1 w-full">
+                            <UrlInput label={event?.baseUrl ?? "https://example.com/bracelet"} />
+                        </div>
+                        <Link to={event.baseUrl} className="shrink-0">
+                            <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
+                                <ShareIcon />
+                            </span>
+                        </Link>
+                    </div>
+                    <div className="text-[var(--color-grey)] text-xs mt-2">
+                        This URL is encoded in your NFC bracelets (read-only)
+                    </div>
+                </div>
+
+                {/* Destination URL */}
+                <div className="flex flex-col text-sm">
+                    <span className="text-white mb-2">Destination URL:</span>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex-1 w-full">
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    className="w-full bg-[var(--color-surface-input)] text-white rounded p-2"
+                                    value={newDestinationUrl}
+                                    onChange={(e) => setNewDestinationUrl(e.target.value)}
+                                    disabled={loading}
+                                />
+                            ) : (
+                                <UrlInput label={newDestinationUrl} />
+                            )}
+                        </div>
+                        <div className="flex gap-2">
+                            {isEditing ? (
+                                <>
+                                    <span
+                                        onClick={handleCancel}
+                                        className={`border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer ${loading ? "pointer-events-none cursor-not-allowed" : ""
+                                            }`}
+                                    >
+                                        <MdOutlineCancel style={{ color: "white", fontSize: 16 }} />
+                                    </span>
+                                    <span
+                                        onClick={handleSave}
+                                        disabled={loading}
+                                        className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer"
+                                    >
+                                        {loading ? (
+                                            <div className="w-5 h-5 border-4 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
+                                        ) : (
+                                            <FaCheck style={{ color: "white" }} />
+                                        )}
+                                    </span>
+                                </>
+                            ) : (
+                                <span
+                                    onClick={() => setIsEditing(true)}
+                                    className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer"
+                                >
+                                    <EditIcon />
+                                </span>
+                            )}
+                            <Link to={event.destinationUrl} className="shrink-0">
+                                <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
+                                    <ShareIcon />
+                                </span>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="text-[var(--color-grey)] text-xs mt-2">
+                        Where attendees are redirected when they tap their bracelet
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div className="flex justify-between mt-6 gap-2 ">
-            <button className="bg-transparent text-white border border border-[var(--border-color)] rounded px-4 py-2 w-full hover:bg-gray-600 cursor-pointer">View Full Analytics</button>
-            <button className="bg-transparent text-white border border border-[var(--border-color)] rounded px-4 py-2 flex items-center w-full gap-2 justify-center hover:bg-gray-600 cursor-pointer"><DownloadIcon className="w-4 h-4 mr-2" /> Export Data</button>
-        </div>
-    </div>
-);
+    );
+};
 
 export default EventCardOrganizer;

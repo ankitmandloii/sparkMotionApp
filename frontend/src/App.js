@@ -16,6 +16,7 @@ import Settings from './pages/Settings.jsx';
 import CreateEventForm from './components/forms/CreateEventForm.jsx';
 import CreateOrganizerForm from './components/forms/CreateOrganizerForm.jsx';
 import OrganizerDashboard from "./pages/OrganizerDashboard.jsx"
+import { Toaster } from 'sonner';
 // import Login from './pages/Auth/Login';
 // --- Page Components ---
 const Home = () => (
@@ -83,7 +84,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           {isLoggedIn ?
             <Route path="/login" element={<Navigate to="/overview" />} /> :
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} /> 
           }
           <Route path="/events/createEvent" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateEventForm /></PrivateRoute>} />
           <Route path="/organizations/createOrganizer" element={<PrivateRoute isLoggedIn={isLoggedIn}><CreateOrganizerForm organizerToUpdate={editUserInfo} /></PrivateRoute>} />
@@ -105,6 +106,7 @@ const App = () => {
           />
         </Routes>
       </main>
+        <Toaster position="top-left" richColors />
     </div>
 
   );

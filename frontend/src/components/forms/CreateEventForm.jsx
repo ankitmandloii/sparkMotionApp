@@ -4,6 +4,7 @@ import logo from '../../assets/logos/sparkMotionLogo.png'
 import Modal from '../../components/shared/ErrorModal';
 import { apiConnecter } from '../../services/apiConnector';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 
 // A simple placeholder logo component. You can replace this with your actual logo.
@@ -12,7 +13,7 @@ const SparkMotionLogo = () => (
 );
 
 
-const CreateEventForm = () => {
+const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSuccess, setError, setAllEvents }) => {
     // State for all form fields
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state.userInfo)
@@ -30,18 +31,22 @@ const CreateEventForm = () => {
     const [utmCampaign, setUtmCampaign] = useState('');
     const [utmTerm, setUtmTerm] = useState('');
     const [utmContent, setUtmContent] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedOrganizer, setSelectedOrganizer] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredOrganizers, setFilteredOrganizers] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-    // const [fieldErrors, setFieldErrors] = useState({}); // Placeholder for error state
-    const organizerInputRef = useRef(null);
-
-    // State for field-specific validation errors
     const [fieldErrors, setFieldErrors] = useState({});
+    const organizerInputRef = useRef(null);
+    const eventNameRef = useRef(null);
+    const eventDateRef = useRef(null);
+    const expectAttendanceRef = useRef(null);
+    const locationRef = useRef(null);
+    const baseUrlRef = useRef(null);
+    const destinationUrlRef = useRef(null);
+    const organizerRef = useRef(null);
+    const eventEndDateRef = useRef(null);
+
 
 
     useEffect(() => {
@@ -86,9 +91,28 @@ const CreateEventForm = () => {
         try {
             const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_EVENTS_END_POINT, data, { authorization: `Bearer ${userInfo.token}` });
             console.log("data from server", response.data)
-            setSuccess(response.data.message);
+            setSuccess({ title: "Success", message: response.data.message });
+            setAllEvents(prevEvents => [...prevEvents, response.data.result]); // Append the new event to the existing list
+            onCancel();
         } catch (err) {
-            setError(err?.response?.data?.message ?? err.message);
+            setError({ title: "Error", message: err?.response?.data?.message ?? err.message });
+        } finally {
+            setLoading(false);
+        }
+    };
+    const updateEventHandler = async (data) => {
+
+        setLoading(true);
+
+        // Simulate an API call with a delay
+        try {
+            const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_EVENTS_END_POINT}/${eventToUpdate._id}`, data, { authorization: `Bearer ${userInfo.token}` });
+            console.log("data from server", response.data)
+            setSuccess({ title: "Success", message: response.data.message });
+            setAllEvents(prevEvents => prevEvents.map(event => event._id === eventToUpdate._id ? response.data.result : event)); // Update the event in the list
+            onCancel();
+        } catch (err) {
+            setError({ title: "Error", message: err?.response?.data?.message ?? err.message });
         } finally {
             setLoading(false);
         }
@@ -100,98 +124,116 @@ const CreateEventForm = () => {
     };
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+ const handleSubmit = (e) => {
+    e.preventDefault();
 
-        let isValid = true;
-        const newFieldErrors = {};
+    let isValid = true;
+    const newFieldErrors = {};
 
-        // Validation for required fields
-        if (!eventName.trim()) {
-            newFieldErrors.eventName = 'Event Name is required.';
+    // Event Name
+    if (!eventName.trim()) {
+        newFieldErrors.eventName = 'Event Name is required.';
+        isValid = false;
+    }
+
+    // Event Dates
+    if (!eventDate.trim()) {
+        newFieldErrors.eventDate = 'Event Date is required.';
+        isValid = false;
+    }
+    if (!eventEndDate.trim()) {
+        newFieldErrors.eventEndDate = 'Event End Date is required.';
+        isValid = false;
+    }
+
+    // Check if eventEndDate is after eventDate
+    if (eventDate && eventEndDate) {
+        const start = new Date(eventDate);
+        const end = new Date(eventEndDate);
+        if (end < start) {
+            newFieldErrors.eventEndDate = 'Event End Date must be after Event Date.';
             isValid = false;
         }
-        if (!eventDate.trim()) {
-            newFieldErrors.eventDate = 'Event Date is required.';
-            isValid = false;
-        }
-        if (!expectAttendance.trim()) {
-            newFieldErrors.expectAttendance = 'Expected Attendance is required.';
-            isValid = false;
-        }
-        if (!location.trim()) {
-            newFieldErrors.location = 'Location is required.';
-            isValid = false;
-        }
-        if (!baseUrl.trim()) {
-            newFieldErrors.baseUrl = 'Base URL is required.';
-            isValid = false;
-        }
-        if (!destinationUrl.trim()) {
-            newFieldErrors.destinationUrl = 'Destination URL is required.';
-            isValid = false;
-        }
-        if (!selectedOrganizer || !selectedOrganizer?._id.trim()) {
-            newFieldErrors.organizer = 'Organizer is required.';
-            isValid = false;
-        }
+    }   
 
-        setFieldErrors(newFieldErrors);
+    // Expected Attendance
+    if (!String(expectAttendance).trim()) {
+        newFieldErrors.expectAttendance = 'Expected Attendance is required.';
+        isValid = false;
+    } else if (isNaN(expectAttendance) || Number(expectAttendance) <= 0) {
+        newFieldErrors.expectAttendance = 'Expected Attendance must be a positive number.';
+        isValid = false;
+    }
 
-        if (!isValid) {
-            console.log("Form has validation errors. Not submitting.");
-            return;
-        }
-        // {
-        //     "eventName": "Summer Festival",
-        //         "eventStartDate": "2025-06-01T00:00:00Z",
-        //             "eventEndDate": "2025-06-05T00:00:00Z",
-        //                 "utmParams": {
-        //         "utm_source": "google",
-        //             "utm_medium": "cpc",
-        //                 "utm_campaign": "summer2025",
-        //                     "utm_term": "event",
-        //                         "utm_content": "ad1"
-        //     },
-        //     "expectedAttendees": 5000,
-        //         "location": "New York City, Central Park",
-        //             "baseUrl": "https://sparkmotion.com/e/123",
-        //                 "destinationUrl": "https://example.com/target-url",
-        //                     "organizers" : ["68d52d7633b5e1d7d424a589"]
-        // }
+    // Location
+    if (!location.trim()) {
+        newFieldErrors.location = 'Location is required.';
+        isValid = false;
+    }
 
+    // Base URL
+    if (!baseUrl.trim()) {
+        newFieldErrors.baseUrl = 'Base URL is required.';
+        isValid = false;
+    } else if (!/^https?:\/\/.+\..+/.test(baseUrl)) {
+        newFieldErrors.baseUrl = 'Base URL must be a valid URL.';
+        isValid = false;
+    }
 
+    // Destination URL
+    if (!destinationUrl.trim()) {
+        newFieldErrors.destinationUrl = 'Destination URL is required.';
+        isValid = false;
+    } else if (!/^https?:\/\/.+\..+/.test(destinationUrl)) {
+        newFieldErrors.destinationUrl = 'Destination URL must be a valid URL.';
+        isValid = false;
+    }
 
-        const payload =
-        {
-            "eventName": eventName,
-            "eventStartDate": eventDate,
-            "eventEndDate": eventEndDate,
-            "utmParams": {
-                "utm_source": utmSource,
-                "utm_medium": utmMedium,
-                "utm_campaign": utmCampaign,
-                "utm_term": utmTerm,
-                "utm_content": utmContent
-            },
-            "expectedAttendees": expectAttendance,
-            "location": location,
-            "baseUrl": baseUrl,
-            "destinationUrl": destinationUrl,
-            "organizer  Ids": [selectedOrganizer?._id]
-        }
-        console.log("payload", payload)
-        createEventHandler(payload)
-        // Handle form submission (e.g., send data to an API)
-        console.log('Form submitted successfully with the following data:');
-        console.log({
-            eventName, eventDate, eventEndDate, expectAttendance, location, baseUrl, destinationUrl, organizer, utmSource, utmMedium, utmCampaign, utmTerm, utmContent
-        });
+    // Organizer
+    if (typeof selectedOrganizer !== "object" || !selectedOrganizer?._id.trim()) {
+        newFieldErrors.organizer = 'Organizer is required.';
+        isValid = false;
+    }
 
-        // You would typically reset the form here after a successful submission
-        // setEventName('');
-        // etc.
+    setFieldErrors(newFieldErrors);
+
+    if (!isValid) {
+        // Scroll to first error field
+        if (newFieldErrors.eventName) eventNameRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.eventDate) eventDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.eventEndDate) eventEndDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.expectAttendance) expectAttendanceRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.location) locationRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.baseUrl) baseUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.destinationUrl) destinationUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        else if (newFieldErrors.organizer) organizerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    // Payload
+    const payload = {
+        eventName,
+        eventStartDate: eventDate,
+        eventEndDate,
+        utmParams: {
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: utmCampaign,
+            utm_term: utmTerm,
+            utm_content: utmContent
+        },
+        expectedAttendees: expectAttendance,
+        location,
+        baseUrl,
+        destinationUrl,
+        organizerIds: [selectedOrganizer?._id]
     };
+
+    console.log("payload", payload);
+    if (eventToUpdate) updateEventHandler(payload);
+    else createEventHandler(payload);
+};
+
 
     const getInputBorderClass = (fieldName) => {
         return fieldErrors[fieldName] ? "border-orange-600 focus:border-orange-600" : "border-transparent focus:border-[var(--color-primary)]";
@@ -205,7 +247,7 @@ const CreateEventForm = () => {
         }
 
 
-        setLoading(true);
+        // setLoading(true);
         setError('');
 
         try {
@@ -227,55 +269,46 @@ const CreateEventForm = () => {
             console.error("API Error:", err);
             setError(err?.response?.data?.message ?? err.message);
         } finally {
-            setLoading(false);
+            // setLoading(false);
         }
     }
 
     // 3. Use useEffect with the correct dependency array
     useEffect(() => {
-        // Call the function
-
         getOrganizersList()
-        // Dependency array: Re-run the effect whenever the token changes.
-        // This ensures the API call uses the *latest* token (e.g., after login).
+        console.log("eventToUpdate", eventToUpdate)
+        if (eventToUpdate) {
+            setEventName(eventToUpdate.eventName || '');
+            setEventDate(eventToUpdate.eventStartDate ? eventToUpdate.eventStartDate.split('T')[0] : '');
+            setEventEndDate(eventToUpdate.eventEndDate ? eventToUpdate.eventEndDate.split('T')[0] : '');
+            setExpectAttendance(eventToUpdate.expectedAttendees || '');
+            setLocation(eventToUpdate.location || '');
+            setBaseUrl(eventToUpdate.baseUrl || '');
+            setDestinationUrl(eventToUpdate.destinationUrl || '');
+            if (eventToUpdate?.organizers?.length > 0) {
+                setOrganizer(eventToUpdate.organizers[0].userName || '');
+                setSelectedOrganizer(eventToUpdate.organizers[0] || null);
+            }
+            setUtmSource(eventToUpdate.utmParams?.utm_source || '');
+            setUtmMedium(eventToUpdate.utmParams?.utm_medium || '');
+            setUtmCampaign(eventToUpdate.utmParams?.utm_campaign || '');
+            setUtmTerm(eventToUpdate.utmParams?.utm_term || '');
+            setUtmContent(eventToUpdate.utmParams?.utm_content || '');
+        }
     }, [userInfo.token]);
     return (
-        <div
-            className="min-h-screen w-full font-[Inter] flex justify-center items-center p-4  text-gray-200"
-        // style={{
-        //     '--color-surface-background': '#1A1A1A',
-        //     '--color-surface-card': '#222222',
-        //     '--color-surface-input': '#2C2C2C',
-        //     '--color-primary': '#3B82F6',
-        //     '--color-text-base': '#F5F5F5',
-        //     '--color-text-secondary': '#A0A0A0',
-        //     '--color-input-placeholder': '#6B7280',
-        //     backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(https://placehold.co/1920x1080/1a1a1a/cccccc?text=Background+Image)',
-        //     backgroundSize: 'cover',
-        //     backgroundPosition: 'center',
-        //     fontFamily: 'Inter, sans-serif'
-        // }}
-        >
-            <style>
-
-            </style>
-            <div className='flex flex-col justify-center items-center p-[20px] mx-w-[517px] w-full'>
+        <div className=" absolute inset-0 backdrop-blur-xs z-50  min-h-screen font-[Inter] w-full flex justify-center items-center p-4 text-gray-200">
+            <div className="flex  flex-col  justify-center items-center p-4 w-full max-w-[517px]">
                 {/* <SparkMotionLogo /> */}
-                <div className="flex bg-[var(--color-surface-card)] rounded-[12px] border-[#454343] border pb-4 shadow-2xl  mx-auto flex-col justify-center items-center">
+                <div className="flex  absolute top-1/2 transform -translate-y-1/2 bg-[var(--color-surface-background)] rounded-[12px] border-[#454343] border pb-4 shadow-2xl  mx-auto flex-col justify-center items-center">
 
-                    <div className=" p-[20px] max-h-[400px] overflow-y-auto custom-scrollbar">
+                    <div className=" p-[20px] max-h-[500px] overflow-y-auto custom-scrollbar">
                         <div className="w-full mb-2  ">
-                            {/* <h2 className="text-center text-[20px] font-semibold tracking-tight text-[var(--color-text-base)]">
-                            Create New Event
-                        </h2>
-                        <p className="mt-1 text-center text-[13px] text-[var(--color-text-secondary)] leading-[20px]">
-                            Set up a new SparkMotion event with NFC bracelet tracking.
-                        </p> */}
                             <h2 className="text-start text-[23px] font-bold tracking-tight text-[var(--color-text-base)]" style={{ lineHeight: "32px" }}>
-                                Create New Event
+                                {eventToUpdate ? 'Edit Event' : 'Create New Event'}
                             </h2>
                             <p className="mt-1 text-start text-[14px] font-medium text-[var(--color-text-secondary)] leading-[20px]">
-                                Set up a new SparkMotion event with NFC bracelet tracking.
+                                {eventToUpdate ? 'Edit your existing SparkMotion event with NFC bracelet tracking.' : 'Set up a new SparkMotion event with NFC bracelet tracking.'}
                             </p>
                         </div>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -286,6 +319,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={eventNameRef}
                                         id="eventName"
                                         type="text"
                                         value={eventName}
@@ -307,6 +341,7 @@ const CreateEventForm = () => {
                                     </label>
                                     <div className="mt-2">
                                         <input
+                                            ref={eventDateRef}
                                             id="eventDate"
                                             type="date"
                                             value={eventDate}
@@ -325,15 +360,19 @@ const CreateEventForm = () => {
                                     </label>
                                     <div className="mt-2">
                                         <input
+                                            ref={eventEndDateRef}
                                             id="eventEndDate"
                                             type="date"
                                             value={eventEndDate}
                                             onChange={(e) => setEventEndDate(e.target.value)}
                                             placeholder="dd/mm/yyyy"
                                             // className="block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border border-transparent transition-colors duration-200 focus:border-[var(--color-primary)]"
-                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('eventDate')}`}
+                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('eventEndDate')}`}
                                         />
                                     </div>
+                                    {fieldErrors.eventEndDate && (
+                                            <p className="mt-1 text-xs text-orange-600">{fieldErrors.eventEndDate}</p>
+                                        )}
                                 </div>
                             </div>
 
@@ -344,6 +383,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={expectAttendanceRef}
                                         id="expectAttendance"
                                         type="text"
                                         value={expectAttendance}
@@ -364,6 +404,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={locationRef}
                                         id="location"
                                         type="text"
                                         value={location}
@@ -384,6 +425,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={baseUrlRef}
                                         id="baseUrl"
                                         type="text"
                                         value={baseUrl}
@@ -405,6 +447,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={destinationUrlRef}
                                         id="destinationUrl"
                                         type="text"
                                         value={destinationUrl}
@@ -426,6 +469,7 @@ const CreateEventForm = () => {
                                 </label>
                                 <div className="mt-2">
                                     <input
+                                        ref={organizerRef}
                                         id="organizer"
                                         type="text"
                                         value={organizer}
@@ -439,7 +483,7 @@ const CreateEventForm = () => {
                                     )}
                                 </div>
                                 {(isDropdownVisible && filteredOrganizers.length > 0) ? (
-                                    <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                    <ul className="absolute z-10 w-full mt-1 bg-[var(--color-surface-background)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
                                         {filteredOrganizers.map(organizer => (
                                             <li
                                                 key={organizer._id}
@@ -456,7 +500,7 @@ const CreateEventForm = () => {
                                     </ul>
                                 ) : (
                                     isDropdownVisible &&
-                                    <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                    <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
                                         {[{ _id: "00", userName: "No Active Organizer Found. " }].map(organizer => (
                                             <li
                                                 key={organizer._id}
@@ -613,7 +657,7 @@ const CreateEventForm = () => {
                     <div className="mt-8 flex justify-end space-x-4 px-8 w-full">
                         <button
                             type="button"
-                            onClick={() => navigate("/Events")}
+                            onClick={() => setShowForm(false)}
                             className={`px-6 py-2 text-sm cursor-pointer  font-semibold rounded-md border border-[#454343] text-[var(--color-text-base)]  transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-[#333333]'}`}
                         >
                             Cancel
@@ -625,15 +669,16 @@ const CreateEventForm = () => {
 
                         >
                             {
-                                loading ? "Creating Event..." : "Create Event"
+                                eventToUpdate ? loading ? 'Updating Event...' : 'Update Event' : loading ? "Creating Event..." : "Create Event"
                             }
+
 
                         </button>
                     </div>
                 </div>
             </div>
-            {error && <Modal title="Event Creation Failed" message={error} onClose={handleModalClose} />}
-            {success && <Modal title="Event Created Successfully" message={success} onClose={handleModalClose} />}
+            {/* {error && <Modal title={eventToUpdate ? "Event Update Failed" : "Event Creation Failed"} message={error} onClose={handleModalClose} />}
+            {success && <Modal title={eventToUpdate ? "Event Updated Successfully" : "Event Created Successfully"} message={success} onClose={handleModalClose} />} */}
         </div>
     );
 };

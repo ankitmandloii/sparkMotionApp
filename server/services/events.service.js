@@ -194,12 +194,12 @@ exports.deleteEvent = async (eventId) => {
 };
 
 // Service function to update the destination URL for an event (Organizer only)
-exports.updateDestinationUrl = async (eventId, destinationUrl, userId) => {
+exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees, userId) => {
   try {
     const event = await eventSchema.findById(eventId);
 
     if (!event) {
-      throw new Error('eventSchema not found');
+      throw new Error('event not found');
     }
 
     // Check if the user is part of the event's organizers
@@ -208,6 +208,7 @@ exports.updateDestinationUrl = async (eventId, destinationUrl, userId) => {
     }
 
     event.destinationUrl = destinationUrl;
+    event.expectedAttendees = parseInt(expectedAttendees);
     await event.save();
 
     return event;

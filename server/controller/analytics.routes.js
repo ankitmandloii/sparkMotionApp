@@ -208,14 +208,14 @@ exports.getClickTimeline = async (req, res) => {
     const cityData = groupClicksByCity(clicks);
     const countryData = groupClicksByCountry(clicks);
 
-     let peakHour = null;
-    let peakHourCount = 0;
-    for (const [hour, count] of Object.entries(hourlyData)) {
-      if (count > peakHourCount) {
-        peakHourCount = count;
-        peakHour = hour;
-      }
-    }
+    //  let peakHour = null;
+    // let peakHourCount = 0;
+    // for (const [hour, count] of Object.entries(hourlyData)) {
+    //   if (count > peakHourCount) {
+    //     peakHourCount = count;
+    //     peakHour = hour;
+    //   }
+    // }
 
     const eventData = await eventSchema.findById(eventId);
     
@@ -227,10 +227,10 @@ exports.getClickTimeline = async (req, res) => {
       // monthlyData,
       cityData,
       countryData,
-      peakHour: {
-        hour: peakHour,
-        taps: peakHourCount
-      }
+      // peakHour: {
+      //   hour: peakHour,
+      //   taps: peakHourCount
+      // }
     });
   } catch (error) {
     console.error('Error fetching click timeline:', error);

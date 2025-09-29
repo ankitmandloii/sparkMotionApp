@@ -213,19 +213,20 @@ exports.deleteEvent = async (req, res) => {
 exports.updateDestinationUrl = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { destinationUrl } = req.body;
+    const { destinationUrl, expectedAttendees } = req.body;
     const userId = req.user._id;
 
     // Call the service to update the destination URL
     const updatedEvent = await eventService.updateDestinationUrl(
       eventId,
       destinationUrl,
+      expectedAttendees,
       userId
     );
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.DESTINATION_URL_UPDATED, updatedEvent);
   } catch (error) {
     console.error('Error in controller:', error);
-    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, error.message || ErrorMessage.INTERNAL_SERVER_ERROR);
   }
 };

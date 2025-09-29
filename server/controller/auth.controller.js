@@ -55,7 +55,11 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await services.findUserForLogin(email);
+    if(user.status == "inactive"){
+      return sendResponse(res, statusCode.UNAUTHORIZED, false, ErrorMessage.USER_INACTIVE);
+    }
 
+    console.log(user, "user in login controller");
     if (!user) {
       return sendResponse(res, statusCode.UNAUTHORIZED, false, ErrorMessage.USER_NOT_FOUND);
     }

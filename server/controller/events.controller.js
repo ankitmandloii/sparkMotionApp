@@ -51,12 +51,48 @@ exports.createEvent = async (req, res) => {
 };
 
 // Controller function to update an event (Admin only)
-// controllers/eventController.js
+//last code 
+// exports.updateEvent = async (req, res) => {
+//   try {
+//     const { eventId } = req.params;
+
+//     // Full event details from request body
+//     const {
+//       eventName,
+//       eventStartDate,
+//       eventEndDate,
+//       utmParams,
+//       expectedAttendees,
+//       location,
+//       destinationUrl,
+//       status,
+//       organizerIds
+//     } = req.body;
+
+//     // Call the service with all event fields
+//     const updatedEvent = await eventService.updateEvent(eventId, {
+//       eventName,
+//       eventStartDate,
+//       eventEndDate,
+//       utmParams,
+//       expectedAttendees,
+//       location,
+//       destinationUrl,
+//       status,
+//       organizers: organizerIds
+//     });
+
+//     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENT_UPDATED, updatedEvent);
+//   } catch (error) {
+//     console.error('Error in updateEvent controller:', error);
+//     return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, error.message || ErrorMessage.INTERNAL_SERVER_ERROR);
+//   }
+// };
+
 exports.updateEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
 
-    // Full event details from request body
     const {
       eventName,
       eventStartDate,
@@ -65,11 +101,35 @@ exports.updateEvent = async (req, res) => {
       expectedAttendees,
       location,
       destinationUrl,
-      status,
+      status,       // requested status from admin
       organizerIds
     } = req.body;
 
-    // Call the service with all event fields
+    // Validate status logic
+    const now = new Date();
+    let correctStatus;
+
+    if (eventStartDate && eventEndDate) {
+      if (now < new Date(eventStartDate)) {
+        correctStatus = "Upcoming";
+      } else if (now >= new Date(eventStartDate) && now <= new Date(eventEndDate)) {
+        correctStatus = "Active";
+      } else if (now > new Date(eventEndDate)) {
+        correctStatus = "Completed";
+      }
+    }
+
+    // If requested status doesn’t match the actual logic → reject
+    if (status && status !== correctStatus) {
+      return sendResponse(
+        res,
+        statusCode.BAD_REQUEST,
+        false,
+        `Invalid status update. Event should be "${correctStatus}" based on dates.`
+      );
+    }
+
+    // Call service for update
     const updatedEvent = await eventService.updateEvent(eventId, {
       eventName,
       eventStartDate,
@@ -78,7 +138,7 @@ exports.updateEvent = async (req, res) => {
       expectedAttendees,
       location,
       destinationUrl,
-      status,
+      status,  // will be same as correctStatus
       organizers: organizerIds
     });
 
@@ -88,7 +148,6 @@ exports.updateEvent = async (req, res) => {
     return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, error.message || ErrorMessage.INTERNAL_SERVER_ERROR);
   }
 };
-
 
 // Controller function to get all events created by an organizer
 exports.getMyEvents = async (req, res) => {

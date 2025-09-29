@@ -23,7 +23,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     const [eventEndDate, setEventEndDate] = useState('');
     const [expectAttendance, setExpectAttendance] = useState('');
     const [location, setLocation] = useState('');
-    const [baseUrl, setBaseUrl] = useState('');
+    const [baseUrl, setBaseUrl] = useState(process.env.REACT_APP_CLICK_BASE_URL_END_POINT);
     const [destinationUrl, setDestinationUrl] = useState('');
     const [organizer, setOrganizer] = useState('');
     const [utmSource, setUtmSource] = useState('');
@@ -36,6 +36,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredOrganizers, setFilteredOrganizers] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isDropdownVisibleStatus, setIsDropdownVisibleStatus] = useState(false)
     const [fieldErrors, setFieldErrors] = useState({});
     const organizerInputRef = useRef(null);
     const eventNameRef = useRef(null);
@@ -45,8 +46,10 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     const baseUrlRef = useRef(null);
     const destinationUrlRef = useRef(null);
     const organizerRef = useRef(null);
+    const statusRef = useRef(null)
     const eventEndDateRef = useRef(null);
-
+    const allStatus = ["Active", "Completed", "Upcoming"]
+    const [status, setStatus] = useState(eventToUpdate?.status ?? "Upcoming"); // Default to 'active'
 
 
     useEffect(() => {
@@ -85,6 +88,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
         setIsDropdownVisible(true);
     };
     const createEventHandler = async (data) => {
+        delete data.status;
 
         setLoading(true);
         // Simulate an API call with a delay
@@ -103,7 +107,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     const updateEventHandler = async (data) => {
 
         setLoading(true);
-
+        delete data.baseUrl;
         // Simulate an API call with a delay
         try {
             const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_EVENTS_END_POINT}/${eventToUpdate._id}`, data, { authorization: `Bearer ${userInfo.token}` });
@@ -124,115 +128,107 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     };
 
 
- const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-    let isValid = true;
-    const newFieldErrors = {};
+        let isValid = true;
+        const newFieldErrors = {};
 
-    // Event Name
-    if (!eventName.trim()) {
-        newFieldErrors.eventName = 'Event Name is required.';
-        isValid = false;
-    }
-
-    // Event Dates
-    if (!eventDate.trim()) {
-        newFieldErrors.eventDate = 'Event Date is required.';
-        isValid = false;
-    }
-    if (!eventEndDate.trim()) {
-        newFieldErrors.eventEndDate = 'Event End Date is required.';
-        isValid = false;
-    }
-
-    // Check if eventEndDate is after eventDate
-    if (eventDate && eventEndDate) {
-        const start = new Date(eventDate);
-        const end = new Date(eventEndDate);
-        if (end < start) {
-            newFieldErrors.eventEndDate = 'Event End Date must be after Event Date.';
+        // Event Name
+        if (!eventName.trim()) {
+            newFieldErrors.eventName = 'Event Name is required.';
             isValid = false;
         }
-    }   
 
-    // Expected Attendance
-    if (!String(expectAttendance).trim()) {
-        newFieldErrors.expectAttendance = 'Expected Attendance is required.';
-        isValid = false;
-    } else if (isNaN(expectAttendance) || Number(expectAttendance) <= 0) {
-        newFieldErrors.expectAttendance = 'Expected Attendance must be a positive number.';
-        isValid = false;
-    }
+        // Event Dates
+        if (!eventDate.trim()) {
+            newFieldErrors.eventDate = 'Event Date is required.';
+            isValid = false;
+        }
+        if (!eventEndDate.trim()) {
+            newFieldErrors.eventEndDate = 'Event End Date is required.';
+            isValid = false;
+        }
 
-    // Location
-    if (!location.trim()) {
-        newFieldErrors.location = 'Location is required.';
-        isValid = false;
-    }
+        // Check if eventEndDate is after eventDate
+        if (eventDate && eventEndDate) {
+            const start = new Date(eventDate);
+            const end = new Date(eventEndDate);
+            if (end < start) {
+                newFieldErrors.eventEndDate = 'Event End Date must be after Event Date.';
+                isValid = false;
+            }
+        }
 
-    // Base URL
-    if (!baseUrl.trim()) {
-        newFieldErrors.baseUrl = 'Base URL is required.';
-        isValid = false;
-    } else if (!/^https?:\/\/.+\..+/.test(baseUrl)) {
-        newFieldErrors.baseUrl = 'Base URL must be a valid URL.';
-        isValid = false;
-    }
+        // Expected Attendance
+        if (!String(expectAttendance).trim()) {
+            newFieldErrors.expectAttendance = 'Expected Attendance is required.';
+            isValid = false;
+        } else if (isNaN(expectAttendance) || Number(expectAttendance) <= 0) {
+            newFieldErrors.expectAttendance = 'Expected Attendance must be a positive number.';
+            isValid = false;
+        }
 
-    // Destination URL
-    if (!destinationUrl.trim()) {
-        newFieldErrors.destinationUrl = 'Destination URL is required.';
-        isValid = false;
-    } else if (!/^https?:\/\/.+\..+/.test(destinationUrl)) {
-        newFieldErrors.destinationUrl = 'Destination URL must be a valid URL.';
-        isValid = false;
-    }
+        // Location
+        if (!location.trim()) {
+            newFieldErrors.location = 'Location is required.';
+            isValid = false;
+        }
 
-    // Organizer
-    if (typeof selectedOrganizer !== "object" || !selectedOrganizer?._id.trim()) {
-        newFieldErrors.organizer = 'Organizer is required.';
-        isValid = false;
-    }
 
-    setFieldErrors(newFieldErrors);
+        // Destination URL
+        if (destinationUrl && (!/^https?:\/\/.+\..+/.test(destinationUrl))) {
+            newFieldErrors.destinationUrl = 'Destination URL must be a valid URL.';
+            isValid = false;
+        }
 
-    if (!isValid) {
-        // Scroll to first error field
-        if (newFieldErrors.eventName) eventNameRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.eventDate) eventDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.eventEndDate) eventEndDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.expectAttendance) expectAttendanceRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.location) locationRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.baseUrl) baseUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.destinationUrl) destinationUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        else if (newFieldErrors.organizer) organizerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-    }
+        // Organizer
+        if (typeof selectedOrganizer !== "object" || !selectedOrganizer?._id.trim()) {
+            newFieldErrors.organizer = 'Organizer is required.';
+            isValid = false;
+        }
 
-    // Payload
-    const payload = {
-        eventName,
-        eventStartDate: eventDate,
-        eventEndDate,
-        utmParams: {
-            utm_source: utmSource,
-            utm_medium: utmMedium,
-            utm_campaign: utmCampaign,
-            utm_term: utmTerm,
-            utm_content: utmContent
-        },
-        expectedAttendees: expectAttendance,
-        location,
-        baseUrl,
-        destinationUrl,
-        organizerIds: [selectedOrganizer?._id]
+        setFieldErrors(newFieldErrors);
+
+        if (!isValid) {
+            // Scroll to first error field
+            if (newFieldErrors.eventName) eventNameRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.eventDate) eventDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.eventEndDate) eventEndDateRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.expectAttendance) expectAttendanceRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.location) locationRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.baseUrl) baseUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.destinationUrl) destinationUrlRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            else if (newFieldErrors.organizer) organizerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        // Payload
+        const payload = {
+            eventName,
+            eventStartDate: eventDate,
+            eventEndDate,
+            utmParams: {
+                utm_source: utmSource,
+                utm_medium: utmMedium,
+                utm_campaign: utmCampaign,
+                utm_term: utmTerm,
+                utm_content: utmContent
+            },
+            expectedAttendees: expectAttendance,
+            location,
+            baseUrl,
+            destinationUrl,
+            organizerIds: [selectedOrganizer?._id],
+            status
+        };
+        if (!destinationUrl) {
+            delete payload.destinationUrl
+        }
+        console.log("payload", payload);
+        if (eventToUpdate) updateEventHandler(payload);
+        else createEventHandler(payload);
     };
-
-    console.log("payload", payload);
-    if (eventToUpdate) updateEventHandler(payload);
-    else createEventHandler(payload);
-};
 
 
     const getInputBorderClass = (fieldName) => {
@@ -241,15 +237,10 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
     async function getOrganizersList() {
         // Only attempt to fetch if a token exists
         if (!userInfo.token) {
-            // Optionally, handle the case where no token is available if necessary
             console.log("No token available. Skipping API call.");
             return;
         }
-
-
-        // setLoading(true);
         setError('');
-
         try {
             // Your existing API call
             const res = await apiConnecter(
@@ -261,9 +252,8 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                 }
             );
             setOrganizersList(res.data?.result ?? [])
-            setFilteredOrganizers(res.data.result ?? [])
+            setFilteredOrganizers(res?.data?.result ?? [])
             console.log("Organizers List:", res.data);
-            // console.log(response); // Store the response data
 
         } catch (err) {
             console.error("API Error:", err);
@@ -371,8 +361,8 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                         />
                                     </div>
                                     {fieldErrors.eventEndDate && (
-                                            <p className="mt-1 text-xs text-orange-600">{fieldErrors.eventEndDate}</p>
-                                        )}
+                                        <p className="mt-1 text-xs text-orange-600">{fieldErrors.eventEndDate}</p>
+                                    )}
                                 </div>
                             </div>
 
@@ -428,10 +418,11 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                         ref={baseUrlRef}
                                         id="baseUrl"
                                         type="text"
+                                        disabled={true}
                                         value={baseUrl}
                                         onChange={(e) => setBaseUrl(e.target.value)}
                                         placeholder="https://r.sparkmotion.app/eventcodes"
-                                        className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('baseUrl')}`}
+                                        className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-secondary)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('baseUrl')}`}
                                     />
                                     <p className="mt-1 text-xs text-[var(--color-text-secondary)]">Short URL for NFC bracelet redirects</p>
                                     {fieldErrors.baseUrl && (
@@ -482,9 +473,9 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                         <p className="mt-1 text-xs text-orange-600">{fieldErrors.organizer}</p>
                                     )}
                                 </div>
-                                {(isDropdownVisible && filteredOrganizers.length > 0) ? (
+                                {(isDropdownVisible && filteredOrganizers?.length > 0) ? (
                                     <ul className="absolute z-10 w-full mt-1 bg-[var(--color-surface-background)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
-                                        {filteredOrganizers.map(organizer => (
+                                        {filteredOrganizers?.map(organizer => (
                                             <li
                                                 key={organizer._id}
                                                 onClick={() => {
@@ -504,11 +495,6 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                         {[{ _id: "00", userName: "No Active Organizer Found. " }].map(organizer => (
                                             <li
                                                 key={organizer._id}
-                                                // onClick={() => {
-                                                //     setOrganizer(organizer.userName)
-                                                //     setSelectedOrganizer(organizer)
-                                                //     setIsDropdownVisible(false)
-                                                // }}
                                                 className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-bg-hover)] transition-colors duration-200"
                                             >
                                                 {organizer.userName}
@@ -517,43 +503,6 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                     </ul>
                                 )}
                             </div>
-                            {/* Organizer Selection Section */}
-                            {/* <div className="relative" ref={organizerInputRef}>
-                                <label htmlFor="organizer" className="block text-sm font-bold text-[var(--color-text-base)]">
-                                    Assign Organizer
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        id="organizer"
-                                        type="text"
-                                        value={searchTerm}
-                                        onChange={handleInputChange}
-                                        onFocus={handleInputFocus}
-                                        placeholder="Select or search for an organizer"
-                                        autoComplete="off"
-                                        className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('organizer')}`}
-                                    />
-                                    {fieldErrors.organizer && (
-                                        <p className="mt-1 text-xs text-orange-600">{fieldErrors.organizer}</p>
-                                    )}
-                                </div>
-
-
-                            </div> */}
-
-                            {/* Display selected organizer */}
-                            {/* {selectedOrganizer && (
-                                <div className="mt-6 p-4 bg-[var(--color-bg-highlight)] rounded-lg">
-                                    <p className="text-sm font-semibold text-[var(--color-text-base)]">
-                                        Selected Organizer: <span className="font-normal">{organizer.userName}</span>
-                                    </p>
-                                    <p className="text-xs text-[var(--color-text-subtle)]">
-                                        ID: {selectedOrganizer._id}
-                                    </p>
-                                </div>
-                            )} */}
-
-                            {/* UTM Parameters Section (optional) */}
                             <div>
                                 <h3 className="text-sm font-semibold text-[var(--color-text-base)] mb-1">UTM Parameters</h3>
                                 <p className="text-xs text-[var(--color-text-secondary)]">Add UTM parameters for campaign tracking and analytics</p>
@@ -650,6 +599,45 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                     </div>
                                 </div>
                             </div>
+                            {
+                                eventToUpdate &&
+                                <div ref={statusRef}>
+                                    <label htmlFor="status" className="block text-sm font-bold text-[var(--color-text-base)]">
+                                        Status
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            id="status"
+                                            value={status}
+                                            onChange={(e) => setStatus(e.target.value)}
+                                            onFocus={() => setIsDropdownVisibleStatus(true)}
+                                            className="block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none  transition-colors duration-200 focus:ring-1 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
+                                        >
+                                            {/* <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option> */}
+                                        </input>
+                                    </div>{
+                                        isDropdownVisibleStatus &&
+                                        <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                            {allStatus.map((status, index) => (
+                                                <li
+                                                    key={index}
+                                                    onClick={() => {
+                                                        setStatus(status)
+                                                        // setOrganizer(organizer.userName)
+                                                        // setSelectedOrganizer(organizer)
+                                                        setIsDropdownVisibleStatus(false)
+                                                    }}
+                                                    className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-primary-dark)] transition-colors duration-200 hover:"
+                                                >
+                                                    {status}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    }
+                                </div>
+                            }
+
 
                             {/* Buttons */}
                         </form>

@@ -39,12 +39,12 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
         setLoading(true);
         try {
             const response = await apiConnecter("GET", process.env.REACT_APP_GET_ORGANIZER_LIST_END_POINT, "", { authorization: `Bearer ${userInfo.token}` });
-            setOrganizers(response.data.result);
-            setFilteredOrganizers(response.data.result);
+            setOrganizers(response.data.result.organizers);
+            setFilteredOrganizers(response.data.result.organizers);
             // setSuccess(response.data.message);
         } catch (err) {
             console.error(err, "error fetching organizers");
-            setError(err?.response?.data?.message ?? err.message);
+            // Modal({ title: "Eror", message: err?.response?.data?.message ?? err.message });
         } finally {
             setLoading(false);
         }
@@ -58,15 +58,16 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
             loadingText: "Please wait while the organizer is being deleted...",
         });
         try {
-            await apiConnecter("DELETE", `${process.env.REACT_APP_DELETE_ORGANIZER_END_POINT}${id}`, "", { authorization: `Bearer ${userInfo.token}` });
+            await apiConnecter("DELETE", `${process.env.REACT_APP_DELETE_ORGANIZER_END_POINT}/${id}`, "", { authorization: `Bearer ${userInfo.token}` });
             setOrganizers(prevOrganizers => prevOrganizers.filter(organizer => organizer._id !== id));
             setFilteredOrganizers(prevOrganizers => prevOrganizers.filter(organizer => organizer._id !== id));
             setLoading(false);
             toast.dismiss(toastId);
-            setSuccess({ "message": "Organizer removed successfully", title: "Success" });
-            setShowModal(false)
+            Modal({
+                "message": "Organizer removed successfully", title: "Success"
+            })
         } catch (err) {
-            setError({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
+            Modal({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
             console.error(err, "error deleting organizer");
         }
         finally {
@@ -87,6 +88,16 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
     const handleDeleteClick = (organizer) => {
         setShowModal(true);
         setClickedOrganizer(organizer);
+        Modal({
+            title: "Do You Want To Delete ?",
+            message: error,
+            //iwant to give the two  buttons here text 
+            buttontxt: { accept: "Yes, Delete", decline: "No, Cancel" },
+            onClose: () => setError(''),
+            onAccept: () => { deleteOrganizer(organizer._id) },
+            onDecline: () => setShowModal(false),
+            showAcceptDecline: true
+        });
     };
 
     const renderEvents = (assignedEvents) => {
@@ -105,36 +116,36 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
         );
     };
     useEffect(() => {
-        if (error) {
-            Modal({
-                title: error.title || "Error",
-                message: error.message,
-            });
-        }
-        if (success) {
-            Modal({
-                title: success.title || "Success",
-                message: success.message,
-            });
+        // if (error) {
+        //     Modal({
+        //         title: error.title || "Error",
+        //         message: error.message,
+        //     });
+        // }
+        // if (success) {
+        //     Modal({
+        //         title: success.title || "Success",
+        //         message: success.message,
+        //     });
 
-        }
-        if (showModal && clickedOrganizer) {
-            Modal({
-                title: "Do You Want To Delete ?",
-                message: error,
-                //iwant to give the two  buttons here text 
-                buttontxt: { accept: "Yes, Delete", decline: "No, Cancel" },
-                onClose: () => setError(''),
-                onAccept: () => { deleteOrganizer(clickedOrganizer._id) },
-                onDecline: () => setShowModal(false),
-                showAcceptDecline: true
-            });
-        }
+        // }
+        // if (showModal && clickedOrganizer) {
+        //     Modal({
+        //         title: "Do You Want To Delete ?",
+        //         message: error,
+        //         //iwant to give the two  buttons here text 
+        //         buttontxt: { accept: "Yes, Delete", decline: "No, Cancel" },
+        //         onClose: () => setError(''),
+        //         onAccept: () => { deleteOrganizer(clickedOrganizer._id) },
+        //         onDecline: () => setShowModal(false),
+        //         showAcceptDecline: true
+        //     });
+        // }
 
-        setTimeout(() => {
-            setSuccess('');
-            setError('');
-        }, 3000);
+        // setTimeout(() => {
+        //     setSuccess('');
+        //     setError('');
+        // }, 3000);
     }, [error, success, showModal, clickedOrganizer, loading]);
 
     function searchOrganizers() {
@@ -203,7 +214,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                                 {loading ? (
                                     <tr><td colSpan="4" className="text-center py-4"><div className="loader"></div></td></tr>
                                 ) : (
-                                    filteredOrganizers?.map((organizer, index) => (
+                                    filteredOrganizers && Array.isArray(filteredOrganizers) && filteredOrganizers?.map((organizer, index) => (
                                         <tr key={index} className="border-b border-gray-700 hover:bg-gray-750">
                                             <td className={`py-4 px-6 ${COL_WIDTH}`}><div className="text-white font-medium">{organizer.userName}</div></td>
                                             <td className={`py-4 px-6 text-gray-300 ${COL_WIDTH}`}>{organizer.email}</td>
@@ -231,7 +242,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                     {loading ? (
                         <div className="text-center py-4"><div className="loader"></div></div>
                     ) : (
-                        filteredOrganizers?.map((organizer, index) => (
+                        filteredOrganizers && filteredOrganizers?.map((organizer, index) => (
                             <div key={index} className="bg-[var(--color-surface-background)] p-4 rounded-lg border border-[var(--border-color)]">
 
                                 {/* Organizer Name & Email */}

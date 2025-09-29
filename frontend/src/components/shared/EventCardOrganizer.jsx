@@ -10,13 +10,15 @@ import { useReactToPrint } from "react-to-print";
 import UrlInput from './UrlInput';
 import { apiConnecter } from '../../services/apiConnector';
 import Modal from "./ErrorModal";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { exportEventAsReport } from './exportEventAsTable';
 
 
 const EventCardOrganizer = ({ event, userInfo }) => {
+    console.log("---------customerevent", event)
     // safely handle undefined props
     const expectedAttendees = event?.expectedAttendees ?? 0;
+    const navigate = useNavigate();
     const clickCount = event?.clickCount ?? 0;
     const postEventClickCount = event?.postEventClickCount ?? 0;
 
@@ -43,7 +45,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
 
     // save API handler
     const handleSave = async () => {
-        if(loading) return
+        if (loading) return
         try {
             setLoading(true);
             const response = await apiConnecter(
@@ -69,6 +71,31 @@ const EventCardOrganizer = ({ event, userInfo }) => {
     };
 
     const handleCancel = () => setIsEditing(false);
+    const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
+        // console.log("-----Analyytaps", taps);
+        // console.log("-----Analyytaps2", engagement);
+        // console.log("-----Analyytaps3", postClick);
+        // console.log("-----Analyytaps4", attendance);
+
+        const tapsNum = Number(taps) || 0;
+        const postClickNum = Number(postClick) || 0;
+        // const engagementNum = Number(engagement) || 0;
+        // const attendanceNum = Number(attendance) || 0;
+
+        // rate in %
+        const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        console.log("---------postRate", postClickRate);
+
+        navigate(`/analytics/${eventId}`, {
+            state: {
+                totalTaps: tapsNum,
+                engagementRate: engagement,
+                postClickRate: `${postClickRate} % `, // e.g., 42.86
+                // postClickCount: postClickNum,
+                attendance: attendance,
+            }
+        });
+    };
 
     return (
         <div
@@ -102,7 +129,10 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                     <IconButton
                         color="text-[var(--color-primary)]"
                         label="View Analytics"
-                        onClick={() => alert("View Analytics clicked")}
+                        // onClick={() => alert("View Analytics clicked")}
+                        onClick={() =>
+                            handleAnalyticsClick(event?._id, event?.clickCount, engagementRate, event?.postEventClickCount, event?.expectedAttendees)
+                        }
                         hoverColor="hover:bg-gray-600"
                         bgColor="bg-[var(--color-surface-background)]"
                         border={true}

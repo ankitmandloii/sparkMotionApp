@@ -79,6 +79,7 @@ const OrganizerDashboard = () => {
     useEffect(() => {
         getAllEventsDataHandler()
     }, [])
+
     return (
         <div className='flex flex-col w-full m-5'>
             <div className="flex items-center justify-between mb-6">
@@ -102,7 +103,7 @@ const OrganizerDashboard = () => {
                     )
                 }
                 {
-                    !loading && eventsData.length == 0 && <>
+                    !loading && eventsData?.length == 0 && <>
                         <div className="text-center text-[var(--color-text-secondary)]   py-4 bg-[var(--color-surface-background)]">
                             <p className="">No events assigned.</p>
                         </div>

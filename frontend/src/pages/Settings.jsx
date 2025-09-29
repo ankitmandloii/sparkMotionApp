@@ -17,6 +17,7 @@ const Settings = () => {
 
     const handleChangePassword = async () => {
         setMessage('');
+        setMessage('');
         setFieldErrors({ oldPassword: '', newPassword: '' });
         // Simple validation
         if (!oldPassword) {
@@ -60,7 +61,7 @@ const Settings = () => {
     );
 
     return (
-        <div className='w-full m-4'>
+        <div className='w-full mx-4 mt-2'>
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-2xl font-semibold text-white">Settings</h2>

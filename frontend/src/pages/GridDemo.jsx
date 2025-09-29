@@ -208,7 +208,7 @@ const EngagementChart = ({ eventId, token }) => {
         const options = [
             { value: 'hourly', label: 'Hourly Data' },
             { value: 'daily', label: 'Daily Data' },
-            { value: 'monthly', label: 'Monthly Data' },
+            // { value: 'monthly', label: 'Monthly Data' },
         ];
         const currentOption = options.find((opt) => opt.value === timeRange);
 

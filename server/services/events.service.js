@@ -140,10 +140,12 @@ exports.updateEvent = async (eventId, eventDetails) => {
 };
 
 // Service function to get all events created by an organizer
-exports.getMyEvents = async (createdBy) => {
+exports.getMyEvents = async (createdBy, page, limit) => {
   try {
-    // Find all events where the organizer is the creator
-    const events = await eventSchema.find({ createdBy }).populate('organizers', 'userName email');
+    const events = await eventSchema.find({ createdBy })
+      .populate('organizers', 'userName email')
+      .skip((page - 1) * limit)
+      .limit(limit);
     return events;
   } catch (error) {
     console.error('Error fetching events:', error);

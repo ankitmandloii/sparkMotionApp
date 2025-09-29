@@ -2,31 +2,58 @@ const cronjob = require('node-cron');
 const eventSchema = require('../model/eventSchema');
 
 exports.createCronJobs = () => {
-    // Schedule a task to run every hour
-    cronjob.schedule('09 15 * * *', async () => {
-        await this.eventsStatusUpdate(); // Call your function here
-        console.log("Running cron job every hour");
+    
+    // Runs every hour at minute 0
+    cronjob.schedule('0 * * * *', async () => {
+        await this.eventsStatusUpdate(); 
+        await this.eventsStartUpdate();
+        console.log("Running cron job for event status updates...");
     });
 };
 
-
+// Update events from Active → Completed
 exports.eventsStatusUpdate = async () => {
     try {
         const currentTime = new Date();
 
+        // Find events that should now be marked Completed
         const eventsCompleted = await eventSchema.find({
             eventEndDate: { $lte: currentTime },
             status: "Active"
         });
-        if (!eventsCompleted.length) return;
-        console.log("events---", eventsCompleted)
-        await eventSchema.updateMany(
-            { _id: { $in: eventsCompleted.map(event => event._id) } },
-            { $set: { status: "Completed" } }
-        );
 
-    console.log("Event statuses updated based on current time.");
+        if (eventsCompleted.length > 0) {
+            await eventSchema.updateMany(
+                { _id: { $in: eventsCompleted.map(event => event._id) } },
+                { $set: { status: "Completed" } }
+            );
+            console.log(`✅ ${eventsCompleted.length} event(s) updated to Completed`);
+        }
     } catch (error) {
-        console.error("Error updating event statuses:", error);
+        console.error("❌ Error updating events to Completed:", error);
     }
-}
+};
+
+// Update events from Upcoming → Active
+exports.eventsStartUpdate = async () => {
+    try {
+        const currentTime = new Date();
+
+        // Find events that should now be marked Active
+        const eventsToStart = await eventSchema.find({
+            eventStartDate: { $lte: currentTime },
+            eventEndDate: { $gte: currentTime }, // still ongoing
+            status: "Upcoming"
+        });
+
+        if (eventsToStart.length > 0) {
+            await eventSchema.updateMany(
+                { _id: { $in: eventsToStart.map(event => event._id) } },
+                { $set: { status: "Active" } }
+            );
+            console.log(`✅ ${eventsToStart.length} event(s) updated to Active`);
+        }
+    } catch (error) {
+        console.error("❌ Error updating events to Active:", error);
+    }
+};

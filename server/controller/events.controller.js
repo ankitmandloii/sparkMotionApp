@@ -106,28 +106,28 @@ exports.updateEvent = async (req, res) => {
     } = req.body;
 
     // Validate status logic
-    const now = new Date();
-    let correctStatus;
+    // const now = new Date();
+    // let correctStatus;
 
-    if (eventStartDate && eventEndDate) {
-      if (now < new Date(eventStartDate)) {
-        correctStatus = "Upcoming";
-      } else if (now >= new Date(eventStartDate) && now <= new Date(eventEndDate)) {
-        correctStatus = "Active";
-      } else if (now > new Date(eventEndDate)) {
-        correctStatus = "Completed";
-      }
-    }
+    // if (eventStartDate && eventEndDate) {
+    //   if (now < new Date(eventStartDate)) {
+    //     correctStatus = "Upcoming";
+    //   } else if (now >= new Date(eventStartDate) && now <= new Date(eventEndDate)) {
+    //     correctStatus = "Active";
+    //   } else if (now > new Date(eventEndDate)) {
+    //     correctStatus = "Completed";
+    //   }
+    // }
 
-    // If requested status doesn’t match the actual logic → reject
-    if (status && status !== correctStatus) {
-      return sendResponse(
-        res,
-        statusCode.BAD_REQUEST,
-        false,
-        `Invalid status update. Event should be "${correctStatus}" based on dates.`
-      );
-    }
+    // // If requested status doesn’t match the actual logic → reject
+    // if (status && status !== correctStatus) {
+    //   return sendResponse(
+    //     res,
+    //     statusCode.BAD_REQUEST,
+    //     false,
+    //     `Invalid status update. Event should be "${correctStatus}" based on dates.`
+    //   );
+    // }
 
     // Call service for update
     const updatedEvent = await eventService.updateEvent(eventId, {

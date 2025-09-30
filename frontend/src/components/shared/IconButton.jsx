@@ -12,13 +12,13 @@ const IconButton = ({
 }) => {
     return (
         <button
-            className={`text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer ${bgColor} ${hoverColor} ${border ? 'border border-[#262626]' : ''} ${disabled  ? "opacity-[0.5] cursor-not-allowed pointer-events-none" : ""}`}
+            className={`text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer ${bgColor} ${hoverColor} ${border ? 'border border-[#262626]' : ''} ${disabled ? "opacity-[0.5] cursor-not-allowed pointer-events-none" : ""}`}
 
             onClick={onClick}
         >
             {/* Show icon on small screens only */}
             {Icon && (
-                <Icon className="w-4 h-4 sm:hidden" />
+                <Icon className="w-4 h-4 sm:block " />
             )}
 
             {/* Show label on larger screens and hide on small screens */}

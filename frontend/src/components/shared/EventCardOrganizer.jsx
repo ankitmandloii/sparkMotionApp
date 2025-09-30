@@ -4,7 +4,7 @@ import { IoLocationOutline } from "react-icons/io5";
 import IconButton from './IconButton';
 import { FaCheck } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
-import { CalendarIcon, DownloadIcon, EditIcon, ShareIcon } from '../../assets/icons/icons';
+import { AnalyticIcon, CalendarIcon, DownloadIcon, EditIcon, ShareIcon } from '../../assets/icons/icons';
 import Badge from './Badge';
 import { useReactToPrint } from "react-to-print";
 import UrlInput from './UrlInput';
@@ -165,7 +165,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
 
     const handleCancel = () => {
         setIsEditing(false)
-        setNewDestinationUrl(event.destinationUrl?event.destinationUrl:"")
+        setNewDestinationUrl(event.destinationUrl ? event.destinationUrl : "")
     };
     const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
         // console.log("-----Analyytaps", taps);
@@ -230,6 +230,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                         disabled={loading}
                     />
                     <IconButton
+                        icon={AnalyticIcon}
                         color="text-[var(--color-primary)]"
                         label="View Analytics"
                         // onClick={() => alert("View Analytics clicked")}

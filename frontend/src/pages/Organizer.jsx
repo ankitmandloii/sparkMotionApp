@@ -552,7 +552,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                         {loading && filteredOrganizers.length === 0 ? (
                             <div className="text-center py-8">
                                 <div className="loader"></div>
-                                <p className="text-gray-400 mt-2">Loading organizers...</p>
+                                {/* <p className="text-gray-400 mt-2">Loading organizers...</p> */}
                             </div>
                         ) : (
                             <InfiniteScroll
@@ -602,7 +602,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                                                                     : 'bg-transparent'
                                                         }
                                                         textColor={(organizer?.status?.toLowerCase() === 'active') ? 'text-black' : 'text-white'}
-                                                        borderColor={(organizer?.status?.toLowerCase() === 'upcoming') ? 'border-gray-700' : ''}
+                                                        borderColor={(organizer?.status?.toLowerCase() === 'inactive') ? 'border-gray-700' : ''}
                                                     />
                                                 </td>
                                                 <td className={`py-4 px-6 ${COL_WIDTH}`}>
@@ -642,7 +642,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                     {loading && filteredOrganizers.length === 0 ? (
                         <div className="text-center py-8">
                             <div className="loader"></div>
-                            <p className="text-gray-400 mt-2">Loading organizers...</p>
+                            {/* <p className="text-gray-400 mt-2">Loading organizers...</p> */}
                         </div>
                     ) : (
                         <InfiniteScroll

@@ -32,7 +32,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
         : "0.00";
 
     // state for editing destination URL
-    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl.trim() ? event?.destinationUrl : "N/A");
+    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl?.trim() ? event?.destinationUrl : "N/A");
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
 

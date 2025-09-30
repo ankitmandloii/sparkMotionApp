@@ -63,7 +63,7 @@ const Settings = () => {
     );
 
     return (
-        <div className='w-full mx-4 mt-2'>
+        <div className='w-full m-4 '>
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-2xl font-semibold text-white">Settings</h2>
@@ -113,7 +113,7 @@ const Settings = () => {
                 </div>
             </div>
 
-            <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-6 mt-3">
+            {/* <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-6 mt-3">
                 <h3 className="text-md text-[#fafafa]">Brand Settings</h3>
                 <p className="text-gray-400 text-sm mt-1">Customize the SparkMotion brand appearance</p>
 
@@ -126,7 +126,7 @@ const Settings = () => {
                         <p className="text-sm text-gray-400">Current brand mark</p>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

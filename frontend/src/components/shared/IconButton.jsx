@@ -1,28 +1,3 @@
-// // IconButton.js
-// // IconButton.js
-// import React from 'react';
-
-// const IconButton = ({
-//     icon: Icon,
-//     label,
-//     onClick,
-//     bgColor = 'bg-orange-500',  // Default background color
-//     hoverColor = 'hover:bg-orange-600',  // Default hover color
-// }) => {
-//     return (
-//         <button
-//             className={` text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer ${bgColor} ${hoverColor}`}
-//             onClick={onClick}
-//         >
-//             {Icon && <Icon className="w-4 h-4" />}
-//             <span className="text-sm font-medium">{label}</span>
-//         </button>
-//     );
-// };
-
-// export default IconButton;
-
-// IconButton.js
 import React from 'react';
 
 const IconButton = ({
@@ -41,12 +16,13 @@ const IconButton = ({
 
             onClick={onClick}
         >
+            {/* Show icon on small screens only */}
             {Icon && (
-                <Icon
-                    className="w-4 h-4 hidden sm:block"  // Hide icon on small devices, show on medium and larger screens
-                />
+                <Icon className="w-4 h-4 sm:hidden" />
             )}
-            <span className={`text-sm font-medium ${color ? color : ''} sm:block`}>
+
+            {/* Show label on larger screens and hide on small screens */}
+            <span className="text-sm font-medium sm:block hidden">
                 {label}
             </span>
         </button>
@@ -54,5 +30,3 @@ const IconButton = ({
 };
 
 export default IconButton;
-
-

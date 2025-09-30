@@ -137,7 +137,7 @@ const Overview = () => {
             <main>
                 <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h2 className="text-2xl font-semibold text-white">Overview</h2>
+                        <h2 className="md:text-2xl font-semibold text-white   text-xl ">Overview</h2>
                         <p className="text-[var(--color-grey)] text-sm mt-1">
                             Get a detailed summary of the event's performance and key metrics.
                         </p>

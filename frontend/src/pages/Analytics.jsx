@@ -3,7 +3,8 @@ import StatCard from '../components/shared/StatsCard'
 import { CalendarIcon, PeopleIcon, AnalyticIcon, DownloadIcon } from '../assets/icons/icons'
 import GridDemo from './GridDemo'
 import { useLocation, useNavigate, useParams } from 'react-router'
-import { FaArrowLeftLong } from "react-icons/fa6";
+// import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa";
 import IconButton from '../components/shared/IconButton'
 import { useSelector } from 'react-redux'
 import { apiConnecter } from '../services/apiConnector'
@@ -52,13 +53,31 @@ const Analytics = () => {
             // setLoading(false);
         }
     };
+
+    // Function to calculate the number of events in the last 24 hours
+    const calculateLast24HoursClicks = () => {
+        if (!analyticsData || !analyticsData.analyticsData) return 0;
+
+        const currentTime = new Date();
+        const last24Hours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        const eventsInLast24Hours = analyticsData.analyticsData.filter(event => {
+            const eventTimestamp = new Date(event.timestamp);
+            return currentTime - eventTimestamp <= last24Hours;
+        });
+
+        return eventsInLast24Hours.length;
+    }
+
+    const last24HoursClicks = calculateLast24HoursClicks();
+    // console.log("------last24HoursClicks", last24HoursClicks)
     useEffect(() => {
         getClickAnalysis();
     }, [])
     return (
         <div className='w-full m-5' >
             <div className="flex gap-2 flex-wrap justify-between mb-2">
-                <h2 className="text-2xl font-semibold text-white  flex gap-3 cursor-pointer  "><span className='mt-1' onClick={() => navigate(-1)}><FaArrowLeftLong /></span>Event Analytics </h2>
+                <h2 className="text-2xl font-semibold text-white  flex gap-3 cursor-pointer   "><span className='mt-1 ' onClick={() => navigate(-1)}><FaArrowLeft /></span>Event Analytics </h2>
                 <IconButton
                     icon={DownloadIcon}
                     label="Export"
@@ -72,7 +91,7 @@ const Analytics = () => {
 
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
-                <StatCard title="Total Taps" value={totalTaps} icon={CalendarIcon} description="+125 in last 24h" />
+                <StatCard title="Total Taps" value={totalTaps} icon={CalendarIcon} description={`+${last24HoursClicks} in last 24h`} />
                 <StatCard title="Engagement Rate" value={engagementRate + " %"} icon={PeopleIcon} description={`${totalTaps} of ${attendance} attendees`} />
                 <StatCard title="Total Taps" value={postClick + " %"} icon={AnalyticIcon} description="Still engaging after event" />
                 {/* <StatCard title=" Active Organizers" value="3" icon={PeopleIcon} description="4,500 taps during peak hour" /> */}

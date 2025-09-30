@@ -23,7 +23,7 @@ exports.createOrganizer = async (req, res) => {
     }
 
     // Step 2: Send the welcome email
-    const organizerDashboardLink = process.env.ORGANIZER_DASHBOARD_LINK || 'http://localhost:3000/organizer-dashboard';
+    const organizerDashboardLink = process.env.ORGANIZER_DASHBOARD_LINK ;
     const sendEmailResult = await organizersService.sendWelcomeOrganizerEmail({ email, password, organizerDashboardLink });
 
     if (!sendEmailResult) {

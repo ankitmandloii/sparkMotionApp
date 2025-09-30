@@ -168,11 +168,11 @@ const GeographicChart = ({ eventId, token }) => {
 
             {!loading && !error && (
                 <div className="h-96">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={currentData} margin={{ top: 20, right: 30, left: 60, bottom: 5 }} layout="vertical">
+                    <ResponsiveContainer width="100%" height="100%" >
+                        <BarChart data={currentData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} layout="vertical" >
                             <CartesianGrid strokeDasharray="1 1" stroke="#333333" horizontal={false} vertical={true} />
                             <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 11 }} domain={[0, 'auto']} />
-                            <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#ffffff', fontSize: 12 }} width={120} />
+                            <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#ffffff', fontSize: 12 }} width={100} className='bg-red-400' />
                             {/* <Tooltip /> */}
                             <Tooltip
                                 content={<CustomBarTooltip />}

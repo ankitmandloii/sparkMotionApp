@@ -282,7 +282,7 @@ const Events = () => {
                     )}
                 </InfiniteScroll>
             </div>
-            {showForm && <CreateEventForm setShowForm={setShowForm} eventToUpdate={eventToUpdate} onCancel={() => setShowForm(false)} setSuccess={setSuccess} setError={setError} setAllEvents={setAllEvents} />}
+            {showForm && <CreateEventForm setShowForm={setShowForm} eventToUpdate={eventToUpdate} onCancel={() => setShowForm(false)} setSuccess={setSuccess} setError={setError} setAllEvents={setAllEvents} getAllEventsHandler={getAllEventsHandler} />}
         </div>
     );
 };

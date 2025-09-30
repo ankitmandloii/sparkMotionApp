@@ -5,27 +5,27 @@ const eventSchema = require('../model/eventSchema'); // Import eventSchema model
 exports.createEvent = async (eventDetails, createdBy) => {
   try {
     // Destructure the eventDetails to get the necessary fields
-    const { 
-      eventName, 
-      eventStartDate, 
-      eventEndDate, 
-      utmParams, 
-      expectedAttendees, 
-      location, 
-      baseUrl, 
+    const {
+      eventName,
+      eventStartDate,
+      eventEndDate,
+      utmParams,
+      expectedAttendees,
+      location,
+      baseUrl,
       destinationUrl,
-      organizerIds  
+      organizerIds
     } = eventDetails;
 
-  
+
     // Create a new event object
     const newEvent = new eventSchema({
       eventName,
       eventStartDate,
       eventEndDate,
-      utmParams, 
-      expectedAttendees, 
-      location, 
+      utmParams,
+      expectedAttendees,
+      location,
       baseUrl,
       createdBy,
       status: 'Upcoming',  // The event will start as "Upcoming"
@@ -43,12 +43,12 @@ exports.createEvent = async (eventDetails, createdBy) => {
     const utm_termData = newEvent?.utmParams?.utm_term || "NA";
     const utm_contentData = newEvent?.utmParams?.utm_content || "NA";
 
-   
-   const eventId = newEvent._id;
-   console.log("New Event ID:", eventId, "Base URL:", baseUrl + eventId); // Debugging line to check the new event ID
-   const fullUrlForHit = baseUrl + eventId + `?utm_source=${utm_sourceData}&utm_medium=${utm_mediumData}&utm_campaign=${utm_campaignData}&utm_term=${utm_termData}&utm_content=${utm_contentData}`;
-   const UpdatedData = await eventSchema.findByIdAndUpdate(eventId, { baseUrl: fullUrlForHit }, { new: true }).populate('organizers');
-  
+
+    const eventId = newEvent._id;
+    console.log("New Event ID:", eventId, "Base URL:", baseUrl + eventId); // Debugging line to check the new event ID
+    const fullUrlForHit = baseUrl + eventId + `?utm_source=${utm_sourceData}&utm_medium=${utm_mediumData}&utm_campaign=${utm_campaignData}&utm_term=${utm_termData}&utm_content=${utm_contentData}`;
+    const UpdatedData = await eventSchema.findByIdAndUpdate(eventId, { baseUrl: fullUrlForHit }, { new: true }).populate('organizers');
+
     return UpdatedData;  // Return the created event
   } catch (error) {
     console.error('Error creating event:', error);
@@ -128,7 +128,7 @@ exports.updateEvent = async (eventId, eventDetails) => {
       { new: true, runValidators: true }  // Return updated doc + run schema validators
     ).populate('organizers'); // Populate organizers with selected fields
 
-   
+
     if (!updatedEvent) {
       throw new Error('Event not found');
     }
@@ -140,11 +140,25 @@ exports.updateEvent = async (eventId, eventDetails) => {
   }
 };
 
+// // Service function to get all events created by an organizer
+// exports.getMyEvents = async (createdBy, page, limit) => {
+//   try {
+//     const events = await eventSchema.find({ createdBy })
+//       .populate('organizers', 'userName email phoneNumber status') // Populate organizers with selected fields
+//       .skip((page - 1) * limit)
+//       .limit(limit);
+//     return events;
+//   } catch (error) {
+//     console.error('Error fetching events:', error);
+//     throw error;
+//   }
+// };
 // Service function to get all events created by an organizer
 exports.getMyEvents = async (createdBy, page, limit) => {
   try {
     const events = await eventSchema.find({ createdBy })
       .populate('organizers', 'userName email phoneNumber status') // Populate organizers with selected fields
+      .sort({ createdAt: -1 })  // Sort by createdAt in descending order (latest first)
       .skip((page - 1) * limit)
       .limit(limit);
     return events;
@@ -153,6 +167,7 @@ exports.getMyEvents = async (createdBy, page, limit) => {
     throw error;
   }
 };
+
 
 exports.getEventsByOrganizerId = async (organizerId) => {
   try {
@@ -199,7 +214,7 @@ exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees
     const event = await eventSchema.findById(eventId);
 
     if (!event) {
-      throw new Error('event not found');
+      throw new Error('Event not found');
     }
 
     // Check if the user is part of the event's organizers
@@ -208,7 +223,12 @@ exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees
     }
 
     event.destinationUrl = destinationUrl;
-    event.expectedAttendees = parseInt(expectedAttendees);
+
+    // Update expectedAttendees only if it's provided
+    if (expectedAttendees !== undefined && expectedAttendees !== null) {
+      event.expectedAttendees = parseInt(expectedAttendees); // Ensure it's an integer
+    }
+
     await event.save();
 
     return event;

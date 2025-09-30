@@ -105,7 +105,9 @@ const Overview = () => {
         // const attendanceNum = Number(attendance) || 0;
 
         // rate in %
-        const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        // const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        const postClickRate = tapsNum > 0 ? (tapsNum / postClickNum) * 100 : 0;
+
         console.log("---------postRate", postClickRate);
 
         navigate(`/analytics/${eventId}`, {

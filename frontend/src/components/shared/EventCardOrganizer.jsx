@@ -84,7 +84,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
         // const attendanceNum = Number(attendance) || 0;
 
         // rate in %
-        const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        const postClickRate = tapsNum > 0 ? (tapsNum / postClickNum) * 100 : 0;
         console.log("---------postRate", postClickRate);
 
         navigate(`/analytics/${eventId}`, {
@@ -110,10 +110,22 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                         {event?.eventName ?? "Platform Configuration"}
                     </h3>
                     {event?.status && (
+                        // <Badge
+                        //     label={event.status}
+                        //     bgColor={event.status === "Active" ? "bg-[#fafafa]" : "bg-[#262626]"}
+                        //     textColor={event.status === "Active" ? "text-black" : "text-[#fafafa]"}
+                        // />
                         <Badge
                             label={event.status}
-                            bgColor={event.status === "Active" ? "bg-[#fafafa]" : "bg-[#262626]"}
-                            textColor={event.status === "Active" ? "text-black" : "text-[#fafafa]"}
+                            bgColor={
+                                event.status === 'Active'
+                                    ? 'bg-[#fafafa]'
+                                    : event.status === 'Completed'
+                                        ? 'bg-[#262626]'
+                                        : 'bg-transparent'
+                            }
+                            textColor={event.status === 'Active' ? 'text-black' : 'text-white'}
+                            borderColor={event.status === 'Upcoming' ? 'border-gray-700' : ''}
                         />
                     )}
                 </div>

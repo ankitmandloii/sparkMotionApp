@@ -13,7 +13,7 @@ const SparkMotionLogo = () => (
 );
 
 
-const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSuccess, setError, setAllEvents }) => {
+const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSuccess, setError, setAllEvents, getAllEventsHandler }) => {
     // State for all form fields
     const navigate = useNavigate();
     const userInfo = useSelector((state) => state.userInfo)
@@ -96,7 +96,8 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
             const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_EVENTS_END_POINT, data, { authorization: `Bearer ${userInfo.token}` });
             console.log("data from server", response.data)
             setSuccess({ title: "Success", message: response.data.message });
-            setAllEvents(prevEvents => [...prevEvents, response.data.result]); // Append the new event to the existing list
+            getAllEventsHandler();
+            // setAllEvents(prevEvents => [...prevEvents, response.data.result]); // Append the new event to the existing list
             onCancel();
         } catch (err) {
             setError({ title: "Error", message: err?.response?.data?.message ?? err.message });

@@ -8,17 +8,17 @@ const { ErrorMessage, SuccessMessage } = require('../constant/messages.js');
 // Controller function to create an event (Admin only)
 exports.createEvent = async (req, res) => {
   try {
-    const { 
-      eventName, 
-      eventStartDate, 
-      eventEndDate, 
-      utmParams, 
-      expectedAttendees, 
-      location, 
-      baseUrl, 
+    const {
+      eventName,
+      eventStartDate,
+      eventEndDate,
+      utmParams,
+      expectedAttendees,
+      location,
+      baseUrl,
       destinationUrl,
-      organizerIds 
-      } = req.body;
+      organizerIds
+    } = req.body;
 
     const createdBy = req.user._id;  // Get the ID of the user creating the event (Admin)
 
@@ -39,8 +39,8 @@ exports.createEvent = async (req, res) => {
     if (!newEvent) {
       return sendResponse(res, statusCode.BAD_REQUEST, false, ErrorMessage.EVENT_CREATION_FAILED);
     }
-   
-   
+
+
 
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENT_CREATED, newEvent);
@@ -154,7 +154,7 @@ exports.getMyEvents = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
     const createdBy = req.user._id;  // Assuming req.user contains the logged-in organizer
-  
+
     // Call the service to get events for the organizer
     const events = await eventService.getMyEvents(createdBy, page, limit);
 

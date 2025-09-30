@@ -27,7 +27,9 @@ const EventCard = ({ event, onEdit }) => {
         // const attendanceNum = Number(attendance) || 0;
 
         // rate in %
-        const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        // const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+        const postClickRate = tapsNum > 0 ? (tapsNum / postClickNum) * 100 : 0;
+
         console.log("---------postRate", postClickRate);
 
         navigate(`/analytics/${eventId}`, {
@@ -47,10 +49,22 @@ const EventCard = ({ event, onEdit }) => {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center  mb-4">
                 <div className="flex items-center space-x-3 mb-2 sm:mb-0 justify-between">
                     <h3 className="text-lg sm:text-xl font-semibold text-white truncate">{event.eventName}</h3>
-                    <Badge
+                    {/* <Badge
                         label={event.status}
                         bgColor={event.status === 'Active' ? 'bg-[#fafafa]' : 'bg-[#262626]'}
                         textColor={event.status === 'Active' ? 'text-black' : 'text-[#fafafa]'}
+                    /> */}
+                    <Badge
+                        label={event.status}
+                        bgColor={
+                            event.status === 'Active'
+                                ? 'bg-[#fafafa]'
+                                : event.status === 'Completed'
+                                    ? 'bg-[#262626]'
+                                    : 'bg-transparent'
+                        }
+                        textColor={event.status === 'Active' ? 'text-black' : 'text-white'}
+                        borderColor={event.status === 'Upcoming' ? 'border-gray-700' : ''}
                     />
                 </div>
                 <div className="flex items-center space-x-2">

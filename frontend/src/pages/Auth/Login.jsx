@@ -206,7 +206,7 @@ import Modal from '../../components/shared/ErrorModal';
 import { login } from '../../redux/slices/userInfoSlice';
 import { useNavigate } from 'react-router';
 import API_ENDPOINTS from '../../data/EndPoints';
-
+import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 
 const SparkMotionLogo = () => (
     <img src={logo} className='mb-3 w-[160px] h-[50px] object-contain'></img>
@@ -219,10 +219,13 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch()
 
     const [fieldErrors, setFieldErrors] = useState({ email: '', password: '' });
-
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
@@ -326,8 +329,10 @@ const Login = () => {
                                 </div>
                             </div>
 
+
+
                             {/* Password */}
-                            <div>
+                            {/* <div>
                                 <label htmlFor="password" className="block text-sm font-semibold text-[var(--color-text-base)]">
                                     Password
                                 </label>
@@ -344,6 +349,29 @@ const Login = () => {
                                         <p className="mt-1 text-xs text-orange-600">{fieldErrors.password}</p>
                                     )}
                                 </div>
+                            </div> */}
+                            <div>
+                                <label htmlFor="password" className="block text-sm font-bold text-[var(--color-text-base)]">
+                                    Password
+                                </label>
+                                <div className="mt-2 relative">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter Password"
+                                        className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('password')}`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-300 transition-colors duration-200 text-lg"
+                                    >
+                                        {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                                    </button>
+                                </div>
+                                {fieldErrors.password && <p className="mt-1 text-xs text-orange-600">{fieldErrors.password}</p>}
                             </div>
 
                             {/* Button */}

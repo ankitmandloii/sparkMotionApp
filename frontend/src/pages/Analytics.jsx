@@ -7,6 +7,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import IconButton from '../components/shared/IconButton'
 import { useSelector } from 'react-redux'
 import { apiConnecter } from '../services/apiConnector'
+import exportToCSVRow from '../services/exportToCSVRow'
 const Analytics = () => {
     const { id } = useParams();
     const { state } = useLocation();
@@ -25,6 +26,13 @@ const Analytics = () => {
         setAttendance(state?.attendance);
     }, [state])
 
+
+    function handleExport() {
+        console.log('analyticsData', analyticsData)
+        if (analyticsData) {
+            exportToCSVRow(analyticsData)
+        }
+    }
     const getClickAnalysis = async () => {
         // setLoading(true);
         try {
@@ -33,7 +41,7 @@ const Analytics = () => {
             const response = await apiConnecter("GET", `${process.env.REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT}/${id}`,
                 null, { authorization: `Bearer ${userInfo.token}` });
             console.log("get REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT response", response);
-            // setSuccess(response.data.message);
+            setAnalyticsData(response.data.result.analyticsData);
             // setEventData(response.data.result);
             // setFilteredEvents(response.data.result);
         } catch (err) {
@@ -52,7 +60,7 @@ const Analytics = () => {
                 <IconButton
                     icon={DownloadIcon}
                     label="Export"
-                    onClick={() => { }}
+                    onClick={handleExport}
                     hoverColor="hover:bg-gray-600"
                     bgColor="bg-[var(--color-surface-background)]"
                     border={true}

@@ -34,8 +34,8 @@ exports.trackClick = async (req, res) => {
 
     const destinationUrl = eventDetails.destinationUrl;  // Get the destination URL from the event
     const eventEndDate = eventDetails.eventEndDate;
-    
-   
+
+
 
     // Get the user's geolocation data from IP (using a third-party service like ipstack or ipinfo)
     const geoData = await getGeolocationData(ipAddress);
@@ -54,8 +54,8 @@ exports.trackClick = async (req, res) => {
       console.log("No geolocation data available for IP:", ipAddress);
     }
 
-   
-  
+
+
     // Store the analytics data in the database
     const newClick = new ClickAnalytics({
       eventId,
@@ -73,7 +73,7 @@ exports.trackClick = async (req, res) => {
 
     await newClick.save();
 
-     // Only track the click if the current date is after the event's end date
+    // Only track the click if the current date is after the event's end date
     const currentDate = new Date();
     const postEventClick = currentDate > new Date(eventEndDate);  // Check if the click is after the event
     if (postEventClick) {
@@ -83,8 +83,8 @@ exports.trackClick = async (req, res) => {
     // Increment the click count for the event
     await eventSchema.findByIdAndUpdate(eventId, { $inc: { clickCount: 1 } });
 
-  
-  
+
+
     // Redirect the user to the destination URL
     res.redirect(destinationUrl || 'https://sparkmotion.net/');
     // sendResponse(res, statusCode.OK, true, 'Click tracked successfully', { redirectURL: destinationUrl });
@@ -179,6 +179,7 @@ exports.getClickAnalytics = async (req, res) => {
       clickCount: event.clickCount,
       postEventClickCount: event.postEventClickCount,  // Return the postEventClickCount from the event schema
       analyticsData,
+      eventName: event.eventName,
       utmData
     });
   } catch (error) {
@@ -217,7 +218,7 @@ exports.getClickTimeline = async (req, res) => {
     // }
 
     const eventData = await eventSchema.findById(eventId);
-    
+
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.ANALYTICS_FETCHED, {
       eventData: eventData || {},

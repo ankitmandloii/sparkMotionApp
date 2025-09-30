@@ -238,25 +238,71 @@ exports.getClickTimeline = async (req, res) => {
   }
 };
 
-// Helper function to group clicks by day
+
+// Helper function to group clicks by day and sort them by date
 const groupClicksByDay = (clicks) => {
-  return clicks.reduce((acc, click) => {
+  const grouped = clicks.reduce((acc, click) => {
     const day = moment(click.timestamp).format('YYYY-MM-DD');
+    
+    // Skip invalid timestamps
+    const timestamp = moment(click.timestamp);
+    if (!timestamp.isValid()) {
+      console.warn('Invalid timestamp:', click.timestamp);  // Log the invalid timestamp
+      return acc;
+    }
+
     if (!acc[day]) acc[day] = 0;
     acc[day] += 1;
     return acc;
   }, {});
+
+  // Sort the grouped data by date (ascending order)
+  const sortedGrouped = Object.entries(grouped)
+    .sort(([dayA], [dayB]) => {
+      const dateA = new Date(dayA);
+      const dateB = new Date(dayB);
+      return dateA - dateB;  // Sort by date in ascending order
+    })
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  return sortedGrouped;
 };
 
-// Helper function to group clicks by hour
+// Helper function to group clicks by hour and sort them by date & time
 const groupClicksByHour = (clicks) => {
-  return clicks.reduce((acc, click) => {
-    const hour = moment(click.timestamp).format('YYYY-MM-DD HH');
+  const grouped = clicks.reduce((acc, click) => {
+    const hour = moment(click.timestamp).format('YYYY-MM-DD HH:00');
+
+    // Skip invalid timestamps
+    const timestamp = moment(click.timestamp);
+    if (!timestamp.isValid()) {
+      console.warn('Invalid timestamp:', click.timestamp);  // Log the invalid timestamp
+      return acc;
+    }
+
     if (!acc[hour]) acc[hour] = 0;
     acc[hour] += 1;
     return acc;
   }, {});
+
+  // Sort the grouped data by date and time (ascending order)
+  const sortedGrouped = Object.entries(grouped)
+    .sort(([hourA], [hourB]) => {
+      const dateA = new Date(hourA);
+      const dateB = new Date(hourB);
+      return dateA - dateB;  // Sort by date and hour in ascending order
+    })
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+
+  return sortedGrouped;
 };
+
 
 // Helper function to group clicks by month
 // const groupClicksByMonth = (clicks) => {

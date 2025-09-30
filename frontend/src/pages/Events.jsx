@@ -139,7 +139,7 @@ import Modal from '../components/shared/ErrorModal';
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-280px)]';
+const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-240px)]';
 const Events = () => {
     const userInfo = useSelector((state) => state.userInfo);
     const [showForm, setShowForm] = useState(false);

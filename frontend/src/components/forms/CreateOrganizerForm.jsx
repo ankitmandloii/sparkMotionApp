@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { apiConnecter } from '../../services/apiConnector';
 import { useNavigate } from 'react-router';
 
-const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, setError }) => {
+const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, setError, getAllOrganizers }) => {
     const userInfo = useSelector((state) => state.userInfo);
     const navigate = useNavigate();
     const [name, setName] = useState('');
@@ -46,13 +46,15 @@ const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, s
         try {
             const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_ORGANIZER_END_POINT, {
                 userName: name, email, phoneNumber: number, password, role: "organizer", status: "active"
-            }, { authorization: `Bearer ${userInfo.token}` });  
+            }, { authorization: `Bearer ${userInfo.token}` });
             // setSuccess({ "message": response.data.message, title: "Success" });
             onCancel();
             Modal({
                 "message": response.data.message,
                 title: "Success"
             })
+            setLoading(false);
+            getAllOrganizers()
 
         } catch (err) {
             console.log(err, "error");
@@ -77,6 +79,8 @@ const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, s
                 "message": response.data.message,
                 title: "Success"
             })
+            setLoading(false);
+            getAllOrganizers()
 
         } catch (err) {
             console.log(err, "errror")

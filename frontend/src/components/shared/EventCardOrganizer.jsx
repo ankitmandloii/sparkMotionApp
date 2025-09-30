@@ -12,6 +12,7 @@ import { apiConnecter } from '../../services/apiConnector';
 import Modal from "./ErrorModal";
 import { Link, useNavigate } from "react-router";
 import { exportEventAsReport } from './exportEventAsTable';
+import { exportEventAsCSV } from './exportEventAsCSV';
 
 
 const EventCardOrganizer = ({ event, userInfo }) => {
@@ -39,7 +40,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
 
     // react-to-print handler
     const handlePrint = () => {
-        exportEventAsReport(event);
+        exportEventAsCSV(event)
     }
 
 
@@ -106,7 +107,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <div className="flex flex-wrap items-center gap-2 justify-between">
                     <h3 className="text-lg font-semibold text-[#fafafa] break-words">
-                        {event?.title ?? "Platform Configuration"}
+                        {event?.eventName ?? "Platform Configuration"}
                     </h3>
                     {event?.status && (
                         <Badge

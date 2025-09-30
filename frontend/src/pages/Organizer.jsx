@@ -290,10 +290,11 @@ import { toast } from "sonner";
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-100px)]';
+const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-300px)]';
+// const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
 const MAX_HEIGHT_CALC_MOBILE = 'max-h-[calc(100vh-320px)]';
 const COL_WIDTH = 'w-1/4';
-const LIMIT = 3; // Items per page
+const LIMIT = 5; // Items per page
 
 const Organizer = ({ setEditUserInfo, editUserInfo }) => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -313,7 +314,8 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
 
     // Fetch organizers list from API
     const getAllOrganizers = async (pageNum = 1, append = false) => {
-        if (loading) return; // Prevent duplicate calls
+        // if (loading) return; // Prevent duplicate calls
+        // else alert("loading is true")
 
         setLoading(true);
         console.log('Fetching page:', pageNum, 'Append:', append);
@@ -340,10 +342,10 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
 
         } catch (err) {
             console.error('Error fetching organizers:', err);
-            setError({
-                message: err?.response?.data?.message ?? err.message,
-                title: "Error"
-            });
+            // setError({
+            //     message: err?.response?.data?.message ?? err.message,
+            //     title: "Error"
+            // });
             setHasMore(false);
         } finally {
             setLoading(false);
@@ -369,8 +371,13 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
 
     // Delete an organizer via API
     const deleteOrganizer = async (id) => {
-        const toastId = toast.loading("Deleting Organizer...", {
-            description: "Please wait while the organizer is being deleted..."
+        // const toastId = toast.loading("Deleting Organizer...", {
+        //     description: "Please wait while the organizer is being deleted..."
+        // });
+        const toastId = Modal({
+            title: "Deleting Organizer...",
+            loading: true,
+            loadingText: "Please wait while the organizer is being deleted...",
         });
 
         try {
@@ -386,12 +393,15 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
             );
 
             toast.dismiss(toastId);
-            toast.success("Organizer removed successfully");
+            Modal({
+                "message": "Organizer removed successfully", title: "Success"
+            })
             setShowModal(false);
 
         } catch (err) {
             toast.dismiss(toastId);
-            toast.error(err?.response?.data?.message ?? "Failed to delete organizer");
+            // toast.error(err?.response?.data?.message ?? "Failed to delete organizer");
+            Modal({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
             console.error('Error deleting organizer:', err);
         }
     };
@@ -500,11 +510,11 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                 />
             </div>
 
-            <SearchBox
+            {/* <SearchBox
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 placeholder="Search organizers, email or event..."
-            />
+            /> */}
 
             <div className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] overflow-hidden">
 
@@ -533,7 +543,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
 
                     <div
                         id="scrollableDivDesktop"
-                        className={`overflow-x-auto overflow-y-auto max-h-[180px] custom-scrollbar`}
+                        className={`overflow-x-auto overflow-y-auto ${MAX_HEIGHT_CALC}  custom-scrollbar`}
                     >
                         {loading && filteredOrganizers.length === 0 ? (
                             <div className="text-center py-8">
@@ -685,6 +695,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                     onCancel={() => setShowForm(false)}
                     setSuccess={setSuccess}
                     setError={setError}
+                    getAllOrganizers={getAllOrganizers}
                 />
             )}
         </div>

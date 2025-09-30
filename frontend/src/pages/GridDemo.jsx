@@ -28,7 +28,7 @@ function useClickTimeline({ eventId }) {
             try {
                 const url = `${process.env.REACT_APP_GET_CLICK_TIMELINE_ANALYTICS_BY_ID_END_POINT}/${eventId}`;
                 const res = await apiConnecter('GET', url, null, { authorization: `Bearer ${userInfo.token}` });
-                // console.log("----res2222222", res)
+                console.log("----res2222222", res)
 
                 if (res?.data?.status) {
                     setData(res.data.result);

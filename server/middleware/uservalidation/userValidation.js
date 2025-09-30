@@ -109,7 +109,7 @@ exports.verifyToken = async (req, res, next) => {
     req.user = decoded;
 
     // console.log("Decoded User:", req.user); // Debugging line to check the decoded token
-    next();
+    next();                     
   } catch (err) {
    return sendResponse(res, statusCode.FORBIDDEN, false, 'Invalid or expired token.');
   }

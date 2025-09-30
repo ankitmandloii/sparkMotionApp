@@ -8,8 +8,11 @@ import { IoSettingsOutline } from "react-icons/io5";
 import Badge from './Badge';
 import { Link, useNavigate } from 'react-router';
 import { handleAnalyticsClick } from './AnalyticNavigatefunc';
+import { MdOutlineDeleteOutline } from "react-icons/md";
+// import { DeleteIcon } from 'lucide-react';
 
-const EventCard = ({ event, onEdit }) => {
+
+const EventCard = ({ event, onEdit, deleteEvent }) => {
     const navigate = useNavigate();
     const engagementRate = event?.expectedAttendees
         ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
@@ -89,6 +92,12 @@ const EventCard = ({ event, onEdit }) => {
                         bgColor="bg-[var(--color-surface-background)]"
                         border={true}
                     />
+                    <button
+                        className={`text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer bg-[var(--color-surface-background)] hover:bg-gray-600 border border-[var(--border-color)]`}
+                        onClick={() => { deleteEvent(event?._id) }}
+                    >
+                        <span className='text-xl text-[var(--color-primary)]' ><MdOutlineDeleteOutline /></span>
+                    </button>
                 </div>
             </div>
 

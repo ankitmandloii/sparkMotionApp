@@ -27,3 +27,8 @@ exports.updateEventValidationSchema = Joi.object({
   organizerIds: Joi.array().items(Joi.string().hex().length(24)).optional(),  // Organizer IDs should be valid MongoDB ObjectIds
 });
 
+
+exports.updateDestinationUrlAndExpectedAtendeesValidationSchema = Joi.object({
+  destinationUrl: Joi.string().uri().optional(),  // destinationUrl must be a valid URI
+  expectedAttendees: Joi.number().integer().min(1).optional(),  // Expected attendees must be an integer greater than 0
+});

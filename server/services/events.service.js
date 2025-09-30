@@ -209,7 +209,7 @@ exports.deleteEvent = async (eventId) => {
 };
 
 // Service function to update the destination URL for an event (Organizer only)
-exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees, userId) => {
+exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees) => {
   try {
     const event = await eventSchema.findById(eventId);
 
@@ -218,9 +218,9 @@ exports.updateDestinationUrl = async (eventId, destinationUrl, expectedAttendees
     }
 
     // Check if the user is part of the event's organizers
-    if (!event.organizers.includes(userId) && event.createdBy.toString() !== userId) {
-      throw new Error('User not authorized to update destination URL');
-    }
+    // if (!event.organizers.includes(userId) && event.createdBy.toString() !== userId) {
+    //   throw new Error('User not authorized to update destination URL');
+    // }
 
     event.destinationUrl = destinationUrl;
 

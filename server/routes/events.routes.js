@@ -3,7 +3,7 @@ const router = express.Router();
 const eventController = require('../controller/events.controller');  // Import controller functions// Middleware to verify token
 // Middleware to verify token
 const eventsvalidation = require("../middleware/uservalidation/userValidation.js");
-const {createEventValidationData, updateEventValidationData} = require("../middleware/eventsValidation/eventsValidation.js");
+const {createEventValidationData, updateEventValidationData, updateDestinationUrlAndExpectedAtendeesValidationData} = require("../middleware/eventsValidation/eventsValidation.js");
 
 // Route to create an event (Admin only)
 router.post('/create-event',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission, createEventValidationData, eventController.createEvent);
@@ -23,7 +23,7 @@ router.get('/get-eventsById/:eventId', eventsvalidation.verifyToken, eventsvalid
 router.delete('/delete-event/:eventId',eventsvalidation.verifyToken, eventsvalidation.checkAdminPermission, eventController.deleteEvent);
 
 // Route to update destination URL for organizers (Event Organizer only) //eventsvalidation.checkOrganizerPermission
-router.put('/update-destination-url/:eventId',eventsvalidation.verifyToken,  eventController.updateDestinationUrl);
+router.put('/update-destination-url/:eventId',eventsvalidation.verifyToken, updateDestinationUrlAndExpectedAtendeesValidationData,  eventController.updateDestinationUrl);
 
 module.exports = router;
 

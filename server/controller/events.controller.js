@@ -214,14 +214,13 @@ exports.updateDestinationUrl = async (req, res) => {
   try {
     const { eventId } = req.params;
     const { destinationUrl, expectedAttendees } = req.body;
-    const userId = req.user._id;
+
 
     // Call the service to update the destination URL
     const updatedEvent = await eventService.updateDestinationUrl(
       eventId,
       destinationUrl,
       expectedAttendees,
-      userId
     );
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.DESTINATION_URL_UPDATED, updatedEvent);

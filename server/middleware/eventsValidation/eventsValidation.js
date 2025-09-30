@@ -20,3 +20,12 @@ exports.updateEventValidationData = async (req, res, next) => {
     next();
   }
 };
+
+exports.updateDestinationUrlAndExpectedAtendeesValidationData = async (req, res, next) => {
+  const { error } = schema.updateDestinationUrlAndExpectedAtendeesValidationSchema.validate(req.body);
+  if (error) {
+   return sendResponse(res, statusCode.BAD_REQUEST, false, error.details[0].message);
+  } else {
+    next();
+  }
+};

@@ -154,19 +154,36 @@ exports.updateEvent = async (eventId, eventDetails) => {
 //   }
 // };
 // Service function to get all events created by an organizer
-exports.getMyEvents = async (createdBy, page, limit) => {
+exports.getMyEvents = async (createdBy, page, limit, searchQuery) => {
   try {
-    const events = await eventSchema.find({ createdBy })
-      .populate('organizers', 'userName email phoneNumber status') // Populate organizers with selected fields
+    // Create search condition if searchQuery is provided
+    let searchCondition = { createdBy };
+
+    if (searchQuery) {
+      // Add search condition to filter event name or destinationUrl
+      searchCondition = {
+        ...searchCondition,
+        $or: [
+          { eventName: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search on eventName
+          { destinationUrl: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search on destinationUrl
+        ],
+      };
+    }
+
+    // Fetch events based on the search condition
+    const events = await eventSchema.find(searchCondition)
+      .populate('organizers', 'userName email phoneNumber status')  // Populate organizers with selected fields
       .sort({ createdAt: -1 })  // Sort by createdAt in descending order (latest first)
       .skip((page - 1) * limit)
       .limit(limit);
+
     return events;
   } catch (error) {
     console.error('Error fetching events:', error);
     throw error;
   }
 };
+
 
 
 exports.getEventsByOrganizerId = async (organizerId) => {

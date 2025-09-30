@@ -152,11 +152,11 @@ exports.updateEvent = async (req, res) => {
 // Controller function to get all events created by an organizer
 exports.getMyEvents = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 ,searchQuery} = req.query;
     const createdBy = req.user._id;  // Assuming req.user contains the logged-in organizer
 
     // Call the service to get events for the organizer
-    const events = await eventService.getMyEvents(createdBy, page, limit);
+    const events = await eventService.getMyEvents(createdBy, page, limit,searchQuery);
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENTS_FETCHED, events);
   } catch (error) {

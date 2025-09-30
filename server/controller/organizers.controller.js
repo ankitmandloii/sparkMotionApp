@@ -118,10 +118,10 @@ exports.deleteOrganizer = async (req, res) => {
 exports.getOrganizers = async (req, res) => {
   try {
     // You can take pagination params from req.query instead of req.body (more common in APIs)
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10 , searchQuery} = req.query;
 
     // Fetch organizers with pagination
-    const organizersResult = await organizersService.findAllOrganizers(page, limit);
+    const organizersResult = await organizersService.findAllOrganizers(page, limit, searchQuery);
 
     // If no organizers found
     if (organizersResult.data.length === 0) {

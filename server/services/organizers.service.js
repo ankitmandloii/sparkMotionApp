@@ -67,19 +67,37 @@ exports.deleteOrganizerById = async (id) => {
 };
 
 // Service for fetching all organizers
-exports.findAllOrganizers = async (page, limit) => {
+exports.findAllOrganizers = async (page, limit, searchQuery) => {
   try {
     page = parseInt(page);
     limit = parseInt(limit);
 
-   
     const skip = (page - 1) * limit;
 
+    // Create search condition if searchQuery is provided
+    let searchCondition = { role: "organizer" };
 
-    const organizers = await User.find({ role: "organizer" }).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit);
-  
+    if (searchQuery) {
+      // Add search condition to filter userName or email
+      searchCondition = {
+        ...searchCondition,
+        $or: [
+          { userName: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search on userName
+          { email: { $regex: searchQuery, $options: 'i' } },      // Case-insensitive search on email
+        ],
+      };
+    }
+
+    // Fetch organizers based on the search condition
+    const organizers = await User.find(searchCondition)
+      .select('-password')  // Exclude password from the result
+      .sort({ createdAt: -1 })  // Sort by createdAt in descending order (latest first)
+      .skip(skip)
+      .limit(limit);
+
     // Count total organizers (for frontend pagination info)
-    const total = await User.countDocuments({ role: "organizer" });
+    const total = await User.countDocuments(searchCondition);
+
     return {
       data: organizers,
       pagination: {
@@ -94,6 +112,7 @@ exports.findAllOrganizers = async (page, limit) => {
     throw error;
   }
 };
+
 
 exports.findActiveOrganizers = async () => {
   try {

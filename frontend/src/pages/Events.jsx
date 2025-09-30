@@ -179,12 +179,13 @@ const Events = () => {
             setLoading(false);
         }
     };
+
     const deleteEvent = async (id) => {
         // const toastId = toast.loading("Deleting Organizer...", {
         //     description: "Please wait while the organizer is being deleted..."
         // });
         const toastId = Modal({
-            title: "Deleting Organizer...",
+            title: "Deleting Event...",
             loading: true,
             loadingText: "Please wait while the Event is being deleted...",
         });

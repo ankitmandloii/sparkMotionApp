@@ -39,11 +39,18 @@ const IconButton = ({
             className={`text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer ${bgColor} ${hoverColor} ${border ? 'border border-[#262626]' : ''}`}
             onClick={onClick}
         >
-            {Icon && <Icon className="w-4 h-4" />}
-            <span className={`text-sm font-medium ${color ? color : ''}`}>{label}</span>
+            {Icon && (
+                <Icon
+                    className="w-4 h-4 hidden sm:block"  // Hide icon on small devices, show on medium and larger screens
+                />
+            )}
+            <span className={`text-sm font-medium ${color ? color : ''} sm:block`}>
+                {label}
+            </span>
         </button>
     );
 };
 
 export default IconButton;
+
 

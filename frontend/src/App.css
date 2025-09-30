@@ -39,3 +39,8 @@ input:-webkit-autofill:active {
     background-image: linear-gradient(135deg, #FF4500, #FF7F50);
     /* Hover effect with different gradient */
 }
+
+.custom-date-icon::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+    /* Inverts the icon to white */
+}

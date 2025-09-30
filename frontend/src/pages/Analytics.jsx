@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import StatCard from '../components/shared/StatsCard'
 import { CalendarIcon, PeopleIcon, AnalyticIcon } from '../assets/icons/icons'
 import GridDemo from './GridDemo'
-import { useLocation, useParams } from 'react-router'
-
+import { useLocation, useNavigate, useParams } from 'react-router'
+import { FaArrowLeftLong } from "react-icons/fa6";
 const Analytics = () => {
     const { id } = useParams();
     const { state } = useLocation();
@@ -11,6 +11,7 @@ const Analytics = () => {
     const [engagementRate, setengagementRate] = useState();
     const [postClick, setpostClick] = useState();
     const [attendance, setAttendance] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setTotaltaps(state?.totalTaps)
@@ -21,6 +22,8 @@ const Analytics = () => {
     console.log("----taps", state)
     return (
         <div className='w-full m-5' >
+            <h2 className="text-2xl font-semibold text-white mb-2 flex gap-3 cursor-pointer  "><span className='mt-1' onClick={() => navigate(-1)}><FaArrowLeftLong /></span>Event Analytics </h2>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
                 <StatCard title="Total Taps" value={totalTaps} icon={CalendarIcon} description="+125 in last 24h" />
                 <StatCard title="Engagement Rate" value={engagementRate} icon={PeopleIcon} description={`${totalTaps} of ${attendance} attendees`} />

@@ -289,12 +289,13 @@ import Modal from '../components/shared/ErrorModal';
 import { toast } from "sonner";
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Badge from '../components/shared/Badge';
 
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-300px)]';
 // const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
 const MAX_HEIGHT_CALC_MOBILE = 'max-h-[calc(100vh-320px)]';
-const COL_WIDTH = 'w-1/4';
-const LIMIT = 5; // Items per page
+const COL_WIDTH = 'w-1/5';
+const LIMIT = 7; // Items per page
 
 const Organizer = ({ setEditUserInfo, editUserInfo }) => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -329,7 +330,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
             );
 
             const newOrganizers = response.data.result.organizers || [];
-            console.log('Received organizers:', newOrganizers.length);
+            console.log('Received organizers:', newOrganizers);
 
             if (append) {
                 setOrganizers(prev => [...prev, ...newOrganizers]);
@@ -534,6 +535,9 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                                         Assigned Events
                                     </th>
                                     <th className={`text-left py-4 px-6 text-gray-400 text-sm font-medium ${COL_WIDTH}`}>
+                                        Status
+                                    </th>
+                                    <th className={`text-left py-4 px-6 text-gray-400 text-sm font-medium ${COL_WIDTH} `}>
                                         Actions
                                     </th>
                                 </tr>
@@ -586,6 +590,20 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                                                 </td>
                                                 <td className={`py-4 px-6 ${COL_WIDTH}`}>
                                                     {renderEvents(organizer.assignedEvents)}
+                                                </td>
+                                                <td className={`py-4 px-6 ${COL_WIDTH}`}>
+                                                    <Badge
+                                                        label={organizer?.status || 'N/A'}
+                                                        bgColor={
+                                                            (organizer?.status?.toLowerCase() === 'active')
+                                                                ? 'bg-[#fafafa]'
+                                                                : (organizer?.status?.toLowerCase() === 'completed')
+                                                                    ? 'bg-[#262626]'
+                                                                    : 'bg-transparent'
+                                                        }
+                                                        textColor={(organizer?.status?.toLowerCase() === 'active') ? 'text-black' : 'text-white'}
+                                                        borderColor={(organizer?.status?.toLowerCase() === 'upcoming') ? 'border-gray-700' : ''}
+                                                    />
                                                 </td>
                                                 <td className={`py-4 px-6 ${COL_WIDTH}`}>
                                                     <div className="flex space-x-2">

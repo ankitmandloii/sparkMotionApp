@@ -124,7 +124,8 @@ const EventCard = ({ event, onEdit }) => {
                 <Link to={event?.destinationUrl}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
                         <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
-                        <ActionButton label={event?.destinationUrl ?? 'N/A'} />
+                        {/* <ActionButton label={event?.destinationUrl ?? 'N/A'} /> */}
+                        <ActionButton label={event?.destinationUrl?.trim() ? event.destinationUrl : 'N/A'} />
                     </div></Link>
             </div>
         </div>

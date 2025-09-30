@@ -337,7 +337,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                             value={eventDate}
                                             onChange={(e) => setEventDate(e.target.value)}
                                             placeholder="dd/mm/yyyy"
-                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('eventDate')}`}
+                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 custom-date-icon ${getInputBorderClass('eventDate')}`}
                                         />
                                         {fieldErrors.eventDate && (
                                             <p className="mt-1 text-xs text-orange-600">{fieldErrors.eventDate}</p>
@@ -357,7 +357,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                             onChange={(e) => setEventEndDate(e.target.value)}
                                             placeholder="dd/mm/yyyy"
                                             // className="block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border border-transparent transition-colors duration-200 focus:border-[var(--color-primary)]"
-                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('eventEndDate')}`}
+                                            className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200  custom-date-icon ${getInputBorderClass('eventEndDate')}`}
                                         />
                                     </div>
                                     {fieldErrors.eventEndDate && (

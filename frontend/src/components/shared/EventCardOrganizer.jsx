@@ -159,7 +159,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                 <div className="flex items-center gap-1">
                     <CalendarIcon className="w-4 h-4 shrink-0" />
                     <span className="truncate">
-                        {event?.eventStartDate?.slice(0, 10) ?? "TBD"} • {event?.location ?? "Location TBD"}
+                        {event?.eventStartDate?.slice(0, 10) ?? "TBD"} -  {event?.eventEndDate?.slice(0, 10) ?? "TBD"} • {event?.location ?? "Location TBD"}
                     </span>
                 </div>
             </div>

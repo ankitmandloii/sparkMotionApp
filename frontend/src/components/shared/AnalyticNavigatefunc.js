@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router";
 
-const navigate = useNavigate(); // Issue: This is outside a component
 
-export const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
+export const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance, navigate) => {
     // console.log("-----Analyytaps", taps);
     // console.log("-----Analyytaps2", engagement);
     console.log("-----postClick", postClick);
@@ -23,8 +22,8 @@ export const handleAnalyticsClick = (eventId, taps, engagement, postClick, atten
     navigate(`/analytics/${eventId}`, {
         state: {
             totalTaps: tapsNum,
-            engagementRate: `${engagement}%`,
-            postClickRate: `${postClickRate} % `, // e.g., 42.86
+            engagementRate: `${engagement}`,
+            postClickRate: `${postClickRate}`, // e.g., 42.86
             // postClickCount: postClickNum,
             attendance: attendance,
         }

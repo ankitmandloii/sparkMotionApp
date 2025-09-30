@@ -35,7 +35,7 @@ const TabNavigation = ({ currentTab, onTabChange }) => {
               ) : (
                 // Otherwise show icon
                 <Icon
-                  className={`w-3 h-3 transition-transform duration-200 ${isActive ? "scale-110" : "scale-100"
+                  className={`w-3 h-3 transition-transform duration-200 ${isActive ? "scale-110" : "scale-100" 
                     }`}
                 />
               )}

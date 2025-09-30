@@ -663,54 +663,54 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                             // }
                             scrollableTarget="scrollableDivMobile"
                         >
-                                {filteredOrganizers.map((organizer, index) => (
-                                    <div
-                                        key={organizer._id || index}
-                                        className="bg-[var(--color-surface-background)] p-4 mb-2  rounded-lg border border-[var(--border-color)]"
-                                    >
-                                        <div className="text-white font-bold text-lg mb-1">
-                                            {organizer.userName}
-                                        </div>
-                                        <div className="text-gray-400 text-sm mb-3">
-                                            {organizer.email}
-                                        </div>
-
-                                        <div className="mb-3">
-                                            <span className="text-gray-500 text-xs uppercase font-bold block mb-1">
-                                                Assigned Events:
-                                            </span>
-                                            {renderEvents(organizer.assignedEvents)}
-                                        </div>
-                                        <div className='mb-2'>
-                                            <Badge
-                                                label={organizer?.status || 'N/A'}
-                                                bgColor={
-                                                    (organizer?.status?.toLowerCase() === 'active')
-                                                        ? 'bg-[#fafafa]'
-                                                        : (organizer?.status?.toLowerCase() === 'completed')
-                                                            ? 'bg-[#262626]'
-                                                            : 'bg-transparent'
-                                                }
-                                                textColor={(organizer?.status?.toLowerCase() === 'active') ? 'text-black' : 'text-white'}
-                                                borderColor={(organizer?.status?.toLowerCase() === 'upcoming') ? 'border-gray-700' : ''}
-                                            />
-
-                                        </div>
-                                        <div className="flex justify-end space-x-2 pt-2 border-t border-gray-800">
-
-                                            <ActionButton
-                                                label="Edit"
-                                                onClick={() => handleEditClick(organizer)}
-                                                type="edit"
-                                            />
-                                            <ActionButton
-                                                label="Remove"
-                                                onClick={() => handleDeleteClick(organizer)}
-                                                type="remove"
-                                            />
-                                        </div>
+                            {filteredOrganizers.map((organizer, index) => (
+                                <div
+                                    key={organizer._id || index}
+                                    className="bg-[var(--color-surface-background)] p-4 mb-2  rounded-lg border border-[var(--border-color)]"
+                                >
+                                    <div className="text-white font-bold text-lg mb-1">
+                                        {organizer.userName}
                                     </div>
-                                ))}
+                                    <div className="text-gray-400 text-sm mb-3">
+                                        {organizer.email}
+                                    </div>
+
+                                    <div className="mb-3">
+                                        <span className="text-gray-500 text-xs uppercase font-bold block mb-1">
+                                            Assigned Events:
+                                        </span>
+                                        {renderEvents(organizer.assignedEvents)}
+                                    </div>
+                                    <div className='mb-2'>
+                                        <Badge
+                                            label={organizer?.status || 'N/A'}
+                                            bgColor={
+                                                (organizer?.status?.toLowerCase() === 'active')
+                                                    ? 'bg-[#fafafa]'
+                                                    : (organizer?.status?.toLowerCase() === 'completed')
+                                                        ? 'bg-[#262626]'
+                                                        : 'bg-transparent'
+                                            }
+                                            textColor={(organizer?.status?.toLowerCase() === 'active') ? 'text-black' : 'text-white'}
+                                            borderColor={(organizer?.status?.toLowerCase() === 'upcoming') ? 'border-gray-700' : ''}
+                                        />
+
+                                    </div>
+                                    <div className="flex justify-end space-x-2 pt-2 border-t border-gray-800">
+
+                                        <ActionButton
+                                            label="Edit"
+                                            onClick={() => handleEditClick(organizer)}
+                                            type="edit"
+                                        />
+                                        <ActionButton
+                                            label="Remove"
+                                            onClick={() => handleDeleteClick(organizer)}
+                                            type="remove"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                             {/* {filteredOrganizers.map((organizer, index) => (
                                 <div
                                     key={organizer._id || index}

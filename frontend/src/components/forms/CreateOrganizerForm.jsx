@@ -5,6 +5,8 @@ import Modal from '../../components/shared/ErrorModal';
 import { useSelector } from 'react-redux';
 import { apiConnecter } from '../../services/apiConnector';
 import { useNavigate } from 'react-router';
+import API_ENDPOINTS from '../../data/EndPoints';
+
 
 const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, setError, getAllOrganizers }) => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -44,7 +46,7 @@ const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, s
     const createOrganizerHandler = async () => {
         setLoading(true);
         try {
-            const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_ORGANIZER_END_POINT, {
+            const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_CREATE_ORGANIZER_END_POINT, {
                 userName: name, email, phoneNumber: number, password, role: "organizer", status: "active"
             }, { authorization: `Bearer ${userInfo.token}` });
             // setSuccess({ "message": response.data.message, title: "Success" });
@@ -72,7 +74,7 @@ const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, s
     const updateOrganizerHandler = async () => {
         setLoading(true);
         try {
-            const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_ORGANIZER_END_POINT}/${organizerToUpdate._id}`, {
+            const response = await apiConnecter("PUT", `${API_ENDPOINTS.REACT_APP_UPDATE_ORGANIZER_END_POINT}/${organizerToUpdate._id}`, {
                 userName: name, email, phoneNumber: number, role: "organizer", status
             }, { authorization: `Bearer ${userInfo.token}` });
             Modal({

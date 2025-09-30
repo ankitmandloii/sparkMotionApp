@@ -8,6 +8,8 @@ import IconButton from '../components/shared/IconButton'
 import { useSelector } from 'react-redux'
 import { apiConnecter } from '../services/apiConnector'
 import exportToCSVRow from '../services/exportToCSVRow'
+import API_ENDPOINTS from '../data/EndPoints'
+
 const Analytics = () => {
     const { id } = useParams();
     const { state } = useLocation();
@@ -30,7 +32,7 @@ const Analytics = () => {
     function handleExport() {
         console.log('analyticsData', analyticsData)
         if (analyticsData) {
-            exportToCSVRow(analyticsData)
+            exportToCSVRow(analyticsData.analyticsData, analyticsData.eventName)
         }
     }
     const getClickAnalysis = async () => {
@@ -38,10 +40,10 @@ const Analytics = () => {
         try {
             // console.log(userInfo);
 
-            const response = await apiConnecter("GET", `${process.env.REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT}/${id}`,
+            const response = await apiConnecter("GET", `${API_ENDPOINTS.REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT}/${id}`,
                 null, { authorization: `Bearer ${userInfo.token}` });
             console.log("get REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT response", response);
-            setAnalyticsData(response.data.result.analyticsData);
+            setAnalyticsData(response.data.result);
             // setEventData(response.data.result);
             // setFilteredEvents(response.data.result);
         } catch (err) {
@@ -71,7 +73,7 @@ const Analytics = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
                 <StatCard title="Total Taps" value={totalTaps} icon={CalendarIcon} description="+125 in last 24h" />
-                <StatCard title="Engagement Rate" value={engagementRate} icon={PeopleIcon} description={`${totalTaps} of ${attendance} attendees`} />
+                <StatCard title="Engagement Rate" value={engagementRate + " %"} icon={PeopleIcon} description={`${totalTaps} of ${attendance} attendees`} />
                 <StatCard title="Total Taps" value={postClick} icon={AnalyticIcon} description="Still engaging after event" />
                 {/* <StatCard title=" Active Organizers" value="3" icon={PeopleIcon} description="4,500 taps during peak hour" /> */}
             </div>

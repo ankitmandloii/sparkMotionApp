@@ -15,6 +15,10 @@ import EventCardOrganizer from '../components/shared/EventCardOrganizer';
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { DownloadIcon } from 'lucide-react';
+import { exportEventAsCSV } from '../components/shared/exportEventAsCSV';
+import API_ENDPOINTS from '../data/EndPoints';
+
 
 // const eventsData = [
 //     {
@@ -64,7 +68,7 @@ const OrganizerDashboard = () => {
         try {
             console.log(userInfo);
 
-            const response = await apiConnecter("GET", `${process.env.REACT_APP_GET_ORGANIZER_EVENTS_BY_ID_END_POINT}/${userInfo.user.id}`,
+            const response = await apiConnecter("GET", `${API_ENDPOINTS.REACT_APP_GET_ORGANIZER_EVENTS_BY_ID_END_POINT}/${userInfo.user.id}`,
                 null, { authorization: `Bearer ${userInfo.token}` });
             console.log("get all events api response", response);
             // setSuccess(response.data.message);
@@ -79,14 +83,25 @@ const OrganizerDashboard = () => {
     useEffect(() => {
         getAllEventsDataHandler()
     }, [])
-
+    function handleExportall() {
+        exportEventAsCSV(eventsData)
+    }
     return (
         <div className='flex flex-col w-full m-5'>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
                 <div>
                     <h2 className="text-2xl font-semibold text-white">Your Events</h2>
                     <p className="text-gray-400 text-sm mt-1">View analytics and manage your assigned SparkMotion events</p>
                 </div>
+                <IconButton
+                    icon={DownloadIcon}
+                    label="Export All"
+                    onClick={handleExportall}
+                    hoverColor="hover:bg-gray-600"
+                    bgColor="bg-[var(--color-surface-background)]"
+                    border={true}
+                // disabled={loading}
+                />
             </div>
 
             {/* Scrollable container for event cards */}
@@ -98,7 +113,7 @@ const OrganizerDashboard = () => {
                         </div>
                     ) : (
                         eventsData?.map((event, index) => (
-                            <EventCardOrganizer key={index} event={event} userInfo={userInfo} />
+                            <EventCardOrganizer key={index} event={event} userInfo={userInfo} getAllEventsDataHandler={getAllEventsDataHandler} />
                         ))
                     )
                 }

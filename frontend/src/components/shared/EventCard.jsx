@@ -130,12 +130,12 @@ const EventCard = ({ event, onEdit }) => {
 
             {/* URLs */}
             <div className="space-y-2">
-                <Link to={event?.baseUrl}>
+                <Link target='blank' to={event?.baseUrl}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
                         <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
-                        <ActionButton label={event?.baseUrl.slice(0, 100) + "..." ?? 'N/A'} />
+                        <ActionButton label={event?.baseUrl.slice(0, 50) + "..." ?? 'N/A'} />
                     </div></Link>
-                <Link to={event?.destinationUrl}>
+                <Link target='blank' to={event?.destinationUrl}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
                         <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
                         {/* <ActionButton label={event?.destinationUrl ?? 'N/A'} /> */}

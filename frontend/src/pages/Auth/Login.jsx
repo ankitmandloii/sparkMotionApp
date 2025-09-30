@@ -6,6 +6,8 @@ import { apiConnecter } from '../../services/apiConnector';
 import Modal from '../../components/shared/ErrorModal';
 import { login, setUserInfo } from '../../redux/slices/userInfoSlice';
 import { useNavigate } from 'react-router';
+import API_ENDPOINTS from '../../data/EndPoints';
+
 
 const SparkMotionLogo = () => (
     <img src={logo} className='mb-3 w-[160px] h-[50px]'></img>
@@ -61,7 +63,7 @@ const Login = () => {
         // Simulate an API call with a delay
         try {
             // A simple validation/check
-            const response = await apiConnecter("POST", process.env.REACT_APP_LOGIN_END_POINT, { email, password });
+            const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_LOGIN_END_POINT, { email, password });
             setSuccess("Redirecting To Dashboard...");
             console.log(response.data.result);
             setTimeout(() => {
@@ -246,7 +248,7 @@ export default Login
 
 //         setLoading(true);
 //         try {
-//             const response = await apiConnecter("POST", process.env.REACT_APP_LOGIN_END_POINT, { email, password });
+//             const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_LOGIN_END_POINT, { email, password });
 //             setSuccess("Redirecting To Dashboard...");
 //             setTimeout(() => {
 //                 navigate("/Overview");
@@ -405,7 +407,7 @@ export default Login
 
 //     setLoading(true);
 //     try {
-//       const response = await apiConnecter("POST", process.env.REACT_APP_LOGIN_END_POINT, { email, password });
+//       const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_LOGIN_END_POINT, { email, password });
 //       setSuccess("Redirecting to Dashboard...");
 //       setTimeout(() => {
 //         navigate("/Overview");

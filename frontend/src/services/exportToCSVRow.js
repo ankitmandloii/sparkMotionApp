@@ -1,9 +1,10 @@
 import React from 'react';
 import Papa from 'papaparse';
 
-const exportToCSVRow = (analyticsData) => {
+const exportToCSVRow = (analyticsData, eventName) => {
     // Step 1: Map the data into the required row format
     const csvData = analyticsData.map((entry) => ({
+        eventName, // You can replace this with actual event name or a dynamic value
         destinationUrl: entry.destinationUrl,
         eventId: entry.eventId,
         ipAddress: entry.ipAddress,
@@ -31,7 +32,7 @@ const exportToCSVRow = (analyticsData) => {
     if (link.download !== undefined) {
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', 'analytics_data.csv');
+        link.setAttribute('download', `analytics_data_${eventName}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();

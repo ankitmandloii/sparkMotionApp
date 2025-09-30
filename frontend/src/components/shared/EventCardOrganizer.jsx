@@ -13,9 +13,9 @@ import Modal from "./ErrorModal";
 import { Link, useNavigate } from "react-router";
 import { exportEventAsReport } from './exportEventAsTable';
 import { exportEventAsCSV } from './exportEventAsCSV';
+import API_ENDPOINTS from '../../data/EndPoints';
 
-
-const EventCardOrganizer = ({ event, userInfo }) => {
+const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
     console.log("---------customerevent", event)
     // safely handle undefined props
     const expectedAttendees = event?.expectedAttendees ?? 0;
@@ -32,7 +32,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
         : "0.00";
 
     // state for editing destination URL
-    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl ?? "");
+    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl.trim() ? event?.destinationUrl : "N/A");
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -51,7 +51,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
             setLoading(true);
             const response = await apiConnecter(
                 "PUT",
-                `${process.env.REACT_APP_UPDATE_DESTINATION_URL_END_POINT}/${event._id}`,
+                `${API_ENDPOINTS.REACT_APP_UPDATE_DESTINATION_URL_END_POINT}/${event._id}`,
                 { destinationUrl: newDestinationUrl },
                 { authorization: `Bearer ${userInfo.token}` }
             );
@@ -59,6 +59,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                 title: "Success",
                 message: response.data.message,
             });
+            getAllEventsDataHandler();
             setIsEditing(false);
         } catch (error) {
             console.error(error);
@@ -91,7 +92,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
             state: {
                 totalTaps: tapsNum,
                 engagementRate: engagement,
-                postClickRate: `${postClickRate} % `, // e.g., 42.86
+                postClickRate: `${postEventEngagementRate}`, // e.g., 42.86
                 // postClickCount: postClickNum,
                 attendance: attendance,
             }
@@ -158,7 +159,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                 <div className="flex items-center gap-1">
                     <CalendarIcon className="w-4 h-4 shrink-0" />
                     <span className="truncate">
-                        {event?.date ?? "TBD"} • {event?.location ?? "Location TBD"}
+                        {event?.eventStartDate?.slice(0, 10) ?? "TBD"} • {event?.location ?? "Location TBD"}
                     </span>
                 </div>
             </div>
@@ -198,9 +199,9 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                     <span className="text-[#FAFAFA] mb-2">Bracelet URL:</span>
                     <div className="flex flex-col sm:flex-row gap-2">
                         <div className="flex-1 w-full">
-                            <UrlInput label={event?.baseUrl ?? "https://example.com/bracelet"} />
+                            <UrlInput label={event?.baseUrl?.slice(0, 50) + "..." ?? "https://example.com/bracelet"} />
                         </div>
-                        <Link to={event.baseUrl} className="shrink-0">
+                        <Link target='blank' to={event?.baseUrl} className="shrink-0">
                             <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
                                 <ShareIcon />
                             </span>
@@ -220,12 +221,12 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                                 <input
                                     type="text"
                                     className="w-full bg-[var(--color-surface-input)] text-white rounded p-2"
-                                    value={newDestinationUrl}
+                                    value={newDestinationUrl ?? "N/A"}
                                     onChange={(e) => setNewDestinationUrl(e.target.value)}
                                     disabled={loading}
                                 />
                             ) : (
-                                <UrlInput label={newDestinationUrl} />
+                                <UrlInput label={newDestinationUrl ?? "N/A"} />
                             )}
                         </div>
                         <div className="flex gap-2">
@@ -258,7 +259,7 @@ const EventCardOrganizer = ({ event, userInfo }) => {
                                     <EditIcon />
                                 </span>
                             )}
-                            <Link to={event.destinationUrl} className="shrink-0">
+                            <Link target='blank' to={event.destinationUrl} className="shrink-0">
                                 <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
                                     <ShareIcon />
                                 </span>

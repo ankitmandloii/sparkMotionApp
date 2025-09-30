@@ -6,6 +6,7 @@ import logo from "../assets/logos/WhiteLogo.png";
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import Modal from '../components/shared/ErrorModal';
+import API_ENDPOINTS from '../data/EndPoints';
 
 const Settings = () => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -19,6 +20,7 @@ const Settings = () => {
         setMessage('');
         setMessage('');
         setFieldErrors({ oldPassword: '', newPassword: '' });
+        if (loading) return
         // Simple validation
         if (!oldPassword) {
             setFieldErrors((prev) => ({ ...prev, oldPassword: 'Old password is required.' }));
@@ -35,7 +37,7 @@ const Settings = () => {
                 newPassword,
             };
 
-            const response = await apiConnecter("POST", process.env.REACT_APP_CHANGE_PASSWORD_END_POINT, payload, { Authorization: `Bearer ${userInfo.token}` });
+            const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_CHANGE_PASSWORD_END_POINT, payload, { Authorization: `Bearer ${userInfo.token}` });
             console.log(response, "response")
             Modal({
                 title: "Success",

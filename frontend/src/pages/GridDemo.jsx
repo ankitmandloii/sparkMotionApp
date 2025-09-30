@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, BarChart, Bar } from 'recharts';
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
+import API_ENDPOINTS from '../data/EndPoints';
 
 // Hook: fetches click timeline
 function useClickTimeline({ eventId }) {
@@ -26,7 +27,7 @@ function useClickTimeline({ eventId }) {
             setLoading(true);
             setError(null);
             try {
-                const url = `${process.env.REACT_APP_GET_CLICK_TIMELINE_ANALYTICS_BY_ID_END_POINT}/${eventId}`;
+                const url = `${API_ENDPOINTS.REACT_APP_GET_CLICK_TIMELINE_ANALYTICS_BY_ID_END_POINT}/${eventId}`;
                 const res = await apiConnecter('GET', url, null, { authorization: `Bearer ${userInfo.token}` });
                 console.log("----res2222222", res)
 

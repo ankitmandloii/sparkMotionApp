@@ -38,7 +38,7 @@
 //     const getAllOrganizers = async () => {
 //         setLoading(true);
 //         try {
-//             const response = await apiConnecter("GET", process.env.REACT_APP_GET_ORGANIZER_LIST_END_POINT, "", { authorization: `Bearer ${userInfo.token}` });
+//             const response = await apiConnecter("GET", API_ENDPOINTS.REACT_APP_GET_ORGANIZER_LIST_END_POINT, "", { authorization: `Bearer ${userInfo.token}` });
 //             setOrganizers(response.data.result.organizers);
 //             setFilteredOrganizers(response.data.result.organizers);
 //             // setSuccess(response.data.message);
@@ -58,7 +58,7 @@
 //             loadingText: "Please wait while the organizer is being deleted...",
 //         });
 //         try {
-//             await apiConnecter("DELETE", `${process.env.REACT_APP_DELETE_ORGANIZER_END_POINT}/${id}`, "", { authorization: `Bearer ${userInfo.token}` });
+//             await apiConnecter("DELETE", `${API_ENDPOINTS.REACT_APP_DELETE_ORGANIZER_END_POINT}/${id}`, "", { authorization: `Bearer ${userInfo.token}` });
 //             setOrganizers(prevOrganizers => prevOrganizers.filter(organizer => organizer._id !== id));
 //             setFilteredOrganizers(prevOrganizers => prevOrganizers.filter(organizer => organizer._id !== id));
 //             setLoading(false);
@@ -290,7 +290,7 @@ import { toast } from "sonner";
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Badge from '../components/shared/Badge';
-
+import API_ENDPOINTS from '../data/EndPoints';
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-300px)]';
 // const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
 const MAX_HEIGHT_CALC_MOBILE = 'max-h-[calc(100vh-320px)]';
@@ -324,7 +324,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
         try {
             const response = await apiConnecter(
                 "GET",
-                `${process.env.REACT_APP_GET_ORGANIZER_LIST_END_POINT}?page=${pageNum}&limit=${LIMIT}`,
+                `${API_ENDPOINTS.REACT_APP_GET_ORGANIZER_LIST_END_POINT}?page=${pageNum}&limit=${LIMIT}`,
                 null,
                 { authorization: `Bearer ${userInfo.token}` }
             );
@@ -384,7 +384,7 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
         try {
             await apiConnecter(
                 "DELETE",
-                `${process.env.REACT_APP_DELETE_ORGANIZER_END_POINT}/${id}`,
+                `${API_ENDPOINTS.REACT_APP_DELETE_ORGANIZER_END_POINT}/${id}`,
                 null,
                 { authorization: `Bearer ${userInfo.token}` }
             );

@@ -27,7 +27,7 @@
 //     const getAllEventsHandler = async () => {
 //         setLoading(true);
 //         try {
-//             const response = await apiConnecter("GET", process.env.REACT_APP_GET_ALL_EVENTS_END_POINT,
+//             const response = await apiConnecter("GET", API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT,
 //                 null, { authorization: `Bearer ${userInfo.token}` });
 //             console.log("get all events api response", response);
 //             // setSuccess(response.data.message);
@@ -138,7 +138,7 @@ import { useSelector } from 'react-redux';
 import Modal from '../components/shared/ErrorModal';
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
+import API_ENDPOINTS from '../data/EndPoints';
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-240px)]';
 const Events = () => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -158,7 +158,7 @@ const Events = () => {
     const getAllEventsHandler = async (pageNum = 1, append = false) => {
         setLoading(true);
         try {
-            const response = await apiConnecter("GET", `${process.env.REACT_APP_GET_ALL_EVENTS_END_POINT}?page=${pageNum}&limit=2`,
+            const response = await apiConnecter("GET", `${API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT}?page=${pageNum}&limit=2`,
                 null, { authorization: `Bearer ${userInfo.token}` });
             console.log("get all events api response", response);
             const newEvents = response.data.result;

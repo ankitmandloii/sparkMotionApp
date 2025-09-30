@@ -5,7 +5,7 @@ import Modal from '../../components/shared/ErrorModal';
 import { apiConnecter } from '../../services/apiConnector';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
-
+import API_ENDPOINTS from '../../data/EndPoints';
 
 // A simple placeholder logo component. You can replace this with your actual logo.
 const SparkMotionLogo = () => (
@@ -93,7 +93,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
         setLoading(true);
         // Simulate an API call with a delay
         try {
-            const response = await apiConnecter("POST", process.env.REACT_APP_CREATE_EVENTS_END_POINT, data, { authorization: `Bearer ${userInfo.token}` });
+            const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_CREATE_EVENTS_END_POINT, data, { authorization: `Bearer ${userInfo.token}` });
             console.log("data from server", response.data)
             setSuccess({ title: "Success", message: response.data.message });
             getAllEventsHandler();
@@ -111,7 +111,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
         delete data.baseUrl;
         // Simulate an API call with a delay
         try {
-            const response = await apiConnecter("PUT", `${process.env.REACT_APP_UPDATE_EVENTS_END_POINT}/${eventToUpdate._id}`, data, { authorization: `Bearer ${userInfo.token}` });
+            const response = await apiConnecter("PUT", `${API_ENDPOINTS.REACT_APP_UPDATE_EVENTS_END_POINT}/${eventToUpdate._id}`, data, { authorization: `Bearer ${userInfo.token}` });
             console.log("data from server", response.data)
             setSuccess({ title: "Success", message: response.data.message });
             setAllEvents(prevEvents => prevEvents.map(event => event._id === eventToUpdate._id ? response.data.result : event)); // Update the event in the list
@@ -246,7 +246,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
             // Your existing API call
             const res = await apiConnecter(
                 "GET",
-                process.env.REACT_APP_GET_ACTIVE_ORGANIZER_LIST_END_POINT,
+                API_ENDPOINTS.REACT_APP_GET_ACTIVE_ORGANIZER_LIST_END_POINT,
                 "",
                 {
                     authorization: `Bearer ${userInfo.token}`
@@ -287,6 +287,11 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
             setUtmContent(eventToUpdate.utmParams?.utm_content || '');
         }
     }, [userInfo.token]);
+    const today = new Date().toISOString().split('T')[0]; // Format as yyyy-mm-dd
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Add 1 day
+    const tomorrowDate = tomorrow.toISOString().split('T')[0];
+
     return (
         <div className=" absolute inset-0 backdrop-blur-xs z-50  min-h-screen font-[Inter] w-full flex justify-center items-center p-4 text-gray-200">
             <div className="flex  flex-col  justify-center items-center p-4 w-full max-w-[517px]">
@@ -314,6 +319,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                         id="eventName"
                                         type="text"
                                         value={eventName}
+
                                         onChange={(e) => setEventName(e.target.value)}
                                         placeholder="Enter event name"
                                         className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('eventName')}`}
@@ -335,6 +341,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                             ref={eventDateRef}
                                             id="eventDate"
                                             type="date"
+                                            min={today}
                                             value={eventDate}
                                             onChange={(e) => setEventDate(e.target.value)}
                                             placeholder="dd/mm/yyyy"
@@ -354,6 +361,7 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                                             ref={eventEndDateRef}
                                             id="eventEndDate"
                                             type="date"
+                                            min={tomorrowDate}
                                             value={eventEndDate}
                                             onChange={(e) => setEventEndDate(e.target.value)}
                                             placeholder="dd/mm/yyyy"

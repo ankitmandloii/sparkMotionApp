@@ -6,6 +6,7 @@ import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import SearchBox from '../components/shared/SearchBox';
+import API_ENDPOINTS from '../data/EndPoints';
 
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
 
@@ -24,7 +25,7 @@ const Overview = () => {
         try {
             const response = await apiConnecter(
                 'GET',
-                process.env.REACT_APP_GET_ALL_EVENTS_END_POINT,
+                API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT,
                 null,
                 { authorization: `Bearer ${userInfo.token}` }
             );
@@ -226,10 +227,10 @@ const Overview = () => {
                                         <span>
                                             Bracelet URL:{' '}
                                             <a
-                                                href={event.braceletUrl}
+                                                href={event.baseUrl}
                                                 className="bg-[var(--grey-button)] hover:bg-gray-600 text-gray-300 px-3 py-1 rounded-xl text-xs cursor-pointer"
                                             >
-                                                {event.braceletUrl}
+                                                {event?.baseUrl?.slice(0, 50) + "..."}
                                             </a>
                                         </span>
                                         <span className=''>

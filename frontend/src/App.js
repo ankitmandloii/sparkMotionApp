@@ -96,7 +96,7 @@ const App = () => {
       }
 
 
-      <main className="flex justify-center ">
+      <main className="flex justify-center  ">
         <Routes>
           {/* login redirect */}
           {isLoggedIn ? (

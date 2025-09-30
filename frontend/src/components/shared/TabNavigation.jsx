@@ -8,8 +8,9 @@ const TabNavigation = ({ currentTab, onTabChange }) => {
   const userInfo = useSelector((state) => state.userInfo);
   const tabs = [
     { name: "Overview", href: "Overview", icon: Home },
-    { name: "Events", href: "#", icon: Calendar },
     { name: "Organizations", href: "#", icon: Building2 },
+    { name: "Events", href: "#", icon: Calendar },
+
     { name: "Settings", href: "#", icon: Settings },
   ];
 

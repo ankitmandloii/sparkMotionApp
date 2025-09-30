@@ -6,6 +6,7 @@ import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import SearchBox from '../components/shared/SearchBox';
+import { handleAnalyticsClick } from '../components/shared/AnalyticNavigatefunc';
 import API_ENDPOINTS from '../data/EndPoints';
 
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
@@ -39,9 +40,12 @@ const Overview = () => {
                 status: event.status || 'Unknown',
                 attendance: event.expectedAttendees?.toLocaleString() || '0',
                 taps: event.clickCount?.toLocaleString() || '0',
-                engagement: event.expectedAttendees > 0
-                    ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
-                    : '0.0%',
+                // engagement: event.expectedAttendees > 0
+                //     ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
+                //     : '0.0%',
+                engagement: event?.expectedAttendees
+                    ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2) + '%'
+                    : '0.00',
                 location: event.location || 'N/A',
                 braceletUrl: event.baseUrl || 'https://bracelet.example.com/default',
                 destinationUrl: event.destinationUrl || 'https://example.com/default',
@@ -94,33 +98,35 @@ const Overview = () => {
     //         }
     //     });
     // };
-    const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
-        // console.log("-----Analyytaps", taps);
-        // console.log("-----Analyytaps2", engagement);
-        // console.log("-----Analyytaps3", postClick);
-        // console.log("-----Analyytaps4", attendance);
+    // const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
+    //     // console.log("-----Analyytaps", taps);
+    //     // console.log("-----Analyytaps2", engagement);
+    //     console.log("-----Analyytaps3", postClick);
+    //     console.log("-----Analyytaps4", attendance);
 
-        const tapsNum = Number(taps) || 0;
-        const postClickNum = Number(postClick) || 0;
-        // const engagementNum = Number(engagement) || 0;
-        // const attendanceNum = Number(attendance) || 0;
+    //     const tapsNum = Number(taps) || 0;
+    //     const postClickNum = Number(postClick) || 0;
+    //     // const engagementNum = Number(engagement) || 0;
+    //     // const attendanceNum = Number(attendance) || 0;
 
-        // rate in %
-        // const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
-        const postClickRate = tapsNum > 0 ? (tapsNum / postClickNum) * 100 : 0;
+    //     // rate in %
+    //     // const postClickRate = tapsNum > 0 ? (postClickNum / tapsNum) * 100 : 0;
+    //     // const postClickRate = tapsNum > 0 ? (tapsNum / postClickNum) * 100 : 0;
+    //     const postClickRate = attendance > 0 ? ((postClickNum / attendance) * 100).toFixed(2) : 0;
 
-        console.log("---------postRate", postClickRate);
+    //     console.log("---------postRate", postClickRate);
 
-        navigate(`/analytics/${eventId}`, {
-            state: {
-                totalTaps: tapsNum,
-                engagementRate: engagement,
-                postClickRate: `${postClickRate} % `, // e.g., 42.86
-                // postClickCount: postClickNum,
-                attendance: attendance,
-            }
-        });
-    };
+    //     navigate(`/analytics/${eventId}`, {
+    //         state: {
+    //             totalTaps: tapsNum,
+    //             engagementRate: engagement,
+    //             postClickRate: `${postClickRate} % `, // e.g., 42.86
+    //             // postClickCount: postClickNum,
+    //             attendance: attendance,
+    //         }
+    //     });
+    // };
+    // handleAnalyticsClick(eventId, taps, engagement, postClick, attendance);
     useEffect(() => {
         getAllEventsHandler();
     }, []);
@@ -128,7 +134,14 @@ const Overview = () => {
     return (
         <div className="text-white m-4 w-full">
             <main>
-                <h2 className="text-2xl font-semibold mb-4">Overview</h2>
+                {/* <h2 className="text-2xl font-semibold mb-4">Overview</h2>
+                <p className="text-[var(--color-grey)] text-sm mt-1">
+                    Get a detailed summary of the event's performance and key metrics.
+                </p> */}
+                <h2 className="text-2xl font-semibold text-white">Overview</h2>
+                <p className="text-[var(--color-grey)] text-sm mt-1 mb-6">
+                    Get a detailed summary of the event's performance and key metrics.
+                </p>
 
                 {/* Search Bar */}
 
@@ -332,7 +345,7 @@ const Overview = () => {
                                                     <button
                                                         className="text-[var(--color-primary-dark)] hover:text-orange-300 text-sm cursor-pointer"
                                                         onClick={() =>
-                                                            handleAnalyticsClick(event.id, event.taps, event.engagement, event?.postClick, event?.attendance)
+                                                            handleAnalyticsClick(event.id, event.taps, event.engagement, event?.postClick, event?.attendance, navigate)
                                                         }
                                                     >
                                                         View Analytics

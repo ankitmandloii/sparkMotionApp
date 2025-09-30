@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router';
 import { DownloadIcon } from 'lucide-react';
 import { exportEventAsCSV } from '../components/shared/exportEventAsCSV';
 import API_ENDPOINTS from '../data/EndPoints';
+import { HiOutlineRefresh } from "react-icons/hi";
+
 
 
 // const eventsData = [
@@ -93,22 +95,36 @@ const OrganizerDashboard = () => {
                     <h2 className="text-2xl font-semibold text-white">Your Events</h2>
                     <p className="text-gray-400 text-sm mt-1">View analytics and manage your assigned SparkMotion events</p>
                 </div>
-                <IconButton
-                    icon={DownloadIcon}
-                    label="Export All"
-                    onClick={handleExportall}
-                    hoverColor="hover:bg-gray-600"
-                    bgColor="bg-[var(--color-surface-background)]"
-                    border={true}
-                // disabled={loading}
-                />
+                <div className='flex gap-2' >
+                    <div disabled={loading}>
+                        <IconButton
+                            icon={DownloadIcon}
+                            label="Export All"
+                            onClick={handleExportall}
+                            hoverColor="hover:bg-gray-600"
+                            bgColor="bg-[var(--color-surface-background)]"
+                            border={true}
+                            disabled={loading}
+                        />
+                    </div>
+                    <IconButton
+                        icon={HiOutlineRefresh}
+                        label="Refresh"
+                        onClick={getAllEventsDataHandler}
+                        hoverColor="hover:bg-gray-600"
+                        bgColor="bg-[var(--color-surface-background)]"
+                        border={true}
+                    // disabled={loading}
+                    />
+                </div>
+
             </div>
 
             {/* Scrollable container for event cards */}
             <div className="space-y-6 overflow-y-auto  custom-scrollbar">
                 {
                     loading ? (
-                        <div className="text-center py-4 bg-[var(--color-surface-background)]">
+                        <div className="text-center py-4  bg-[var(--color-surface-background)]">
                             <div className="loader"></div>
                         </div>
                     ) : (

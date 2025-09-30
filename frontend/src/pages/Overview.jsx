@@ -8,8 +8,9 @@ import { useNavigate } from 'react-router';
 import SearchBox from '../components/shared/SearchBox';
 import { handleAnalyticsClick } from '../components/shared/AnalyticNavigatefunc';
 import API_ENDPOINTS from '../data/EndPoints';
+import IconButton from '../components/shared/IconButton';
 
-const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
+const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-380px)]';
 
 const Overview = () => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -38,7 +39,7 @@ const Overview = () => {
                     ? new Date(event.eventStartDate).toISOString().split('T')[0]
                     : 'N/A',
                 status: event.status || 'Unknown',
-                attendance: event.expectedAttendees?.toLocaleString() || '0',
+                attendance: event.expectedAttendees || '0',
                 taps: event.clickCount?.toLocaleString() || '0',
                 // engagement: event.expectedAttendees > 0
                 //     ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
@@ -79,7 +80,7 @@ const Overview = () => {
     }, [searchTerm, allEvents]);
 
     const totalAttendance = filteredEvents.reduce(
-        (sum, event) => sum + parseInt(event.attendance.replace(/,/g, '') || 0),
+        (sum, event) => sum + parseInt(event.attendance || 0),
         0
     );
     const totalTaps = filteredEvents.reduce(
@@ -134,14 +135,26 @@ const Overview = () => {
     return (
         <div className="text-white m-4 w-full">
             <main>
-                {/* <h2 className="text-2xl font-semibold mb-4">Overview</h2>
-                <p className="text-[var(--color-grey)] text-sm mt-1">
-                    Get a detailed summary of the event's performance and key metrics.
-                </p> */}
-                <h2 className="text-2xl font-semibold text-white">Overview</h2>
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 className="text-2xl font-semibold text-white">Overview</h2>
+                        <p className="text-[var(--color-grey)] text-sm mt-1">
+                            Get a detailed summary of the event's performance and key metrics.
+                        </p>
+                    </div>
+                    {/* <IconButton
+                        icon={HiOutlineRefresh}
+                        label="Refresh"
+                        onClick={() => {
+
+                        }}
+                        hoverColor="hover:bg-orange-600"
+                    /> */}
+                </div>
+                {/* <h2 className="text-2xl font-semibold text-white">Overview</h2>
                 <p className="text-[var(--color-grey)] text-sm mt-1 mb-6">
                     Get a detailed summary of the event's performance and key metrics.
-                </p>
+                </p> */}
 
                 {/* Search Bar */}
 
@@ -225,7 +238,7 @@ const Overview = () => {
                                         </div>
                                         <div>
                                             <div className="text-gray-400 text-xs">Engagement</div>
-                                            <div className="font-semibold">{event.engagement}</div>
+                                            <div className="font-semibold">{event.engagement + "%"}</div>
                                         </div>
                                         <div>
                                             <div className="text-gray-400 text-xs">Actions</div>
@@ -346,7 +359,8 @@ const Overview = () => {
                                                 </td>
                                                 <td className="py-4 px-4 text-gray-300">{event.attendance}</td>
                                                 <td className="py-4 px-4 text-gray-300">{event.taps}</td>
-                                                <td className="py-4 px-4 text-gray-300">{event.engagement}</td>
+                                                <td className="py-4 px-4 text-gray-300">{`${event.engagement}%`}</td>
+
                                                 <td className="py-4 px-4 ">
                                                     <button
                                                         className="text-[var(--color-primary-dark)] hover:text-orange-300 text-sm cursor-pointer"

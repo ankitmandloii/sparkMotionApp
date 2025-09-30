@@ -136,6 +136,8 @@ import CreateEventForm from '../components/forms/CreateEventForm';
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import Modal from '../components/shared/ErrorModal';
+import { toast } from "sonner";
+
 import SearchBox from '../components/shared/SearchBox';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import API_ENDPOINTS from '../data/EndPoints';
@@ -175,6 +177,40 @@ const Events = () => {
             setHasMore(false);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const deleteEvent = async (id) => {
+        // const toastId = toast.loading("Deleting Organizer...", {
+        //     description: "Please wait while the organizer is being deleted..."
+        // });
+        const toastId = Modal({
+            title: "Deleting Event...",
+            loading: true,
+            loadingText: "Please wait while the Event is being deleted...",
+        });
+
+        try {
+            await apiConnecter(
+                "DELETE",
+                `${API_ENDPOINTS.REACT_APP_DELETE_EVENT_BY_ID_END_POINT}/${id}`,
+                null,
+                { authorization: `Bearer ${userInfo.token}` }
+            );
+
+
+
+            toast.dismiss(toastId);
+            Modal({
+                "message": "Event deleted successfully", title: "Success"
+            })
+
+            await getAllEventsHandler();
+        } catch (err) {
+            toast.dismiss(toastId);
+            // toast.error(err?.response?.data?.message ?? "Failed to delete organizer");
+            Modal({ "message": err?.response?.data?.message ?? err.message, title: "Error" });
+            console.error('Error deleting event:', err);
         }
     };
 
@@ -270,9 +306,10 @@ const Events = () => {
                     scrollableTarget="scrollableDiv"
                 >
                     {filteredEvents?.map((event, index) => (
-                        <EventCard key={index} event={event} onEdit={() => {
+                        <EventCard key={index} event={event} deleteEvent={deleteEvent} onEdit={() => {
                             setEventToUpdate(event);
                             setShowForm(true);
+
                         }} />
                     ))}
                     {filteredEvents?.length === 0 && !loading && (

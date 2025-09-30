@@ -159,7 +159,7 @@ const EventCard = ({ event, onEdit, deleteEvent }) => {
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm ">
                     <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
-                    <Link target='blank' to={event?.baseUrl}>
+                    <Link to={event?.baseUrl} target="_blank" rel="noopener noreferrer">
                         <ActionButton label={event?.baseUrl.slice(0, 50) + "..." ?? 'N/A'} />
                     </Link>
                 </div>
@@ -167,7 +167,7 @@ const EventCard = ({ event, onEdit, deleteEvent }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
                     <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
                     {/* <ActionButton label={event?.destinationUrl ?? 'N/A'} /> */}
-                    <Link target='blank' to={event?.destinationUrl}>
+                    <Link target="_blank" rel="noopener noreferrer" to={event?.destinationUrl}>
                         <ActionButton label={event?.destinationUrl?.trim() ? event.destinationUrl : 'N/A'} />
                     </Link>
                 </div>

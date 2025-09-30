@@ -95,16 +95,18 @@ const OrganizerDashboard = () => {
                     <h2 className="text-2xl font-semibold text-white">Your Events</h2>
                     <p className="text-gray-400 text-sm mt-1">View analytics and manage your assigned SparkMotion events</p>
                 </div>
-                <div className='flex gap-2'>
-                    <IconButton
-                        icon={DownloadIcon}
-                        label="Export All"
-                        onClick={handleExportall}
-                        hoverColor="hover:bg-gray-600"
-                        bgColor="bg-[var(--color-surface-background)]"
-                        border={true}
-                    // disabled={loading}
-                    />
+                <div className='flex gap-2' >
+                    <div disabled={loading}>
+                        <IconButton
+                            icon={DownloadIcon}
+                            label="Export All"
+                            onClick={handleExportall}
+                            hoverColor="hover:bg-gray-600"
+                            bgColor="bg-[var(--color-surface-background)]"
+                            border={true}
+                            disabled={loading}
+                        />
+                    </div>
                     <IconButton
                         icon={HiOutlineRefresh}
                         label="Refresh"
@@ -122,7 +124,7 @@ const OrganizerDashboard = () => {
             <div className="space-y-6 overflow-y-auto  custom-scrollbar">
                 {
                     loading ? (
-                        <div className="text-center py-4 bg-[var(--color-surface-background)]">
+                        <div className="text-center py-4  bg-[var(--color-surface-background)]">
                             <div className="loader"></div>
                         </div>
                     ) : (

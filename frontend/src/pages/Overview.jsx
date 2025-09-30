@@ -10,7 +10,7 @@ import { handleAnalyticsClick } from '../components/shared/AnalyticNavigatefunc'
 import API_ENDPOINTS from '../data/EndPoints';
 import IconButton from '../components/shared/IconButton';
 
-const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-360px)]';
+const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-380px)]';
 
 const Overview = () => {
     const userInfo = useSelector((state) => state.userInfo);
@@ -238,7 +238,7 @@ const Overview = () => {
                                         </div>
                                         <div>
                                             <div className="text-gray-400 text-xs">Engagement</div>
-                                            <div className="font-semibold">{event.engagement}</div>
+                                            <div className="font-semibold">{event.engagement + "%"}</div>
                                         </div>
                                         <div>
                                             <div className="text-gray-400 text-xs">Actions</div>

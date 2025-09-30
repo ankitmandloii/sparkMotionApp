@@ -11,6 +11,10 @@ import API_ENDPOINTS from '../../data/EndPoints';
 const SparkMotionLogo = () => (
     <img src={logo} className='mb-3 w-[160px] h-[50px]'></img>
 );
+const today = new Date().toISOString().split('T')[0]; // Format as yyyy-mm-dd
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1); // Add 1 day
+const tomorrowDate = tomorrow.toISOString().split('T')[0];
 
 
 const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSuccess, setError, setAllEvents, getAllEventsHandler }) => {
@@ -146,10 +150,18 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
             newFieldErrors.eventDate = 'Event Date is required.';
             isValid = false;
         }
+        if (eventDate < today) {
+            newFieldErrors.eventDate = 'The event start date must be today or in the future.';
+            isValid = false;
+        }
         if (!eventEndDate.trim()) {
             newFieldErrors.eventEndDate = 'Event End Date is required.';
             isValid = false;
         }
+        // if (eventEndDate < tomorrow) {
+        //     newFieldErrors.eventEndDate = 'The event end date must be today or in the future.';
+        //     isValid = false;
+        // }
 
         // Check if eventEndDate is after eventDate
         if (eventDate && eventEndDate) {
@@ -252,8 +264,11 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                     authorization: `Bearer ${userInfo.token}`
                 }
             );
-            setOrganizersList(res.data?.result ?? [])
-            setFilteredOrganizers(res?.data?.result ?? [])
+            const org = res.data?.result ?? []
+            const sortedEventsOrg = org.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            setOrganizersList(sortedEventsOrg)
+            setFilteredOrganizers(sortedEventsOrg)
             console.log("Organizers List:", res.data);
 
         } catch (err) {
@@ -287,18 +302,14 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
             setUtmContent(eventToUpdate.utmParams?.utm_content || '');
         }
     }, [userInfo.token]);
-    const today = new Date().toISOString().split('T')[0]; // Format as yyyy-mm-dd
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // Add 1 day
-    const tomorrowDate = tomorrow.toISOString().split('T')[0];
 
     return (
-        <div className=" absolute inset-0 backdrop-blur-xs z-50  min-h-screen font-[Inter] w-full flex justify-center items-center p-4 text-gray-200">
-            <div className="flex  flex-col  justify-center items-center p-4 w-full max-w-[517px]">
+        <div className=" absolute inset-0 backdrop-blur-xs z-50   font-[Inter] w-full  flex justify-center items-center p-4 text-gray-200">
+            <div className="flex  flex-col  justify-center items-center p-4 w-full max-w-[500px]">
                 {/* <SparkMotionLogo /> */}
                 <div className="flex  absolute top-1/2 transform -translate-y-1/2 bg-[var(--color-surface-background)] rounded-[12px] border-[#454343] border pb-4 shadow-2xl  mx-auto flex-col justify-center items-center">
 
-                    <div className=" p-[20px] max-h-[500px] overflow-y-auto custom-scrollbar">
+                    <div className=" p-[20px] max-h-[400px] overflow-y-auto custom-scrollbar">
                         <div className="w-full mb-2  ">
                             <h2 className="text-start text-[23px] font-bold tracking-tight text-[var(--color-text-base)]" style={{ lineHeight: "32px" }}>
                                 {eventToUpdate ? 'Edit Event' : 'Create New Event'}

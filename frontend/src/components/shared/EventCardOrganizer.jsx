@@ -32,8 +32,12 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
         : "0.00";
 
     // state for editing destination URL
-    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl?.trim() ? event?.destinationUrl : "N/A");
+    const [newDestinationUrl, setNewDestinationUrl] = useState(event?.destinationUrl?.trim() ? event?.destinationUrl : "");
+    const [newExpectedAttendees, setNewExpectedAttendees] = useState(event?.expectedAttendees ?? 0);
+
     const [isEditing, setIsEditing] = useState(false);
+    const [isEditingAttendece, setIsEditingAttendece] = useState(false);
+
     const [loading, setLoading] = useState(false);
 
     const cardRef = useRef(null);
@@ -46,13 +50,34 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
 
     // save API handler
     const handleSave = async () => {
-        if (loading) return
+        if (loading) return;
+
+        // Validate the destination URL
+        if (newDestinationUrl.trim() === "" || newDestinationUrl === "N/A") {
+            Modal({
+                title: "Error",
+                message: "Destination URL cannot be empty.",
+            });
+            return;
+        }
+
+        if (newDestinationUrl && (!/^https?:\/\/.+\..+/.test(newDestinationUrl))) {
+            Modal({
+                title: "Error",
+                message: "Destination URL must be a valid URL",
+            });
+            return;
+        }
+
+
         try {
             setLoading(true);
             const response = await apiConnecter(
                 "PUT",
                 `${API_ENDPOINTS.REACT_APP_UPDATE_DESTINATION_URL_END_POINT}/${event._id}`,
-                { destinationUrl: newDestinationUrl },
+                {
+                    destinationUrl: newDestinationUrl
+                },
                 { authorization: `Bearer ${userInfo.token}` }
             );
             Modal({
@@ -62,17 +87,86 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
             getAllEventsDataHandler();
             setIsEditing(false);
         } catch (error) {
+            setNewDestinationUrl(event?.destinationUrl);
+            setNewExpectedAttendees(event?.expectedAttendees); // Revert on error
             console.error(error);
             Modal({
                 title: "Error",
-                message: error.message,
+                message: error.response.data.message,
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleSaveExpectedAttendence = async () => {
+        if (loading) return;
+
+
+        // Validate expected attendees
+        if (!String(newExpectedAttendees).trim()) {
+            Modal({
+                title: "Error",
+                message: "Expected Attendance be empty",
+            });
+            return
+        }
+        if (isNaN(newExpectedAttendees) || Number(newExpectedAttendees) <= 0) {
+            Modal({
+                title: "Error",
+                message: "Expected Attendance must be a positive number.",
+            });
+            return
+        }
+        console.log(Number(newExpectedAttendees), Number(event.expectedAttendees), "XXXXXXXXXXX")
+        if (Number(newExpectedAttendees) == Number(event.expectedAttendees)) {
+            Modal({
+                title: "Error",
+                message: "Expected attendees must be a different number.",
+            });
+            return;
+        }
+        if (newExpectedAttendees <= 0) {
+            Modal({
+                title: "Error",
+                message: "Expected attendees must be a positive number.",
+            });
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const response = await apiConnecter(
+                "PUT",
+                `${API_ENDPOINTS.REACT_APP_UPDATE_DESTINATION_URL_END_POINT}/${event._id}`,
+                {
+                    expectedAttendees: newExpectedAttendees, // Send the new expected attendees
+                },
+                { authorization: `Bearer ${userInfo.token}` }
+            );
+            Modal({
+                title: "Success",
+                message: "Expetected attendence updated successfully",
+            });
+            getAllEventsDataHandler();
+            setIsEditing(false);
+        } catch (error) {
+            setNewDestinationUrl(event?.destinationUrl);
+            setNewExpectedAttendees(event?.expectedAttendees); // Revert on error
+            console.error(error);
+            Modal({
+                title: "Error",
+                message: error.response.data.message,
             });
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCancel = () => setIsEditing(false);
+
+    const handleCancel = () => {
+        setIsEditing(false)
+        setNewDestinationUrl(event.destinationUrl?event.destinationUrl:"")
+    };
     const handleAnalyticsClick = (eventId, taps, engagement, postClick, attendance) => {
         // console.log("-----Analyytaps", taps);
         // console.log("-----Analyytaps2", engagement);
@@ -111,11 +205,6 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                         {event?.eventName ?? "Platform Configuration"}
                     </h3>
                     {event?.status && (
-                        // <Badge
-                        //     label={event.status}
-                        //     bgColor={event.status === "Active" ? "bg-[#fafafa]" : "bg-[#262626]"}
-                        //     textColor={event.status === "Active" ? "text-black" : "text-[#fafafa]"}
-                        // />
                         <Badge
                             label={event.status}
                             bgColor={
@@ -201,7 +290,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                         <div className="flex-1 w-full">
                             <UrlInput label={event?.baseUrl?.slice(0, 50) + "..." ?? "https://example.com/bracelet"} />
                         </div>
-                        <Link target='blank' to={event?.baseUrl} className="shrink-0">
+                        <Link target="_blank" rel="noopener noreferrer" to={event?.baseUrl} className="shrink-0">
                             <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
                                 <ShareIcon />
                             </span>
@@ -221,12 +310,13 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                                 <input
                                     type="text"
                                     className="w-full bg-[var(--color-surface-input)] text-white rounded p-2"
-                                    value={newDestinationUrl ?? "N/A"}
+                                    value={newDestinationUrl !== "N/A" ? newDestinationUrl : ""}
+                                    placeholder='Ex. https://example.com'
                                     onChange={(e) => setNewDestinationUrl(e.target.value)}
                                     disabled={loading}
                                 />
-                            ) : (
-                                <UrlInput label={newDestinationUrl ?? "N/A"} />
+                            ) : (<UrlInput label={newDestinationUrl !== "" ? newDestinationUrl : "No destination set"} />
+
                             )}
                         </div>
                         <div className="flex gap-2">
@@ -259,7 +349,7 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                                     <EditIcon />
                                 </span>
                             )}
-                            <Link target='blank' to={event.destinationUrl} className="shrink-0">
+                            <Link target="_blank" rel="noopener noreferrer" to={event.destinationUrl} className="shrink-0">
                                 <span className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer">
                                     <ShareIcon />
                                 </span>
@@ -270,6 +360,66 @@ const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
                         Where attendees are redirected when they tap their bracelet
                     </div>
                 </div>
+                {/* Expected Attendance */}
+                <div className="flex flex-col text-sm">
+                    <span className="text-white mb-2">Expected Attendance:</span>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex-1 w-full">
+                            {isEditingAttendece ? (
+                                <input
+                                    type="text"
+                                    className="w-full bg-[var(--color-surface-input)] text-white rounded p-2 "
+                                    value={newExpectedAttendees}
+                                    placeholder="Enter expected attendees"
+                                    onChange={(e) => setNewExpectedAttendees(e.target.value)}
+                                    disabled={loading}
+
+                                />
+                            ) : (
+                                <div className="w-full bg-[var(--color-surface-input)] text-white p-2 rounded">
+                                    {newExpectedAttendees || "No attendees set"}
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex gap-2">
+                            {isEditingAttendece ? (
+                                <>
+                                    <span
+                                        onClick={() => {
+                                            setIsEditingAttendece(false)
+                                            setNewExpectedAttendees(event.expectedAttendees)
+                                        }}
+                                        className={`border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer ${loading ? "pointer-events-none cursor-not-allowed" : ""}`}
+                                    >
+                                        <MdOutlineCancel style={{ color: "white", fontSize: 16 }} />
+                                    </span>
+                                    <span
+                                        onClick={handleSaveExpectedAttendence}
+                                        disabled={loading}
+                                        className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer"
+                                    >
+                                        {loading ? (
+                                            <div className="w-5 h-5 border-4 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
+                                        ) : (
+                                            <FaCheck style={{ color: "white" }} />
+                                        )}
+                                    </span>
+                                </>
+                            ) : (
+                                <span
+                                    onClick={() => setIsEditingAttendece(true)}
+                                    className="border border-[var(--border-color)] p-2 flex justify-center items-center rounded hover:bg-gray-600 cursor-pointer"
+                                >
+                                    <EditIcon />
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                    <div className="text-[var(--color-grey)] text-xs mt-2">
+                        The number of attendees expected for the event.
+                    </div>
+                </div>
+
             </div>
         </div>
 

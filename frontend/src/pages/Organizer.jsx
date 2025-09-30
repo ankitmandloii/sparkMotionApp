@@ -676,13 +676,28 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
                                     </div>
 
                                     <div className="mb-3">
-                                        <span className="text-gray-500 text-xs uppercase block mb-1">
+                                        <span className="text-gray-500 text-xs uppercase font-bold block mb-1">
                                             Assigned Events:
                                         </span>
                                         {renderEvents(organizer.assignedEvents)}
                                     </div>
+                                    <div className='mb-2'>
+                                        <Badge
+                                            label={organizer?.status || 'N/A'}
+                                            bgColor={
+                                                (organizer?.status?.toLowerCase() === 'active')
+                                                    ? 'bg-[#fafafa]'
+                                                    : (organizer?.status?.toLowerCase() === 'completed')
+                                                        ? 'bg-[#262626]'
+                                                        : 'bg-transparent'
+                                            }
+                                            textColor={(organizer?.status?.toLowerCase() === 'active') ? 'text-black' : 'text-white'}
+                                            borderColor={(organizer?.status?.toLowerCase() === 'upcoming') ? 'border-gray-700' : ''}
+                                        />
 
+                                    </div>
                                     <div className="flex justify-end space-x-2 pt-2 border-t border-gray-800">
+
                                         <ActionButton
                                             label="Edit"
                                             onClick={() => handleEditClick(organizer)}

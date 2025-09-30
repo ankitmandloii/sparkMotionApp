@@ -44,7 +44,7 @@ const Overview = () => {
                 //     ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
                 //     : '0.0%',
                 engagement: event?.expectedAttendees
-                    ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2) + '%'
+                    ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
                     : '0.00',
                 location: event.location || 'N/A',
                 braceletUrl: event.baseUrl || 'https://bracelet.example.com/default',
@@ -52,8 +52,8 @@ const Overview = () => {
                 postClick: event?.postEventClickCount
             }));
 
-            setAllEvents(events.slice(0, 3));
-            setFilteredEvents(events.slice(0, 3));
+            setAllEvents(events);
+            setFilteredEvents(events);
 
             // Calculate active organizers from the organizers array across all events
             const allOrganizers = response.data.result.flatMap(event => event.organizers || []);
@@ -180,13 +180,15 @@ const Overview = () => {
                     <div className="flex flex-col space-y-4 lg:hidden">
                         {loading ? (
                             // <div className="text-center text-gray-300">Loading...</div>
-                            <div className="loader"></div>
+                            <div className='flex items-center justify-center w-full p-2 bg-[var(--color-surface-background)]'>
+                                <div className="loader"></div>
+                            </div>
                         ) : error ? (
                             <div className="text-center text-red-500">{error.message}</div>
                         ) : filteredEvents.length === 0 ? (
                             <div className="text-center text-gray-300">No events found</div>
                         ) : (
-                            filteredEvents.map(event => (
+                            filteredEvents.slice(0, 3).map(event => (
                                 <div
                                     key={event.id}
                                     className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 shadow-md flex flex-col space-y-2"
@@ -228,28 +230,32 @@ const Overview = () => {
                                         <div>
                                             <div className="text-gray-400 text-xs">Actions</div>
                                             <button
-                                                className="text-[var(--color-primary-dark)] hover:text-orange-300 text-xs"
-                                            // onClick={() => handleAnalyticsClick(event.id, event.taps, event.engagement)}
+                                                className="text-[var(--color-primary-dark)] hover:text-orange-300 text-xs cursor-pointer"
+                                                onClick={() =>
+                                                    handleAnalyticsClick(event.id, event.taps, event.engagement, event?.postClick, event?.attendance, navigate)
+                                                }
                                             >
                                                 View Analytics
                                             </button>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col space-y-1 text-gray-400 text-xs mt-2 gap-2">
-                                        <span>
+                                    <div className="flex flex-col space-y-1 text-gray-400 text-xs mt-2 gap-2 flex-wrap">
+                                        <span className='flex flex-wrap gap-2  items-center justify-start  xs:flex-col'>
                                             Bracelet URL:{' '}
                                             <a
-                                                href={event.baseUrl}
+                                                href={event.braceletUrl}
+                                                target='_blank'
                                                 className="bg-[var(--grey-button)] hover:bg-gray-600 text-gray-300 px-3 py-1 rounded-xl text-xs cursor-pointer"
                                             >
-                                                {event?.baseUrl?.slice(0, 50) + "..."}
+                                                {event?.braceletUrl?.slice(0, 50) + "..."}
                                             </a>
                                         </span>
-                                        <span className=''>
+                                        <span className='flex flex-wrap gap-2 items-center justify-start  xs:flex-col'>
                                             Destination URL:{' '}
                                             <a
                                                 href={event.destinationUrl}
+                                                target='_blank'
                                                 className="bg-[var(--grey-button)] hover:bg-gray-600 text-gray-300 px-3 py-1 rounded-xl text-xs cursor-pointer"
                                             >
                                                 {event.destinationUrl}
@@ -317,7 +323,7 @@ const Overview = () => {
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredEvents.map(event => (
+                                        filteredEvents.slice(0, 3).map(event => (
                                             <tr
                                                 key={event.id}
                                                 className="border-b border-[var(--border-color)] hover:bg-gray-750"

@@ -96,7 +96,7 @@ const EventCard = ({ event, onEdit }) => {
             <div className="flex flex-col sm:flex-row sm:space-x-4 text-sm text-gray-400 mb-4 space-y-1 sm:space-y-0">
                 <div className="flex items-center space-x-1">
                     <CalendarIcon className="w-4 h-4" />
-                    <span>{event.date}</span>
+                    <span>{event.eventStartDate.slice(0, 10)} - {event.eventEndDate.slice(0, 10)}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                     <IoLocationOutline />
@@ -132,17 +132,21 @@ const EventCard = ({ event, onEdit }) => {
 
             {/* URLs */}
             <div className="space-y-2">
-                <Link target='blank' to={event?.baseUrl}>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm">
-                        <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm ">
+                    <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Bracelet URL:</span>
+                    <Link target='blank' to={event?.baseUrl}>
                         <ActionButton label={event?.baseUrl.slice(0, 50) + "..." ?? 'N/A'} />
-                    </div></Link>
-                <Link target='blank' to={event?.destinationUrl}>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
-                        <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
-                        {/* <ActionButton label={event?.destinationUrl ?? 'N/A'} /> */}
+                    </Link>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm mt-2">
+                    <span className="text-gray-400 flex gap-1 items-center mb-1 sm:mb-0"><LinkIcon /> Destination URL:</span>
+                    {/* <ActionButton label={event?.destinationUrl ?? 'N/A'} /> */}
+                    <Link target='blank' to={event?.destinationUrl}>
                         <ActionButton label={event?.destinationUrl?.trim() ? event.destinationUrl : 'N/A'} />
-                    </div></Link>
+                    </Link>
+                </div>
             </div>
         </div>
     );

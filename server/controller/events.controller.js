@@ -165,6 +165,27 @@ exports.getMyEvents = async (req, res) => {
   }
 };
 
+exports.getAllRecentEvents = async (req, res) => {
+  try {
+    const { searchQuery} = req.query;
+    const createdBy = req.user._id;  // Assuming req.user contains the logged-in organizer
+
+    // Call the service to get events for the organizer
+    const events = await eventService.getAllRecentEvents(createdBy, searchQuery);
+    
+    const data = {
+      totalTabs: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
+      totalAttendees: events.reduce((sum, event) => sum + (event.expectedAttendees || 0), 0),
+      totalEventsCount: events.length,
+      recentEvents: events.slice(0, 3) // Get the 5 most recent events
+    };
+    return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENTS_FETCHED, data);
+  } catch (error) {
+    console.error('Error in controller:', error);
+    return sendResponse(res, statusCode.INTERNAL_SERVER_ERROR, false, ErrorMessage.INTERNAL_SERVER_ERROR);
+  }
+};
+
 exports.getEventsByOrganizerId = async (req, res) => {
   try {
     const { organizerId } = req.params;

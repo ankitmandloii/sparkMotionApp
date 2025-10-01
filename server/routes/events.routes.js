@@ -14,6 +14,8 @@ router.put('/update-event/:eventId',eventsvalidation.verifyToken, eventsvalidati
 // Route to get all events for an organizer //eventsvalidation.checkOrganizerPermission
 router.get('/get-all-events', eventsvalidation.verifyToken,eventsvalidation.checkAdminPermission, eventController.getMyEvents);
 
+router.get('/get-all-recent-events', eventsvalidation.verifyToken,eventsvalidation.checkAdminPermission, eventController.getAllRecentEvents);
+
 router.get('/get-organizer-events/:organizerId', eventsvalidation.verifyToken, eventsvalidation.checkOrganizerPermission, eventController.getEventsByOrganizerId);
 
 // Route to get event by eventId (Admin can view all events, Organizer can view their own events)

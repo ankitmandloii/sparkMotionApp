@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { BarChart3, ChevronDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, BarChart, Bar } from 'recharts';
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import API_ENDPOINTS from '../data/EndPoints';
-import { useClickOutside } from '../components/shared/ClickoutsideHook';
+import { useClickOutside } from '../services/ClickoutsideHook';
+import { Clock } from 'lucide-react'
+import NoDataFound from '../components/shared/NoDataFound';
 
 // Hook: fetches click timeline
 function useClickTimeline({ eventId }) {
@@ -152,6 +154,8 @@ const GeographicChart = ({ eventId, token }) => {
             </div>
         );
     };
+    const isDataEmpty = !loading && !error && currentData.length === 0;
+    console.log("--------currentDataa", isDataEmpty, loading, error)
 
     return (
         <div className="bg-[var(--color-surface-background)] border border-[var(--border-color)] rounded-lg  p-6 relative">
@@ -169,8 +173,17 @@ const GeographicChart = ({ eventId, token }) => {
             </div>}
 
             {error && !loading && <div className="h-96 flex items-center justify-center text-red-400 text-sm">{error}</div>}
-
-            {!loading && !error && (
+            {isDataEmpty && (
+                <div className="h-96">
+                    <NoDataFound
+                        title="No Geographic Activity"
+                        icon={BarChart3}
+                        message={`We haven't collected any location data for the current ${geoView} view. As soon as the first click registers, data will appear here.`}
+                        height="h-full" // Use h-full to fill the h-96 parent div
+                    />
+                </div>
+            )}
+            {!loading && !error && currentData.length > 0 && (
                 <div className="h-96">
                     <ResponsiveContainer width="100%" height="100%" >
                         <BarChart data={currentData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} layout="vertical" >
@@ -205,7 +218,7 @@ const EngagementChart = ({ eventId, token }) => {
             default: return daily;
         }
     }, [timeRange, hourly, daily, monthly]);
-
+    const isDataEmpty = !loading && !error && data.length === 0;
     // Dropdown selector restored with Hourly/Daily/Monthly options
     const TimeRangeSelector = () => {
         const [isOpen, setIsOpen] = useState(false);
@@ -275,7 +288,16 @@ const EngagementChart = ({ eventId, token }) => {
             {loading && <div className="h-64 flex items-center justify-center text-gray-400"><div className="loader"></div></div>}
             {error && !loading && <div className="h-64 flex items-center justify-center text-red-400">{error}</div>}
 
-            {!loading && !error && (
+
+            {isDataEmpty && (
+                <NoDataFound
+                    title="No Engagement Recorded"
+                    icon={Clock}
+                    message={`We haven't recorded any taps for this event in the ${timeRange} view. Try checking a different time range or come back later!`}
+                    height="h-64"
+                />
+            )}
+            {!loading && !error && data.length > 0 && (
                 <div className="h-64 ">
                     <ResponsiveContainer width="100%" height="100%" >
                         <LineChart data={data} margin={{ top: 5, right: 45, left: 10, bottom: 5 }}>

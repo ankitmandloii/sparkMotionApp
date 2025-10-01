@@ -11,9 +11,11 @@ import UrlInput from './UrlInput';
 import { apiConnecter } from '../../services/apiConnector';
 import Modal from "./ErrorModal";
 import { Link, useNavigate } from "react-router";
-import { exportEventAsReport } from './exportEventAsTable';
-import { exportEventAsCSV } from './exportEventAsCSV';
+// import { exportEventAsReport } from './exportEventAsTable';
+// import { exportEventAsCSV } from '';
 import API_ENDPOINTS from '../../data/EndPoints';
+import { exportEventAsCSV } from '../../services/exportEventAsCSV';
+import { exportEventAsReport } from '../../services/exportEventAsTable';
 
 const EventCardOrganizer = ({ event, userInfo, getAllEventsDataHandler }) => {
     console.log("---------customerevent", event)

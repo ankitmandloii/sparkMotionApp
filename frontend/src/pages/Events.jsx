@@ -273,7 +273,7 @@ const Events = () => {
     }, [searchTerm, allEvents]);
 
     return (
-        <div className='flex flex-col w-full m-5'>
+        <div className='flex flex-col w-full m-5 p-4 sm:p-0'>
             <div className="flex items-center justify-between mb-6">
                 <div className='pr-4 '>
                     <h2 className="text-2xl font-semibold text-white">Events</h2>

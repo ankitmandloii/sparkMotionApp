@@ -203,7 +203,7 @@ exports.getClickTimeline = async (req, res) => {
 
     // Group clicks by date (daily), hour (hourly), month (monthly), city, and country
     const dailyData = groupClicksByDay(clicks);
-    const hourlyData = groupClicksByHour(clicks);
+    const hourlyData = groupClicksByHourAmPm(clicks);
     // const monthlyData = groupClicksByMonth(clicks);
     const cityData = groupClicksByCity(clicks);
     const countryData = groupClicksByCountry(clicks);
@@ -272,9 +272,9 @@ const groupClicksByDay = (clicks) => {
 };
 
 // Helper function to group clicks by hour and sort them by date & time
-const groupClicksByHour = (clicks) => {
+const groupClicksByHourAmPm = (clicks) => {
   const grouped = clicks.reduce((acc, click) => {
-    const hour = moment(click.timestamp).format('YYYY-MM-DD HH:00');
+    const hour = moment(click.timestamp).format('YYYY-MM-DD hh:00 A'); // Format with AM/PM
 
     // Skip invalid timestamps
     const timestamp = moment(click.timestamp);
@@ -302,6 +302,7 @@ const groupClicksByHour = (clicks) => {
 
   return sortedGrouped;
 };
+
 
 
 // Helper function to group clicks by month

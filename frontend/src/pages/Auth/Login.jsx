@@ -200,7 +200,7 @@
 import logo from '../../assets/logos/sparkMotionLogo.png'
 import backgroundImageLogin from "../../assets/images/backgroundImageLogin.png"
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { apiConnecter } from '../../services/apiConnector';
 import Modal from '../../components/shared/ErrorModal';
 import { login } from '../../redux/slices/userInfoSlice';
@@ -220,6 +220,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoggedIn, setisLoggedIn] = useState(false)
     const dispatch = useDispatch()
 
     const [fieldErrors, setFieldErrors] = useState({ email: '', password: '' });
@@ -255,9 +256,10 @@ const Login = () => {
         try {
             const response = await apiConnecter("POST", API_ENDPOINTS.REACT_APP_LOGIN_END_POINT, { email, password });
             setSuccess("Redirecting To Dashboard...");
+            setisLoggedIn(true)
             setTimeout(() => {
-                navigate("/Overview");
                 dispatch(login({ user: response?.data?.result?.user, token: response?.data?.result?.token }))
+                navigate("/Overview");
             }, 2000);
         } catch (err) {
             setError(err?.response?.data?.message ?? err.message);
@@ -378,8 +380,8 @@ const Login = () => {
                             <div>
                                 <button
                                     type="submit"
-                                    disabled={loading}
-                                    className={`flex w-full justify-center rounded-md bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity cursor-pointer duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-80'
+                                    disabled={loading || isLoggedIn}
+                                    className={`flex w-full justify-center rounded-md bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-white shadow-sm transition-opacity cursor-pointer duration-200 ${loading || isLoggedIn ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'hover:opacity-80'
                                         }`}
                                 >
                                     {loading ? 'Signing in...' : 'Sign in'}

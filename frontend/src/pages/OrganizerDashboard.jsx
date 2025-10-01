@@ -16,9 +16,10 @@ import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { DownloadIcon } from 'lucide-react';
-import { exportEventAsCSV } from '../components/shared/exportEventAsCSV';
+// import { exportEventAsCSV } from '../components/shared/exportEventAsCSV';
 import API_ENDPOINTS from '../data/EndPoints';
 import { HiOutlineRefresh } from "react-icons/hi";
+import { exportEventAsCSV } from '../services/exportEventAsCSV';
 
 
 

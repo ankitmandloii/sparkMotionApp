@@ -15,12 +15,12 @@ exports.sendWelcomeOrganizerEmail = async (details) => {
     let mailOptions = emailTemplates.sendWelcomeOrganizerEmail(details);
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent for Verification OTP: ${info.response}`);
+    console.log(`Email sent for WelcomeOrganizer: ${info.response}`);
     return true;
   }
   catch (e) {
     console.error(
-      `Error in email send For OTP: ${e}`,
+      `Error in email send For WelcomeOrganizer: ${e}`,
     );
     return false;
   }

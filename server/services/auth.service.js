@@ -143,39 +143,3 @@ exports.findOrganizerById = async (id) => {
 
 
 
-exports.sendWelcomeOrganizerEmail = async (email, password, organizerDashboardLink) => {
-  try {
-    const transporter = nodemailer.createTransport(emailConfig);
-
-    let mailOptions = emailTemplates.sendWelcomeOrganizerEmail(email, password, organizerDashboardLink);
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent for Welcome : ${info.response}`);
-    return true;
-  }
-  catch (e) {
-    console.error(
-      `Error in email send For Welcome: ${e}`,
-    );
-    return false;
-  }
-}
-
-
-exports.sendEmailForOtpverification = async (email, otp) => {
-  try {
-    const transporter = nodemailer.createTransport(emailConfig);
-
-    let mailOptions = emailTemplates.otpEmailTemplate(email, otp);
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent for Verification OTP: ${info.response}`);
-    return true;
-  }
-  catch (e) {
-    console.error(
-      `Error in email send For OTP: ${e}`,
-    );
-    return false;
-  }
-}

@@ -5,14 +5,14 @@ exports.createCronJobs = () => {
     
     // Runs every hour at minute 0
     cronjob.schedule('0 * * * *', async () => {
-        await this.eventsStatusUpdate(); 
-        await this.eventsStartUpdate();
+        await this.eventsActiveTOCompletedStatusUpdate(); 
+        await this.eventsUpcomingToActiveUpdate();
         console.log("Running cron job for event status updates...");
     });
 };
 
 // Update events from Active → Completed
-exports.eventsStatusUpdate = async () => {
+exports.eventsActiveTOCompletedStatusUpdate = async () => {
     try {
         const currentTime = new Date();
 
@@ -35,7 +35,7 @@ exports.eventsStatusUpdate = async () => {
 };
 
 // Update events from Upcoming → Active
-exports.eventsStartUpdate = async () => {
+exports.eventsUpcomingToActiveUpdate = async () => {
     try {
         const currentTime = new Date();
 

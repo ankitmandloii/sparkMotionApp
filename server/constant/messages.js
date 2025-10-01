@@ -15,7 +15,7 @@ module.exports.SuccessMessage = {
   ORGANIZER_UPDATE_SUCCESS: "Organizer Updated Successfully.",
   ORGANIZERS_FETCH_SUCCESS: "Organizers Fetched Successfully.",
   ORGANIZER_FETCH_SUCCESS: "Organizer Fetched Successfully.",
-  ORGANIZER_CREATE_SUCCESS: "Organizer Created Successfully.",
+  ORGANIZER_CREATE_SUCCESS: "Organizer created, and an invitation email with credentials has been sent Successfully.",
   DATA_FETCHED: "Data Fetched Successfully.",
   DATA_CREATED: "Data Created Successfully.",
   LOGIN_SUCCESS: "Login Success. Welcome To Dashboard",

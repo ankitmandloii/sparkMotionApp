@@ -19,6 +19,8 @@ const API_ENDPOINTS = {
     REACT_APP_GET_ALL_EVENTS_END_POINT: 'sparkMotion-events/get-all-events',
     REACT_APP_GET_EVENT_BY_ID_END_POINT: 'sparkMotion-events/get-eventsById',
     REACT_APP_DELETE_EVENT_BY_ID_END_POINT: 'sparkMotion-events/delete-event',
+    REACT_APP_GET_ALL_RECENT_EVENTS_END_POINT: 'sparkMotion-events/get-all-recent-events',
+
 
     // Analytics Endpoints
     REACT_APP_TRACK_URL_END_POINT: 'sparkMotion-analytics/e/',

@@ -14,6 +14,7 @@ import API_ENDPOINTS from '../data/EndPoints'
 const Analytics = () => {
     const { id } = useParams();
     const { state } = useLocation();
+    console.log("state",state)
     const userInfo = useSelector((state) => state.userInfo)
     const [totalTaps, setTotaltaps] = useState();
     const [engagementRate, setengagementRate] = useState();

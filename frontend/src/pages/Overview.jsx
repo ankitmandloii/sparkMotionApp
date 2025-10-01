@@ -9,7 +9,7 @@ import SearchBox from '../components/shared/SearchBox';
 import { handleAnalyticsClick } from '../components/shared/AnalyticNavigatefunc';
 import API_ENDPOINTS from '../data/EndPoints';
 import IconButton from '../components/shared/IconButton';
-
+import { getEngagementRate } from '../services/getEngagementRate';
 const MAX_HEIGHT_CALC = 'max-h-[calc(100vh-380px)]';
 
 const Overview = () => {
@@ -21,45 +21,55 @@ const Overview = () => {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const navigate = useNavigate();
     const [activeOrganizers, setActiveOrganizers] = useState(0);
+    const [stateData, setStateData] = useState({ totalTaps: "0", totalEventsCount: "0", totalAttendees: "0", activeOrganizers: "0", totalEngagement: "0%", activeEvents: "0" })
 
+    const normalizedDatahandler = (event) => {
+        return event.map(event => ({
+            id: event?._id || `event-${Math.random().toString(36).substr(2, 9)}`,
+            event: event.eventName || 'Unnamed Event',
+            date: event.eventStartDate
+                ? new Date(event.eventStartDate).toISOString().split('T')[0]
+                : 'N/A',
+            status: event.status || 'Unknown',
+            attendance: event.expectedAttendees || '0',
+            taps: event.clickCount || '0',
+            // engagement: event.expectedAttendees > 0
+            //     ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
+            //     : '0.0%',
+            engagement: event?.expectedAttendees
+                ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
+                : '0.00',
+            location: event.location || 'N/A',
+            braceletUrl: event.baseUrl || 'https://bracelet.example.com/default',
+            destinationUrl: event.destinationUrl || 'https://example.com/default',
+            postClick: event?.postEventClickCount
+        }));
+    }
     const getAllEventsHandler = async () => {
         setLoading(true);
         try {
             const response = await apiConnecter(
                 'GET',
-                API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT,
+                API_ENDPOINTS.REACT_APP_GET_ALL_RECENT_EVENTS_END_POINT,
                 null,
                 { authorization: `Bearer ${userInfo.token}` }
             );
-            console.log('get all events api response', response);
-            const events = response.data.result.map(event => ({
-                id: event?._id || `event-${Math.random().toString(36).substr(2, 9)}`,
-                event: event.eventName || 'Unnamed Event',
-                date: event.eventStartDate
-                    ? new Date(event.eventStartDate).toISOString().split('T')[0]
-                    : 'N/A',
-                status: event.status || 'Unknown',
-                attendance: event.expectedAttendees || '0',
-                taps: event.clickCount?.toLocaleString() || '0',
-                // engagement: event.expectedAttendees > 0
-                //     ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(1) + '%'
-                //     : '0.0%',
-                engagement: event?.expectedAttendees
-                    ? ((event.clickCount / event.expectedAttendees) * 100).toFixed(2)
-                    : '0.00',
-                location: event.location || 'N/A',
-                braceletUrl: event.baseUrl || 'https://bracelet.example.com/default',
-                destinationUrl: event.destinationUrl || 'https://example.com/default',
-                postClick: event?.postEventClickCount
-            }));
+            const activeOrganizersCount =
+                console.log('get all events api response', response);
+            const result = response.data.result;
+            const normalizedData = normalizedDatahandler(result.recentEvents);
+            setAllEvents(normalizedData);
+            setFilteredEvents(normalizedData);
+            const totalEngagement = getEngagementRate(result.totalAttendees, result.totalTaps);
+            const activeEvents = result.recentEvents.filter(event => event.status === 'Active').length
+            const allOrganizers = response.data.result.recentEvents.flatMap(event => event.organizers || []);
+            const uniqueActiveOrganizers = new Set(allOrganizers.map(org => org._id)).size;
+            setStateData((prev) => ({ ...prev, totalTaps: result.totalTaps, totalEventsCount: result.totalEventsCount, totalAttendees: result.totalAttendees, activeOrganizers: uniqueActiveOrganizers, totalEngagement, activeEvents }))
 
-            setAllEvents(events);
-            setFilteredEvents(events);
 
             // Calculate active organizers from the organizers array across all events
-            const allOrganizers = response.data.result.flatMap(event => event.organizers || []);
-            const uniqueActiveOrganizers = new Set(allOrganizers.map(org => org._id)).size;
-            setActiveOrganizers(uniqueActiveOrganizers);
+
+            // setActiveOrganizers(uniqueActiveOrganizers);
         } catch (err) {
             setError({ title: 'Error', message: err?.response?.data?.message ?? err.message });
         } finally {
@@ -79,17 +89,17 @@ const Overview = () => {
         }
     }, [searchTerm, allEvents]);
 
-    const totalAttendance = filteredEvents.reduce(
-        (sum, event) => sum + parseInt(event.attendance || 0),
-        0
-    );
-    const totalTaps = filteredEvents.reduce(
-        (sum, event) => sum + parseInt(event.taps.replace(/,/g, '') || 0),
-        0
-    );
-    const totalEngagement = totalAttendance > 0
-        ? ((totalTaps / totalAttendance) * 100).toFixed(1) + '%'
-        : '0.0%';
+    // const totalAttendance = filteredEvents.reduce(
+    //     (sum, event) => sum + parseInt(event.attendance || 0),
+    //     0
+    // );
+    // const totalTaps = filteredEvents.reduce(
+    //     (sum, event) => sum + parseInt(event.taps.replace(/,/g, '') || 0),
+    //     0
+    // );
+    // const totalEngagement = totalAttendance > 0
+    //     ? ((totalTaps / totalAttendance) * 100).toFixed(1) + '%'
+    //     : '0.0%';
 
     // const handleAnalyticsClick = (eventId, taps, engagement) => {
     //     navigate(`/analytics/${eventId}`, {
@@ -163,25 +173,25 @@ const Overview = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     <StatCard
                         title="Total Events"
-                        value={filteredEvents.length.toString()}
+                        value={filteredEvents.length}
                         icon={CalendarIcon}
-                        description={`${filteredEvents.filter(event => event.status === 'Active').length} active`}
+                        description={`${stateData.activeEvents} active`}
                     />
                     <StatCard
                         title="Total Attendance"
-                        value={totalAttendance.toLocaleString()}
+                        value={stateData.totalAttendees}
                         icon={PeopleIcon}
                         description="Across all events"
                     />
                     <StatCard
                         title="Total Taps"
-                        value={totalTaps.toLocaleString()}
+                        value={stateData.totalTaps}
                         icon={AnalyticIcon}
-                        description={`${totalEngagement} engagement rate`}
+                        description={`${stateData.totalEngagement} engagement rate`}
                     />
                     <StatCard
                         title="Active Organizers"
-                        value={activeOrganizers.toString()}
+                        value={stateData.activeOrganizers}
                         icon={PeopleIcon}
                         description="Registered organizers"
                     />
@@ -201,7 +211,7 @@ const Overview = () => {
                         ) : filteredEvents.length === 0 ? (
                             <div className="text-center text-gray-300">No events found</div>
                         ) : (
-                            filteredEvents.slice(0, 3).map(event => (
+                            filteredEvents.map(event => (
                                 <div
                                     key={event.id}
                                     className="bg-[var(--color-surface-background)] rounded-2xl border border-[var(--border-color)] p-4 shadow-md flex flex-col space-y-2"

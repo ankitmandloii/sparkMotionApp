@@ -274,7 +274,7 @@ const groupClicksByDay = (clicks) => {
 // Helper function to group clicks by hour and sort them by date & time
 const groupClicksByHourAmPm = (clicks) => {
   const grouped = clicks.reduce((acc, click) => {
-    const hour = moment(click.timestamp).format('YYYY-MM-DD hh:mm A'); // Format with AM/PM
+    const hour = moment(click.timestamp).format('YYYY-MM-DD hh:00 A'); // Format with AM/PM
 
     // Skip invalid timestamps
     const timestamp = moment(click.timestamp);

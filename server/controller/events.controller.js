@@ -156,7 +156,10 @@ exports.getMyEvents = async (req, res) => {
     const createdBy = req.user._id;  // Assuming req.user contains the logged-in organizer
 
     // Call the service to get events for the organizer
-    const events = await eventService.getMyEvents(createdBy, page, limit,searchQuery);
+    const events = await eventService.getMyEvents(createdBy, page, limit, searchQuery);
+    if (!events || events.length === 0) {
+      return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_EVENTS_FOUND, []);
+    }
 
     return sendResponse(res, statusCode.OK, true, SuccessMessage.EVENTS_FETCHED, events);
   } catch (error) {

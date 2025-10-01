@@ -185,6 +185,7 @@ exports.getAllRecentEvents = async (req, res) => {
   
 
    const data = {
+      totalActiveEvents: events.filter(event => event.status === 'Active').length,
       totalActiveOrganizers: activeOrganizers?.length || 0,
       totalTaps: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
       totalAttendees: events.reduce((sum, event) => sum + (event.expectedAttendees || 0), 0),

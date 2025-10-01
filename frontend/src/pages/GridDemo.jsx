@@ -300,7 +300,7 @@ const EngagementChart = ({ eventId, token }) => {
             {!loading && !error && data.length > 0 && (
                 <div className="h-64 ">
                     <ResponsiveContainer width="100%" height="100%" >
-                        <LineChart data={data} margin={{ top: 5, right: 45, left: 10, bottom: 5 }}>
+                        <LineChart data={data} margin={{ top: 5, right: 55, left: 10, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="1 1" stroke="#333333" />
                             <XAxis dataKey="date" tick={{ fill: '#9ca3af', fontSize: 11 }} />
                             <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />

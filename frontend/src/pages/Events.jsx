@@ -156,11 +156,12 @@ const Events = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const navigate = useNavigate();
+    const LIMIT = 8;
 
     const getAllEventsHandler = async (pageNum = 1, append = false) => {
         setLoading(true);
         try {
-            const response = await apiConnecter("GET", `${API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT}?page=${pageNum}&limit=2`,
+            const response = await apiConnecter("GET", `${API_ENDPOINTS.REACT_APP_GET_ALL_EVENTS_END_POINT}?page=${pageNum}&limit=${LIMIT}`,
                 null, { authorization: `Bearer ${userInfo.token}` });
             console.log("get all events api response", response);
             const newEvents = response.data.result;
@@ -171,7 +172,7 @@ const Events = () => {
                 setAllEvents(newEvents);
                 setFilteredEvents(newEvents);
             }
-            setHasMore(newEvents.length === 2); // If we get full page (2 items), there might be more
+            setHasMore(newEvents.length === LIMIT);; // If we get full page (2 items), there might be more
         } catch (err) {
             setError({ title: "Error", message: err?.response?.data?.message ?? err.message });
             setHasMore(false);

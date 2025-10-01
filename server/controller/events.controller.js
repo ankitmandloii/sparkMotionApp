@@ -176,9 +176,9 @@ exports.getAllRecentEvents = async (req, res) => {
     if (!events || events.length === 0) {
       return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_EVENTS_FOUND, []);
     }
-    
+
     const data = {
-      totalTabs: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
+      totalTaps: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
       totalAttendees: events.reduce((sum, event) => sum + (event.expectedAttendees || 0), 0),
       totalEventsCount: events.length,
       recentEvents: events.slice(0, 3) // Get the 5 most recent events

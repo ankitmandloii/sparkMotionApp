@@ -205,7 +205,6 @@ exports.getAllRecentEvents = async (createdBy, searchQuery) => {
       .populate('organizers', 'userName email phoneNumber status')  // Populate organizers with selected fields
       .sort({ createdAt: -1 });  // Sort by createdAt in descending order (latest first)
 
-      console.log("Recent Events:", events.length); // Debugging line to check the fetched events
     return events;
   } catch (error) {
     console.error('Error fetching events:', error);

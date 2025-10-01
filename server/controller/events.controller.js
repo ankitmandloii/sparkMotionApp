@@ -2,6 +2,7 @@ const eventService = require('../services/events.service');  // Import the event
 const { sendResponse } = require('../utils/sendResponse.js');
 const { statusCode } = require('../constant/statusCodes.js');
 const { ErrorMessage, SuccessMessage } = require('../constant/messages.js');
+const { findActiveOrganizers } = require('../services/organizers.service.js');
 
 // Controller function to create an event (Admin only)
 
@@ -180,7 +181,11 @@ exports.getAllRecentEvents = async (req, res) => {
       return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_EVENTS_FOUND, []);
     }
 
-    const data = {
+   const activeOrganizers = await findActiveOrganizers(req,res);
+  
+
+   const data = {
+      totalActiveOrganizers: activeOrganizers?.length || 0,
       totalTaps: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
       totalAttendees: events.reduce((sum, event) => sum + (event.expectedAttendees || 0), 0),
       totalEventsCount: events.length,

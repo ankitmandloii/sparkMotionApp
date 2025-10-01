@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { ChevronDown } from 'lucide-react';
 import logo from '../../assets/logos/sparkMotionLogo.png'
 import Modal from '../../components/shared/ErrorModal';
 import { apiConnecter } from '../../services/apiConnector';
@@ -66,6 +67,19 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutsideStatus = (event) => {
+            if (statusRef.current && !statusRef.current.contains(event.target)) {
+                setIsDropdownVisibleStatus(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutsideStatus);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutsideStatus);
         };
     }, []);
 
@@ -474,55 +488,55 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                             </div>
 
                             {/* Assign Organizer */}
+
                             <div className="relative" ref={organizerInputRef}>
                                 <label htmlFor="organizer" className="block text-sm font-bold text-[var(--color-text-base)]">
                                     Assign Organizer
                                 </label>
-                                <div className="mt-2">
+                                <div className="mt-2 relative">
                                     <input
                                         ref={organizerRef}
                                         id="organizer"
                                         type="text"
                                         value={organizer}
                                         onChange={handleInputChange}
-                                        onFocus={handleInputFocus}
+                                        onFocus={() => setIsDropdownVisible(true)}
                                         placeholder="Select organizer"
-                                        className={`block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('organizer')}`}
+                                        className={`block w-full pr-10 rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 ${getInputBorderClass('organizer')}`}
+                                    />
+                                    <ChevronDown
+                                        onClick={() => setIsDropdownVisible(prev => !prev)}
+                                        className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--color-text-secondary)] transition-transform cursor-pointer ${isDropdownVisible ? 'rotate-180' : ''}`}
                                     />
                                     {fieldErrors.organizer && (
                                         <p className="mt-1 text-xs text-orange-600">{fieldErrors.organizer}</p>
                                     )}
                                 </div>
-                                {(isDropdownVisible && filteredOrganizers?.length > 0) ? (
+                                {isDropdownVisible && (
                                     <ul className="absolute z-10 w-full mt-1 bg-[var(--color-surface-background)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
-                                        {filteredOrganizers?.map(organizer => (
-                                            <li
-                                                key={organizer._id}
-                                                onClick={() => {
-                                                    setOrganizer(organizer.userName)
-                                                    setSelectedOrganizer(organizer)
-                                                    setIsDropdownVisible(false)
-                                                }}
-                                                className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-bg-hover)] transition-colors duration-200"
-                                            >
-                                                {organizer.userName}
+                                        {filteredOrganizers?.length > 0 ? (
+                                            filteredOrganizers.map(org => (
+                                                <li
+                                                    key={org._id}
+                                                    onClick={() => {
+                                                        setOrganizer(org.userName)
+                                                        setSelectedOrganizer(org)
+                                                        setIsDropdownVisible(false)
+                                                    }}
+                                                    className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-bg-hover)] transition-colors duration-200"
+                                                >
+                                                    {org.userName}
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="px-4 py-2 text-sm text-[var(--color-text-base)]">
+                                                No Active Organizer Found
                                             </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    isDropdownVisible &&
-                                    <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
-                                        {[{ _id: "00", userName: "No Active Organizer Found. " }].map(organizer => (
-                                            <li
-                                                key={organizer._id}
-                                                className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-bg-hover)] transition-colors duration-200"
-                                            >
-                                                {organizer.userName}
-                                            </li>
-                                        ))}
+                                        )}
                                     </ul>
                                 )}
                             </div>
+
                             <div>
                                 <h3 className="text-sm font-semibold text-[var(--color-text-base)] mb-1">UTM Parameters</h3>
                                 <p className="text-xs text-[var(--color-text-secondary)]">Add UTM parameters for campaign tracking and analytics</p>
@@ -621,41 +635,44 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
                             </div>
                             {
                                 eventToUpdate &&
-                                <div ref={statusRef}>
+
+                                <div ref={statusRef} className="relative">
                                     <label htmlFor="status" className="block text-sm font-bold text-[var(--color-text-base)]">
                                         Status
                                     </label>
-                                    <div className="mt-2">
+                                    <div className="mt-2 relative">
                                         <input
                                             id="status"
                                             value={status}
-                                            onChange={(e) => setStatus(e.target.value)}
-                                            onFocus={() => setIsDropdownVisibleStatus(true)}
-                                            className="block w-full rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none  transition-colors duration-200 focus:ring-1 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
-                                        >
-                                            {/* <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option> */}
-                                        </input>
-                                    </div>{
-                                        isDropdownVisibleStatus &&
-                                        <ul className=" z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto">
-                                            {allStatus.map((status, index) => (
+                                            readOnly
+                                            onClick={() => setIsDropdownVisibleStatus(true)} // ✅ open on input click
+                                            className="block w-full pr-10 rounded-md bg-[var(--color-surface-input)] px-[12px] py-[6px] text-sm text-[var(--color-text-base)] placeholder-[var(--color-input-placeholder)] outline-none border transition-colors duration-200 focus:ring-1 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] cursor-pointer"
+                                        />
+                                        <ChevronDown
+                                            onClick={() => setIsDropdownVisibleStatus(prev => !prev)} // ✅ only chevron toggles
+                                            className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--color-text-secondary)] transition-transform cursor-pointer ${isDropdownVisibleStatus ? 'rotate-180' : ''
+                                                }`}
+                                        />
+                                    </div>
+
+                                    {isDropdownVisibleStatus && (
+                                        <ul className="absolute z-10 w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border-base)] rounded-md shadow-lg max-h-60 overflow-y-auto custom-scrollbar">
+                                            {allStatus.map((statusItem, index) => (
                                                 <li
                                                     key={index}
                                                     onClick={() => {
-                                                        setStatus(status)
-                                                        // setOrganizer(organizer.userName)
-                                                        // setSelectedOrganizer(organizer)
+                                                        setStatus(statusItem)
                                                         setIsDropdownVisibleStatus(false)
                                                     }}
-                                                    className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-primary-dark)] transition-colors duration-200 hover:"
+                                                    className="px-4 py-2 text-sm text-[var(--color-text-base)] cursor-pointer hover:bg-[var(--color-primary-dark)] transition-colors duration-200"
                                                 >
-                                                    {status}
+                                                    {statusItem}
                                                 </li>
                                             ))}
                                         </ul>
-                                    }
+                                    )}
                                 </div>
+
                             }
 
 
@@ -692,4 +709,3 @@ const CreateEventForm = ({ setShowForm, eventToUpdate = null, onCancel, setSucce
 };
 
 export default CreateEventForm;
-

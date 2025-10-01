@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, BarChart, Bar } from 'recharts';
 import { apiConnecter } from '../services/apiConnector';
 import { useSelector } from 'react-redux';
 import API_ENDPOINTS from '../data/EndPoints';
+import { useClickOutside } from '../components/shared/ClickoutsideHook';
 
 // Hook: fetches click timeline
 function useClickTimeline({ eventId }) {
@@ -115,17 +116,19 @@ const GeographicChart = ({ eventId, token }) => {
 
     const GeoViewSelector = () => {
         const [isOpen, setIsOpen] = useState(false);
+        const ref = useRef(null);
         const options = [
             { value: 'country', label: 'By Country' },
             { value: 'city', label: 'By City' },
         ];
+        useClickOutside(ref, () => setIsOpen(false));
         const currentOption = options.find((opt) => opt.value === geoView);
 
         return (
-            <div className="relative">
+            <div className="relative" ref={ref}>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors border border-gray-600"
+                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors border border-gray-600 cursor-pointer"
                 >
                     <span className="text-sm font-medium">{currentOption?.label}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -206,6 +209,10 @@ const EngagementChart = ({ eventId, token }) => {
     // Dropdown selector restored with Hourly/Daily/Monthly options
     const TimeRangeSelector = () => {
         const [isOpen, setIsOpen] = useState(false);
+        const ref = useRef(null);
+
+        useClickOutside(ref, () => setIsOpen(false));
+
         const options = [
             { value: 'hourly', label: 'Hourly Data' },
             { value: 'daily', label: 'Daily Data' },
@@ -214,10 +221,10 @@ const EngagementChart = ({ eventId, token }) => {
         const currentOption = options.find((opt) => opt.value === timeRange);
 
         return (
-            <div className="relative">
+            <div className="relative" ref={ref}>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors border border-gray-600"
+                    className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors border border-gray-600 cursor-pointer"
                 >
                     <span className="text-sm font-medium">{currentOption?.label}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />

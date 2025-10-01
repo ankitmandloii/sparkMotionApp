@@ -173,6 +173,10 @@ exports.getAllRecentEvents = async (req, res) => {
     // Call the service to get events for the organizer
     const events = await eventService.getAllRecentEvents(createdBy, searchQuery);
     
+    if (!events || events.length === 0) {
+      return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_EVENTS_FOUND, []);
+    }
+    
     const data = {
       totalTabs: events.map(event => event.clickCount).reduce((acc, count) => acc + count, 0),
       totalAttendees: events.reduce((sum, event) => sum + (event.expectedAttendees || 0), 0),

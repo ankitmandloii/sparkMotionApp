@@ -32,6 +32,7 @@ module.exports.SuccessMessage = {
 };
 //Error messages
 module.exports.ErrorMessage = {
+  NO_EVENTS_FOUND: "No Events Found.",
   USER_INACTIVE: "User is inactive. Please contact Super Admin.",
   NO_ACTIVE_ORGANIZERS_FOUND: "No Active Organizers Found.",
   NO_CLICKS_FOUND: "No Clicks Found.",

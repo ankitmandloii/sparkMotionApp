@@ -60,7 +60,7 @@ const App = () => {
     const tabs = [
       "overview",
       "events",
-      "organizations",
+      "organizers",
       "settings"
     ];
     const path = location.pathname.split("/")[1];
@@ -121,7 +121,7 @@ const App = () => {
             }
           />
           <Route
-            path="/organizations"
+            path="/organizers"
             element={
               <PrivateRoute
                 role={userInfo?.user?.role}

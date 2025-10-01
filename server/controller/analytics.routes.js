@@ -198,7 +198,7 @@ exports.getClickTimeline = async (req, res) => {
     const clicks = await ClickAnalytics.find({ eventId });
 
     if (clicks.length === 0) {
-      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_CLICKS_FOUND);
+      return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_CLICKS_FOUND, []);
     }
 
     // Group clicks by date (daily), hour (hourly), month (monthly), city, and country
@@ -243,7 +243,7 @@ exports.getClickTimeline = async (req, res) => {
 const groupClicksByDay = (clicks) => {
   const grouped = clicks.reduce((acc, click) => {
     const day = moment(click.timestamp).format('YYYY-MM-DD');
-    
+
     // Skip invalid timestamps
     const timestamp = moment(click.timestamp);
     if (!timestamp.isValid()) {

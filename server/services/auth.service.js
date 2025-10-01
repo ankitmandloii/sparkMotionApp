@@ -29,7 +29,7 @@ exports.signUp = async (userName, email, phoneNumber, password, role, status) =>
     const userCreated = await User.create(newUser);
     return userCreated;
   } catch (error) {
-    //console.error('Error creating user:', error);
+    console.error('Error creating user:', error);
     return false;
   }
 };

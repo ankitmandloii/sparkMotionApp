@@ -37,7 +37,7 @@ exports.createOrganizer = async (req, res) => {
     // Step 3: Commit the transaction to save the user data permanently
     await session.commitTransaction();
 
-    return sendResponse(res, statusCode.OK, true, SuccessMessage.ORGANIZER_CREATE_SUCCESS, result);
+    return sendResponse(res, statusCode.CREATED, true, SuccessMessage.ORGANIZER_CREATE_SUCCESS, result);
 
   } catch (error) {
     // In case of any other errors, rollback the transaction

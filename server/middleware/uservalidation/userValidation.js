@@ -53,18 +53,18 @@ exports.deleteOrganizer = async (req, res, next) => {
 
 
 exports.checkAdminPermission = (req, res, next) => {
-  console.log("User Role:", req.user.role); // Debugging line to check the role
+  // console.log("User Role:", req.user.role); // Debugging line to check the role
   if (req.user.role !== 'superAdmin') {
-    return sendResponse(res, statusCode.FORBIDDEN, false, ErrorMessage.NOT_AUTHORIZED);
+    return sendResponse(res, statusCode.UNAUTHORIZED, false, ErrorMessage.NOT_AUTHORIZED);
   }
-  console.log("SAdmin permission granted");
+  // console.log("SAdmin permission granted");
   next();
 };
 
 
 exports.checkOrganizerPermission = (req, res, next) => {
   if (req.user.role !== 'organizer') {
-    return sendResponse(res, statusCode.FORBIDDEN, false, ErrorMessage.NOT_AUTHORIZED);
+    return sendResponse(res, statusCode.UNAUTHORIZED, false, ErrorMessage.NOT_AUTHORIZED);
   }
   next();
 };
@@ -88,7 +88,7 @@ exports.checkEventViewPermission = (req, res, next) => {
     if (event.createdBy.toString() === userId || event.organizers.includes(userId)) {
       return next();
     }
-    return sendResponse(res, statusCode.FORBIDDEN, false, ErrorMessage.NOT_AUTHORIZED);
+    return sendResponse(res, statusCode.UNAUTHORIZED, false, ErrorMessage.NOT_AUTHORIZED);
   });
 };
 

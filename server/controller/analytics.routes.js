@@ -198,7 +198,7 @@ exports.getClickTimeline = async (req, res) => {
     const clicks = await ClickAnalytics.find({ eventId });
 
     if (clicks.length === 0) {
-      return sendResponse(res, statusCode.OK, false, ErrorMessage.NO_CLICKS_FOUND, []);
+      return sendResponse(res, statusCode.OK, true, ErrorMessage.NO_CLICKS_FOUND, []);
     }
 
     // Group clicks by date (daily), hour (hourly), month (monthly), city, and country

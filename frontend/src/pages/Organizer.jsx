@@ -343,10 +343,10 @@ const Organizer = ({ setEditUserInfo, editUserInfo }) => {
 
         } catch (err) {
             console.error('Error fetching organizers:', err);
-            // setError({
-            //     message: err?.response?.data?.message ?? err.message,
-            //     title: "Error"
-            // });
+            setError({
+                message: err?.response?.data?.message ?? err.message,
+                title: "Error"
+            });
             setHasMore(false);
         } finally {
             setLoading(false);

@@ -23,7 +23,7 @@ exports.createOrganizer = async (req, res) => {
     }
 
     // Step 2: Send the welcome email
-    const organizerDashboardLink = process.env.ORGANIZER_DASHBOARD_LINK ;
+    const organizerDashboardLink = process.env.ORGANIZER_DASHBOARD_LINK;
     const sendEmailResult = await organizersService.sendWelcomeOrganizerEmail({ email, password, organizerDashboardLink });
 
     if (!sendEmailResult) {
@@ -118,7 +118,7 @@ exports.deleteOrganizer = async (req, res) => {
 exports.getOrganizers = async (req, res) => {
   try {
     // You can take pagination params from req.query instead of req.body (more common in APIs)
-    const { page = 1, limit = 10 , searchQuery} = req.query;
+    const { page = 1, limit = 10, searchQuery } = req.query;
 
     // Fetch organizers with pagination
     const organizersResult = await organizersService.findAllOrganizers(page, limit, searchQuery);
@@ -127,9 +127,10 @@ exports.getOrganizers = async (req, res) => {
     if (organizersResult.data.length === 0) {
       return sendResponse(
         res,
-        statusCode.NOT_FOUND,
+        statusCode.OK,
         false,
-        ErrorMessage.NO_ORGANIZERS_FOUND
+        ErrorMessage.NO_ORGANIZERS_FOUND,
+        []
       );
     }
 
@@ -172,8 +173,16 @@ exports.getActiveOrganizers = async (req, res) => {
     // Fetch only active organizers (status = "active")
     const organizers = await organizersService.findActiveOrganizers();
 
-    if (organizers.length === 0) {
-      return sendResponse(res, statusCode.NOT_FOUND, false, ErrorMessage.NO_ACTIVE_ORGANIZERS_FOUND, []);
+
+    if (!organizers || organizers.length === 0) {
+      // ✅ success=true, 200, empty data
+      return sendResponse(
+        res,
+        statusCode.OK,
+        true,
+        SuccessMessage.ACTIVE_ORGANIZERS_FETCH_SUCCESS, // or a neutral "No active organizers"
+        []
+      );
     }
 
     // For each active organizer, find the events they are assigned to

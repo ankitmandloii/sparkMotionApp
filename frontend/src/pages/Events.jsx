@@ -313,7 +313,7 @@ const Events = () => {
                         }} />
                     ))}
                     {filteredEvents?.length === 0 && !loading && (
-                        <p className='text-[var(--color-text-secondary)] text-center p-5 bg-[var(--color-surface-background)] rounded-md'>
+                        <p className='text-[var(--color-text-secondary)] border border-[var(--border-color)] text-center p-5 bg-[var(--color-surface-background)] rounded-md'>
                             No events found. Please create an event.
                         </p>
                     )}

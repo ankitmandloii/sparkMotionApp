@@ -1,0 +1,63 @@
+:root {
+  /* --- Primary Colors --- */
+  --color-primary: #242323;
+  /* Dark/Off-Black Background */
+  --color-primary-dark: #000000;
+  /* Pure Black for borders, shadows, etc. */
+
+  /* --- Text Colors --- */
+  --color-text-base: #FFFFFF;
+  /* Standard White Text */
+  --color-text-highlighted: #F4CF42;
+  /* Bright Yellow Highlight Text */
+
+  /* --- Gradient Stops (Red/Pink Palette) --- */
+  --color-gradient-stop1: #E35254;
+  /* Lighter Red/Pink */
+  --color-gradient-stop2: #A8272C;
+  /* Darker Red */
+
+  /* --- Shared Gradients (Built from Stops) */
+  --button-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+  --text-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+}
+
+/* * Utility Class to apply a background gradient to text
+ */
+.gradient-text {
+  background: var(--text-bg-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+}
+
+/* --- Text Color Utilities --- */
+.color-primary {
+  color: var(--color-primary);
+}
+
+.color-primary-dark {
+  color: var(--color-primary-dark);
+}
+
+.color-text-base {
+  color: var(--color-text-base);
+}
+
+.color-text-highlighted {
+  color: var(--color-text-highlighted);
+}
+
+.color-gradient-stop1 {
+  color: var(--color-gradient-stop1);
+}
+
+.color-gradient-stop2 {
+  color: var(--color-gradient-stop2);
+}
+
+.button-bg-gradient {
+  background-color: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+}

@@ -2,7 +2,7 @@ import { Clock, MapPin, Calendar } from 'lucide-react';
 import { Button } from './Button';
 export const EventCard = ({ artist, time, stage, onRemind }) => {
     return (
-        <div className="bg-gradient-to-br from-gray-900/80 via-red-950/40 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-red-900/30 hover:border-red-700/50 transition-all duration-300 shadow-xl hover:shadow-2xl">
+        <div className="bg-gradient-to-br  from-gray-900/80 via-red-950/40 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 use-border hover:border-red-700/50 transition-all duration-300 shadow-xl hover:shadow-2xl">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex-1">
                     <h3 className="text-xl md:text-2xl font-bold text-white mb-3">

@@ -34,7 +34,7 @@ const StagePinIcon = ({ color }) => (
     </svg>
 );
 
-const StageSelector = () => {
+const ScheduleHeaderButton = () => {
     return (
         <div className="p-4">
             <div
@@ -70,4 +70,4 @@ const StageSelector = () => {
     );
 };
 
-export default StageSelector;
+export default ScheduleHeaderButton;

@@ -54,7 +54,7 @@ function Events() {
                             <h1 className="text-3xl md:text-4xl font-bold mb-2">EVENT SCHEDULE</h1>
                             <p className="text-gray-400 text-sm italic">Plan your festival experience</p>
                         </div>
-                        <div className=" border border-[var(--border-color)] rounded-full px-5 py-2.5 flex items-center gap-2">
+                        <div className=" use-border rounded-full px-5 py-2.5 flex items-center gap-2 color-primary-background">
                             <Calendar className="w-4 h-4 text-[var(--text-yellow)]" />
                             <span className="text-sm font-medium text-[var(--text-yellow)]">{selectedDate}</span>
                         </div>

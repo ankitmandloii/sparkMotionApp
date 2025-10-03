@@ -11,6 +11,9 @@ import Header from './components/Header';
 import Info from "./pages/Info"
 import Events from './pages/Events';
 import Artists from './pages/Artists';
+import ScheduleHeaderButton from './components/shared/ScheduleHeaderButton';
+import ArtistPageButton from './components/shared/ArtistPageButton';
+
 
 const App = () => {
   const [currentTab, setCurrentTab] = useState("home");
@@ -24,11 +27,11 @@ const App = () => {
   return (
 
     <div className="bg-black border min-h-screen  w-screen relative overflow-x-hidden mb-[110px]">
-      <Header></Header>
+      <Header Button={ScheduleHeaderButton}></Header>
       <main className="flex justify-center w-full mt-[100px] ">
         <Routes>
           <Route path="/Home" element={<Home />} />
-          <Route path="/Schedule" element={<Schedule />} />
+          <Route path="/Schedule" element={<Events />} />
           <Route path="/Map" element={<Map />} />
           <Route path="/Info" element={<Info />} />
           <Route path="/Events" element={<Events />} />

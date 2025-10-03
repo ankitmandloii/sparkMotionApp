@@ -204,8 +204,8 @@ function Map() {
 
       {/* title start */}
       <div className="max-w-7xl mx-auto">
-        <h2 className="uppercase text-4xl font-extrabold color-text-bas ">Festival Map</h2>
-        <p className='text-sm italic text-gray-400 mt-1'>Navigate the festival grounds with ease.</p>
+        <h2 className="uppercase text-[34px] color-primary-base font-extrabold color-text-bas ">Festival Map</h2>
+        <p className='text-[16px] font-medium  color-primary-base  italic  mt-1'>Navigate the festival grounds with ease.</p>
       </div>
       {/* title end*/}
 

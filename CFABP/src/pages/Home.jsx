@@ -6,7 +6,7 @@ import { RedcalendarIcon, RedlocationIcon, RedMusicIcon, RedStarIcon } from '../
 
 function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-red-950 to-gray-900 text-white w-full">
+    <div className="min-h-screen  text-white w-full">
 
 
       {/* Hero Section */}
@@ -72,18 +72,20 @@ function Home() {
           </div>
         </div>
       </section >
+      {/* background: ; */}
+
 
       {/* Happening Now Banner */}
-      < div className="bg-red-900/40 border-t border-b border-red-800/50 py-8 px-4" >
+      < div className="bg-gradient-to-br from-black-900/80 via-red-950/40 to-black-900/80 backdrop-blur-sm border-t border-b border-red-800/50 py-8 px-4" >
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-red-400 text-xs md:text-sm font-semibold uppercase tracking-wider">
+            <div className="w-2 h-2 button-bg-gradient rounded-full animate-pulse"></div>
+            <span className="gradient-text  text-xs md:text-sm font-semibold uppercase tracking-wider">
               Happening Now
             </span>
           </div>
           <h2 className="text-2xl md:text-4xl font-bold mb-2">MARCH 7-9, 2025</h2>
-          <p className="text-gray-300 text-sm md:text-base">
+          <p className="text-gray-300 text-sm md:text-base italic font-[300]">
             Join 15,000+ believers in transformational worship
           </p>
         </div>
@@ -91,7 +93,7 @@ function Home() {
 
       {/* Explore The Festival */}
       < section className="py-16 px-4 bg-black" >
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+        <h2 className="text-2xl md:text-2xl font-bold text-center mb-12">
           EXPLORE THE FESTIVAL
         </h2>
 
@@ -127,7 +129,13 @@ function Home() {
       </section >
 
       {/* Featured Artists */}
-      < div className="w-full bg-black px-8 py-5 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 items-center" >
+      <h2 className="text-xl md:text-2xl font-bold text-center mb-12">
+        FEATURED ARTISTS
+      </h2>
+      < div className="w-full bg-black px-8 py-7 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 items-center relative mb-7" >
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-yellow-900/20 via-black via-50% to-yellow-900/20"></div> */}
+        <div className="absolute inset-0 bg-gradient-to-b from-yellow-800/10 via-transparent to-yellow-800/10"></div>
+
         {/* Brandon Lake Section */}
         < div className="text-center md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-0 md:after:w-px md:after:bg-[#FFFFFF1A]" >
           <h3 className="text-3xl font-bold text-[var(--text-yellow)] mb-1">BRANDON LAKE</h3>

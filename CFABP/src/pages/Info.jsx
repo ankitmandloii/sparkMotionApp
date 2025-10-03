@@ -12,14 +12,14 @@ function Info() {
                 {/* heading section end*/}
                 {/* event details section start */}
 
-                <div className='bg-[#1A1A1A] border px-6 py-6 my-8 rounded-[20px] grid grid-cols-1 lg:grid-cols-2 gap-6'>
+                <div className='bg-[#1A1A1A]  px-6 py-6 my-8 rounded-[20px] grid grid-cols-1 lg:grid-cols-2 gap-6'>
 
                     {/* card1 start */}
 
                     <div>
                         <p className='uppercase py-1 font-bold text-lg'>event details</p>
 
-                        <div className='leading-10 bg-[#313131] rounded-[16px] py-2 px-4 text-sm border border-white border-opacity-15'>
+                        <div className='leading-10 bg-[#313131] rounded-[16px] py-2 px-4 text-sm border  border-opacity-15'>
                             <ul>
                                 <li className='border-b border-white border-opacity-15 flex gap-1'>
                                     <span className='font-semibold'>Dates:</span>

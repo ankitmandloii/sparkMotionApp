@@ -3,13 +3,14 @@ import './App.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Link, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
-import Artists from './pages/Artists';
 import Home from './pages/Home';
 import Map from './pages/Map';
 import Schedule from './pages/Schedule';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Info from "./pages/Info"
+import Events from './pages/Events';
+import Artists from './pages/Artists';
 
 const App = () => {
   const [currentTab, setCurrentTab] = useState("home");
@@ -30,6 +31,10 @@ const App = () => {
           <Route path="/Schedule" element={<Schedule />} />
           <Route path="/Map" element={<Map />} />
           <Route path="/Info" element={<Info />} />
+          <Route path="/Events" element={<Events />} />
+          <Route path="/artist" element={<Artists />} />
+
+
         </Routes>
       </main>
       <div className="fixed bottom-3 left-1/2 transform -translate-x-1/2 w-full  p-4 max-w-[500px]  max-h-[70px] mb-[40px] rounded-full shadow-xl z-10 ">

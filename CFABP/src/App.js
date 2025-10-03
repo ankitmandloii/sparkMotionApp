@@ -3,8 +3,8 @@ import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      
+    <div className="font-[Inter]">
+      hello my name is ankit
     </div>
   );
 }

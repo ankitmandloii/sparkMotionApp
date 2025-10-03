@@ -90,6 +90,10 @@ body {
   color: var(--color-text-highlighted);
 }
 
+.use-border {
+  border: 2px solid var(--border-color);
+}
+
 .color-gradient-stop1 {
   color: var(--color-gradient-stop1);
 }

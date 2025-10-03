@@ -37,19 +37,7 @@ const App = () => {
         <Footer {...{ currentTab, onTabChange }} ></Footer>
       </div>
       <Toaster position="top-left" richColors />
-      import React from 'react';
-      <div className="relative w-full h-32 bg-gradient-to-r from-[#E35254] to-[#A8272C] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#E35254] to-[#A8272C] h-full w-full opacity-60"></div>
-        <div className="relative z-10 flex justify-center items-center h-full text-center text-white">
-          <div className="space-y-2">
-            <p className="text-lg font-semibold text-red-600">HAPPENING NOW</p>
-            <h1 className="text-4xl font-bold">MARCH 7-9, 2025</h1>
-            <p className="text-md">Join 15,000+ believers in transformational worship</p>
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#E35254] to-transparent h-16"></div>
-      </div>
-      export default GradientBanner;
+
 
     </div>
 

@@ -27,6 +27,11 @@
   /* --- Shared Gradients (Built from Stops) */
   --button-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
   --text-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+  --border-color: #FFFFFF1A;
+  --text-yellow: #F4CF42;
+  /* --button-bg: linear-gradient(180deg, #E35254 0%, #A8272C 100%); */
+
+
 }
 
 *,
@@ -89,7 +94,11 @@ body {
 }
 
 .button-bg-gradient {
-  background-color: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+  background: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+}
+
+.border-color {
+  color: var(--border-color);
 }
 
 @import "tailwindcss";

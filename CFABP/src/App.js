@@ -22,7 +22,7 @@ const App = () => {
   }
   return (
 
-    <div className="bg-black border min-h-screen  w-screen relative overflow-x-hidden">
+    <div className="bg-black border min-h-screen  w-screen relative overflow-x-hidden mb-[110px]">
       <Header></Header>
       <main className="flex justify-center w-full mt-[100px] ">
         <Routes>

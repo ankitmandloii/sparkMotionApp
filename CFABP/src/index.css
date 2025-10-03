@@ -31,7 +31,12 @@
   --text-yellow: #F4CF42;
   /* --button-bg: linear-gradient(180deg, #E35254 0%, #A8272C 100%); */
 
-
+  --stage: #8B5CF6;
+  --food: #E35254;
+  --merch: #06B6D4;
+  --parking: #10B981;
+  --restroom: #F4CF42;
+  --entrance: #EE6200;
 }
 
 *,

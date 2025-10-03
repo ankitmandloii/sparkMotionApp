@@ -18,10 +18,34 @@
   /* Lighter Red/Pink */
   --color-gradient-stop2: #A8272C;
   /* Darker Red */
-
+  /* #8B5CF6  */
+  /* #E35254 */
+  /* #06B6D4 */
+  /* #10B981 */
+  /* #F4CF42 */
+  /* #EE6200 */
   /* --- Shared Gradients (Built from Stops) */
   --button-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
   --text-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #151617;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* * Utility Class to apply a background gradient to text
@@ -36,8 +60,12 @@
 }
 
 /* --- Text Color Utilities --- */
-.color-primary {
+.color-primary-text {
   color: var(--color-primary);
+}
+
+.color-primary-background {
+  background-color: var(--color-primary);
 }
 
 .color-primary-dark {

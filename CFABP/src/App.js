@@ -21,7 +21,6 @@ const App = () => {
   const navigate = useNavigate();
   const [editUserInfo, setEditUserInfo] = useState(null)
   const [analyticsPage, setAnalyticsPage] = useState(false)
-  const [headerButton, setHeaderButton] = useState(HomeHeaderButton)
   const headerButtonMap = {
     home: HomeHeaderButton,
     schedule: ScheduleHeaderButton,
@@ -29,12 +28,7 @@ const App = () => {
   }
   const onTabChange = (tab) => {
     navigate(`/${tab.toLowerCase()}`)
-    if (headerButtonMap[tab]) {
-      setHeaderButton(headerButtonMap[tab])
-    }
-    else {
-      setHeaderButton(InfoHeaderButton)
-    }
+
     setCurrentTab(tab)
   }
   return (

@@ -9,7 +9,7 @@ function Home() {
     <div className=" text-white w-full">
 
       {/* Hero Section */}
-      <section className="text-center px-4 py-4 md:py-20" style={{
+      <section className="text-center px-4 py-15 md:py-20" style={{
         backgroundColor: 'var(--color-surface-background)',
         // backfaceVisibility:"visible",
         backgroundImage: ` url(${bgImage})`,
@@ -136,19 +136,19 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-yellow-800/10 via-transparent to-yellow-800/10"></div>
 
         {/* Brandon Lake Section */}
-        < div className="text-center md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-0 md:after:w-px md:after:bg-[#FFFFFF1A]" >
-          <h3 className="text-3xl font-bold text-[var(--text-yellow)] mb-1">BRANDON LAKE</h3>
+        < div className="text-center md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-0 md:after:w-px md:after:bg-[#FFFFFF1A] border-b border-b-[var(--border-color)] md:border-none py-5" >
+          <h3 className="text-3xl font-bold text-[var(--text-yellow)] mb-1 ">BRANDON LAKE</h3>
           <p className="text-[#ffffff] text-sm italic">Saturday Headliner</p>
         </div >
 
         {/* Phil Wickham Section */}
-        < div className="text-center md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-0 md:after:w-px md:after:bg-[#FFFFFF1A]" >
+        < div className="text-center md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-0 md:after:w-px md:after:bg-[#FFFFFF1A] border-b border-b-[var(--border-color)] py-5 md:border-none" >
           <h3 className="text-3xl font-bold text-[var(--text-yellow)] mb-1">PHIL WICKHAM</h3>
           <p className="text-[#ffffff] text-sm italic">Sunday Headliner</p>
         </div >
 
         {/* Josiah Queen Section */}
-        < div className="text-center" >
+        < div className="text-center " >
           <h3 className="text-3xl font-bold text-[var(--text-yellow)] mb-1">JOSIAH QUEEN</h3>
           <p className="text-[#ffffff] text-sm italic">Saturday</p>
         </div >

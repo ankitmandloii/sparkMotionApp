@@ -58,7 +58,7 @@ export const ArtistCard = ({ artist, stage, description, imageUrl, onScheduleCli
                             <MusiccIcon />
                         </div>
                         <div class="w-px h-4 bg-gray-600 mx-2"></div>
-                        <div class="flex items-center justify-center w-8 h-8 cursor-pointer">
+                        <div class="flex items-center justify-center w-8 h-8">
                             <ShareIcon />
                         </div>
                     </div>

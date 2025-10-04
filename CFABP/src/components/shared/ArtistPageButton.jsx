@@ -40,7 +40,7 @@ const ArtistPageButton = () => {
     return (
         <div className="">
             <div
-                className="flex items-center justify-between rounded-3xl p-3 shadow-2xl backdrop-blur-md transition-all duration-300 w-full max-w-[500px] max-h-[62px]"
+                className="flex items-center justify-between rounded-3xl p-3 shadow-2xl backdrop-blur-md transition-all duration-300 w-full md:max-w-[500px] max-h-[62px]"
                 style={{
                     // Custom border and box-shadow for the UI effect
                     border: '2px solid rgba(255, 255, 255, 0.1)',
@@ -51,12 +51,11 @@ const ArtistPageButton = () => {
                     <React.Fragment key={stage.name}>
                         {/* Stage Button */}
                         <button
-                            className="flex items-center space-x-2  rounded-lg transition duration-150 ease-in-out shrink-0"
+                            className="flex items-center space-x-1  rounded-lg transition duration-150 ease-in-out shrink-0"
                             style={{ color: stage.color }} // Apply dynamic color
                         >
-                            <span className="text-[16px] mx-2 font-medium whitespace-nowrap">{stage.name}</span>
+                            <span className=" text-xs sm:text-sm mx-2 font-medium whitespace-nowrap">{stage.name}</span>
                         </button>
-
 
                     </React.Fragment>
                 ))}

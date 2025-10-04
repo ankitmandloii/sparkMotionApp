@@ -9,7 +9,7 @@ function Home() {
     <div className=" text-white w-full">
 
       {/* Hero Section */}
-      <section className="text-center px-4 py-4 md:py-20" style={{
+      <section className="text-center px-4 py-12 md:py-20" style={{
         backgroundColor: 'var(--color-surface-background)',
         // backfaceVisibility:"visible",
         backgroundImage: ` url(${bgImage})`,

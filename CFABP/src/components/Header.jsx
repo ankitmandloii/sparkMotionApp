@@ -27,7 +27,7 @@ const Header = ({ Button = () => null }) => {
         <header className="w-full top-0 color-primary-background flex items-center justify-center  h-[70px] md:h-[110px] fixed z-100 ">
             <div
                 className={`
-                        flex items-center px-14 py-2
+                        flex items-center px-8 md:px-14  py-2
                         overflow-hidden color-primary-background
                          justify-between
                         w-full

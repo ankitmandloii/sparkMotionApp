@@ -109,8 +109,10 @@ function Info() {
                         <div className='py-2 leading-10 bg-[#313131] rounded-[16px]  px-4 text-sm  use-border border-opacity-15'>
                             {
                                 importantUpdates.map((update, index) => {
-                                    return <li className={`'${index < importantUpdates.length - 1 ? " border-b " : ""} border-[var(--border-color)]  border-opacity-15 list-none  '`}>
-                                        This app works offline! Content will sync automatically when you have intenal connections.
+                                    return <li 
+                                    key={index}
+                                    className={`'${index < importantUpdates.length - 1 ? " border-b " : ""} border-[var(--border-color)]  border-opacity-15 list-none text-sm p-1 '`}>
+                                        {update}
                                     </li>
                                 })
 

@@ -40,12 +40,12 @@ function Artists() {
     <div className="min-h-screen  text-white py-8  px-4 md:px-14 w-full mb-3">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+        <div className="flex flex-col sm:flex-row justify-center  md:justify-between items-start sm:items-center gap-4 mb-2">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold ">ARTISTS</h1>
             <p className="text-white text-sm italic font-[300]">Discover the amazing lineup</p>
           </div>
-          <div>
+          <div className='mx-auto md:mx-0'>
             <ArtistPageButton />
           </div>
         </div>

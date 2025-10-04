@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.12.2",
     "install": "^0.13.0",
     "lucide-react": "^0.544.0",
     "npm": "^11.6.1",

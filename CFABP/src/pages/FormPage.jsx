@@ -107,7 +107,10 @@ const FormPage = ({ onCancel, }) => {
                 <div className="p-[20px] w-full use-border rounded-2xl backdrop-blur-3xl ">
                     <div className='flex justify-between '>
                         <legend className='font-semibold text-2xl text-white uppercase'>dive into your festival experience</legend>
-                        <div className="cursor-pointer" onClick={onCancel}>
+                        <div className="cursor-pointer" 
+                            onClick={() => { }}
+                        //  onClick={oncancel}
+                        >
                             <CrossIcon />
                         </div>
                     </div>

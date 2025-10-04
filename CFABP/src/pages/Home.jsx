@@ -3,8 +3,9 @@ import { Calendar, MapPin, Music, Users, Sparkles } from 'lucide-react';
 import bgImage from '../assets/images/Rectangle1.jpg'
 import InfoCard from '../components/shared/InfoCard';
 import { RedcalendarIcon, RedlocationIcon, RedMusicIcon, RedStarIcon } from '../assets/customSvg';
+import CurveBackground from '../components/shared/CurveBackground';
 
-function Home() {
+function Home({ config }) {
   return (
     <div className=" text-white w-full">
 
@@ -17,7 +18,8 @@ function Home() {
         backgroundPosition: 'center'
       }}>
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
-          CHRISTIAN FESTIVAL ASSOCIATION
+          {/* CHRISTIAN FESTIVAL ASSOCIATION */}
+          {config?.style?.eventName}
         </h1>
         <p className="text-gray-300 text-sm md:text-base mb-8 italic">
           The Passion & Purpose Experience
@@ -28,11 +30,11 @@ function Home() {
           <div className="flex items-center gap-2  border border-[var(--border-color)] rounded-full px-4 py-2">
             <div className="flex items-center gap-2 md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-[-10px] md:after:w-px md:after:bg-[var(--text-yellow)] ">
               <MapPin className="w-4 h-4  text-[var(--text-yellow)]" />
-              <span className='text-[var(--text-yellow)]'>Sydney Olympic Park</span>
+              <span className='text-[var(--text-yellow)]'>{config?.style?.eventAddress}</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4  text-[var(--text-yellow)]" />
-              <span className='text-[var(--text-yellow)]'>March 7-9, 2025</span>
+              <span className='text-[var(--text-yellow)]'>{config?.style?.eventDate}</span>
             </div>
 
           </div>
@@ -47,7 +49,7 @@ function Home() {
           <div className="flex items-center gap-3 md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-[-20px] md:after:w-px md:after:bg-[#FFFFFF1A]">
             <Music className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
             <div className="text-left min-w-0">
-              <div className="text-xl md:text-2xl font-bold text-white">25+</div>
+              <div className="text-xl md:text-2xl font-bold text-white">{config?.style?.Artistcount ?? "25+"}</div>
               <div className="text-xs md:text-sm text-gray-400">Artists</div>
             </div>
           </div>
@@ -56,7 +58,7 @@ function Home() {
           <div className="flex items-center gap-3 md:mr-4 md:relative md:after:content-[''] md:after:absolute md:after:inset-y-0 md:after:right-[-20px] md:after:w-px md:after:bg-[#FFFFFF1A]">
             <Calendar className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
             <div className="text-left min-w-0">
-              <div className="text-xl md:text-2xl font-bold text-white">3</div>
+              <div className="text-xl md:text-2xl font-bold text-white">{config?.style?.eventNoOfDays}</div>
               <div className="text-xs md:text-sm text-gray-400">Days</div>
             </div>
           </div>
@@ -65,7 +67,7 @@ function Home() {
           <div className="flex items-center gap-3">
             <Users className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
             <div className="text-left min-w-0">
-              <div className="text-xl md:text-2xl font-bold text-white">5K+</div>
+              <div className="text-xl md:text-2xl font-bold text-white">{config?.style?.eventAttendeesCount}</div>
               <div className="text-xs md:text-sm text-gray-400">Attendees</div>
             </div>
           </div>
@@ -75,7 +77,8 @@ function Home() {
 
 
       {/* Happening Now Banner */}
-      < div className="bg-gradient-to-br from-black-900/80 via-red-950/40 to-black-900/80 backdrop-blur-sm border-t border-b border-red-800/50 py-8 px-4" >
+      < div className="relative bg-gradient-to-br from-black-900/80 via-red-950/40 to-black-900/80 backdrop-blur-sm border-t border-b border-red-800/50 py-8 px-4" >
+        <CurveBackground></CurveBackground>
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="w-2 h-2 button-bg-gradient rounded-full animate-pulse"></div>
@@ -83,7 +86,7 @@ function Home() {
               Happening Now
             </span>
           </div>
-          <h2 className="text-2xl md:text-4xl font-bold mb-2">MARCH 7-9, 2025</h2>
+          <h2 className="text-2xl md:text-4xl font-bold mb-2">{config?.style?.eventDate}</h2>
           <p className="text-gray-300 text-sm md:text-base italic font-[300]">
             Join 15,000+ believers in transformational worship
           </p>
@@ -101,7 +104,7 @@ function Home() {
           <InfoCard
             icon={RedcalendarIcon}
             title="March 7-9, 2025"
-            description="3 Days of Music, Art, & Adventure"
+            description={`${config?.style?.eventNoOfDays} Days of Music, Art, & Adventure`}
           />
 
           {/* Card 2 */}

@@ -1,6 +1,7 @@
 import { MusiccIcon, PlayIcon, ShareIcon, WhiteLocationIcon } from '../../assets/customSvg.js';
 import { Button } from './Button.jsx';
 import { MapPin, Play, Share2, Bookmark } from 'lucide-react';
+import CurveBackground from './CurveBackground.jsx';
 export const ArtistCard = ({ artist, stage, description, imageUrl, onScheduleClick }) => {
     return (
         <div className="group relative rounded-2xl overflow-hidden border border-[var(--border-color)] hover:border-gray-600 transition-all duration-300 shadow-xl hover:shadow-2xl">
@@ -36,7 +37,8 @@ export const ArtistCard = ({ artist, stage, description, imageUrl, onScheduleCli
             </div>
 
             {/* Content */}
-            <div className="p-6 bg-gradient-to-br from-gray-900/80 via-red-950/40 to-gray-900/80 backdrop-blur-3xl h-[100%]">
+            <div className="relative p-6 bg-gradient-to-br from-gray-900/80 via-red-950/40 to-gray-900/80 backdrop-blur-3xl h-[100%]">
+                <CurveBackground></CurveBackground>
                 <div className='flex justify-between'>
                     <div>
                         <h3 className="text-sm md:text-xl font-bold text-white mb-2">

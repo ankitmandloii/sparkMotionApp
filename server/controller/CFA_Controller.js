@@ -31,13 +31,13 @@ exports.addFeedback = async (req, res) => {
 
         // Send a success response
         res.status(201).json({
-            message: "User Feedback added successfully",
+            message: "Thank you for signing up!",
             user: newUser
         });
 
     } catch (err) {
         // Handle any errors that occur during the process
         console.error("Error while adding user:", err);
-        res.status(500).json({ message: "An error occurred while adding the users feedback." });
+        res.status(500).json({ message: "An error occurred while signing ." });
     }
 };

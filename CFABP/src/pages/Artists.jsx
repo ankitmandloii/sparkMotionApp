@@ -37,7 +37,7 @@ const artists = [
 function Artists() {
 
   return (
-    <div className="min-h-screen  text-white  px-4 w-full mb-3">
+    <div className="min-h-screen  text-white py-8  px-4 md:px-14 w-full mb-3">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">

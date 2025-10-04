@@ -36,36 +36,34 @@ const StagePinIcon = ({ color }) => (
 
 const ScheduleHeaderButton = () => {
     return (
-        <div className="p-4">
-            <div
-                className="flex items-center justify-between rounded-3xl p-3 shadow-2xl backdrop-blur-md transition-all duration-300 max-w-[500px] max-h-[62px]"
-                style={{
-                    // Custom border and box-shadow for the UI effect
-                    border: '2px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 4px 6px -1px rgba(1, 2, 2, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.3) inset',
-                }}
-            >
-                {STAGES.map((stage, index) => (
-                    <React.Fragment key={stage.name}>
-                        {/* Stage Button */}
-                        <button
-                            className="flex items-center space-x-2  rounded-lg transition duration-150 ease-in-out shrink-0"
-                            style={{ color: stage.color }} // Apply dynamic color
-                        >
-                            <StagePinIcon color={stage.color} />
-                            <span className="text-[16px] font-medium whitespace-nowrap">{stage.name}</span>
-                        </button>
+        <div
+            className="flex items-center justify-between rounded-3xl p-2 h-[62px] shadow-2xl backdrop-blur-md transition-all duration-300 max-w-[500px] max-h-[62px]"
+            style={{
+                // Custom border and box-shadow for the UI effect
+                border: '2px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 6px -1px rgba(1, 2, 2, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.3) inset',
+            }}
+        >
+            {STAGES.map((stage, index) => (
+                <React.Fragment key={stage.name}>
+                    {/* Stage Button */}
+                    <button
+                        className="flex items-center space-x-2  rounded-lg transition duration-150 ease-in-out shrink-0"
+                        style={{ color: stage.color }} // Apply dynamic color
+                    >
+                        <StagePinIcon color={stage.color} />
+                        <span className="text-[16px] font-medium whitespace-nowrap">{stage.name}</span>
+                    </button>
 
-                        {/* Vertical Separator Span */}
-                        {index < STAGES.length - 1 && (
-                            <span
-                                className="h-6  w-[1px] mx-4 bg-gray-600/50" // Tailwind classes for separator styling
-                                aria-hidden="true" // Hide from screen readers
-                            />
-                        )}
-                    </React.Fragment>
-                ))}
-            </div>
+                    {/* Vertical Separator Span */}
+                    {index < STAGES.length - 1 && (
+                        <span
+                            className="h-6  w-[1px] mx-4 bg-gray-600/50" // Tailwind classes for separator styling
+                            aria-hidden="true" // Hide from screen readers
+                        />
+                    )}
+                </React.Fragment>
+            ))}
         </div>
     );
 };

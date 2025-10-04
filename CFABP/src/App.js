@@ -13,22 +13,35 @@ import Events from './pages/Events';
 import Artists from './pages/Artists';
 import ScheduleHeaderButton from './components/shared/ScheduleHeaderButton';
 import ArtistPageButton from './components/shared/ArtistPageButton';
-
+import InfoHeaderButton from './components/shared/InfoHeaderButton';
+import HomeHeaderButton from './components/shared/HomeHeaderButton';
 
 const App = () => {
   const [currentTab, setCurrentTab] = useState("home");
   const navigate = useNavigate();
   const [editUserInfo, setEditUserInfo] = useState(null)
   const [analyticsPage, setAnalyticsPage] = useState(false)
+  const [headerButton, setHeaderButton] = useState(HomeHeaderButton)
+  const headerButtonMap = {
+    home: HomeHeaderButton,
+    schedule: ScheduleHeaderButton,
+    info: InfoHeaderButton
+  }
   const onTabChange = (tab) => {
     navigate(`/${tab.toLowerCase()}`)
+    if (headerButtonMap[tab]) {
+      setHeaderButton(headerButtonMap[tab])
+    }
+    else {
+      setHeaderButton(InfoHeaderButton)
+    }
     setCurrentTab(tab)
   }
   return (
 
-    <div className="bg-black border min-h-screen  w-screen relative overflow-x-hidden mb-[110px]">
-      <Header Button={ScheduleHeaderButton}></Header>
-      <main className="flex justify-center w-full mt-[100px] ">
+    <div className="bg-black border min-h-screen  w-screen relative overflow-x-hidden  mb-[110px]">
+      <Header Button={headerButtonMap[currentTab]}></Header>
+      <main className="flex justify-center w-full mt-[60px] md:mt-[100px] ">
         <Routes>
           <Route path="/Home" element={<Home />} />
           <Route path="/Schedule" element={<Events />} />
@@ -36,8 +49,6 @@ const App = () => {
           <Route path="/Info" element={<Info />} />
           <Route path="/Events" element={<Events />} />
           <Route path="/artist" element={<Artists />} />
-
-
         </Routes>
       </main>
       <div className="fixed bottom-3 left-1/2 transform -translate-x-1/2 w-full  p-4 max-w-[500px]  max-h-[70px] mb-[40px] rounded-full shadow-xl z-10 ">

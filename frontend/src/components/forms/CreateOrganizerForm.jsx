@@ -199,7 +199,7 @@ const CreateOrganizerForm = ({ organizerToUpdate = null, onCancel, setSuccess, s
                                 {organizerToUpdate ? "Update the organizer's details" : "Create New Organizer"}
                             </p>
                         </div>
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6 ">
                             {/* Organizer Name */}
                             <div>
                                 <label htmlFor="name" className="block text-sm font-bold text-[var(--color-text-base)]">

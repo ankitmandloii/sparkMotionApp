@@ -45,14 +45,14 @@ function Events() {
     };
 
     return (
-        <div className="min-h-screen  text-white py-12 px-4 w-full">
+        <div className="min-h-screen  text-white py-8   px-4 md:px-14 w-full">
             <div className="max-w-7xl mx-auto">
                 {/* Header Section */}
                 <div className="mb-12">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-bold mb-2">EVENT SCHEDULE</h1>
-                            <p className="text-gray-400 text-sm italic">Plan your festival experience</p>
+                            <h1 className="text-3xl md:text-4xl font-bold ">EVENT SCHEDULE</h1>
+                            <p className="color-text-base text-sm italic">Plan your festival experience</p>
                         </div>
                         <div className=" use-border rounded-full px-5 py-2.5 flex items-center gap-2 color-primary-background">
                             <Calendar className="w-4 h-4 text-[var(--text-yellow)]" />

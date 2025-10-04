@@ -6,11 +6,10 @@ import { RedcalendarIcon, RedlocationIcon, RedMusicIcon, RedStarIcon } from '../
 
 function Home() {
   return (
-    <div className="min-h-screen  text-white w-full">
-
+    <div className=" text-white w-full">
 
       {/* Hero Section */}
-      <section className="text-center px-4 py-12 md:py-20" style={{
+      <section className="text-center px-4 py-4 md:py-20" style={{
         backgroundColor: 'var(--color-surface-background)',
         // backfaceVisibility:"visible",
         backgroundImage: ` url(${bgImage})`,

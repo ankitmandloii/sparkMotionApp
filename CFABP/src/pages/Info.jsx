@@ -71,12 +71,16 @@ function Info() {
 
     return (
         <>
-            <section className='bg-black py-4 px-14 text-white w-full overflow-hidden'>
+            <section className='bg-black py-8 px-4 md:px-14 text-white w-full overflow-hidden'>
 
                 {/* heading section start */}
                 <div className="max-w-7xl mx-auto">
-                    <h2 className="uppercase text-[34px] color-primary-base font-extrabold color-text-bas ">Festival Map</h2>
-                    <p className='text-[16px] font-medium  color-primary-base  italic  mt-1'>Everything you need to know.</p>
+                    <div>
+                        <h1 className="text-3xl md:text-4xl font-bold uppercase">FESTIVAL INFO </h1>
+                        <p className="color-text-base text-sm italic">Everything you need to know.</p>
+                    </div>
+                    {/* <h2 className="uppercase text-[34px] color-primary-base font-extrabold color-text-bas ">Festival Map</h2>
+                    <p className='text-[16px] font-medium  color-primary-base  italic  '>Everything you need to know.</p> */}
                 </div>
                 {/* heading section end*/}
                 {/* event details section start */}

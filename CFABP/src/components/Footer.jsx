@@ -51,7 +51,8 @@ const NavItem = ({ item, isActive, onClick }) => {
             {isActive && (
                 <div
                     className={`
-                        absolute h-1 bg-white rounded-full shadow-lg transition-all duration-300
+                            rounded-b-none
+                        absolute h-[4px] bg-white rounded-full shadow-lg transition-all duration-300
                         
                         // Mobile (Icon Only): Smaller width, positioned closer to the icon's center
                         w-8 -bottom-2 

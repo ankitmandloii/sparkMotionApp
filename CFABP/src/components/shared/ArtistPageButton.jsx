@@ -38,9 +38,9 @@ const StagePinIcon = ({ color }) => (
 
 const ArtistPageButton = () => {
     return (
-        <div className="p-4">
+        <div className="">
             <div
-                className="flex items-center justify-between rounded-3xl p-3 shadow-2xl backdrop-blur-md transition-all duration-300 max-w-[500px] max-h-[62px]"
+                className="flex items-center justify-between rounded-3xl p-3 shadow-2xl backdrop-blur-md transition-all duration-300 w-full max-w-[500px] max-h-[62px]"
                 style={{
                     // Custom border and box-shadow for the UI effect
                     border: '2px solid rgba(255, 255, 255, 0.1)',
@@ -57,7 +57,7 @@ const ArtistPageButton = () => {
                             <span className="text-[16px] mx-2 font-medium whitespace-nowrap">{stage.name}</span>
                         </button>
 
-                    
+
                     </React.Fragment>
                 ))}
             </div>

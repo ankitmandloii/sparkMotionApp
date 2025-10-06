@@ -16,7 +16,6 @@ import ArtistPageButton from './components/shared/ArtistPageButton';
 import InfoHeaderButton from './components/shared/InfoHeaderButton';
 import HomeHeaderButton from './components/shared/HomeHeaderButton';
 import FormPage from './pages/FormPage';
-import { apiConnecter } from './service/apiConnector';
 import { config } from './config';
 import {
   setConfig,
@@ -38,7 +37,6 @@ const App = () => {
   }
   const onTabChange = (tab) => {
     navigate(`/${tab.toLowerCase()}`)
-
     setCurrentTab(tab)
   }
   function onCancel() {
@@ -52,15 +50,6 @@ const App = () => {
 
 
   useEffect(() => {
-    // const fetchConfig = async () => {
-    //   try {
-    //     const response = await apiConnecter("GET", '');
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // };
-
-    // fetchConfig();
     dispatch(setConfig(config))
     console.log(configState)
   }, [config, dispatch]);
@@ -74,7 +63,7 @@ const App = () => {
       }
       {
         configState &&
-        <main className="flex justify-center w-full mt-[70px] md:mt-[100px] ">
+        <main className="flex justify-center w-full mt-[70px] md:mt-[400px] ">
           <Routes>
             <Route path="/Home" element={<Home config={config} />} />
             <Route path="/Schedule" element={<Events config={config} />} />
@@ -87,7 +76,6 @@ const App = () => {
       }
 
       <div className="fixed bottom-3 left-1/2 transform -translate-x-1/2 w-full  p-4 max-w-[500px]  max-h-[70px] mb-[40px] rounded-full shadow-xl z-10 ">
-
         <Footer {...{ currentTab, onTabChange }} ></Footer>
       </div>
       <Toaster position="top-left" richColors />

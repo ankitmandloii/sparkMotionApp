@@ -19,6 +19,7 @@ import OrganizerDashboard from "./pages/OrganizerDashboard.jsx"
 import { useLocation } from "react-router";
 
 import { Toaster } from 'sonner';
+import CFAData from './pages/CFAData.jsx';
 // import Login from './pages/Auth/Login';
 // --- Page Components ---
 const Home = () => (
@@ -61,7 +62,8 @@ const App = () => {
       "overview",
       "events",
       "organizers",
-      "settings"
+      "settings",
+      "cfadata"
     ];
     const path = location.pathname.split("/")[1];
     if (tabs.includes(path.toLocaleLowerCase())) {
@@ -168,6 +170,18 @@ const App = () => {
                 allowedRoles={["superAdmin"]}
               >
                 <Settings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/CFAData"
+            element={
+              <PrivateRoute
+                role={userInfo?.user?.role}
+                isLoggedIn={isLoggedIn}
+                allowedRoles={["superAdmin"]}
+              >
+                <CFAData />
               </PrivateRoute>
             }
           />

@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 import BgImage from "../assets/images/HomePage.png";
 import { CrossIcon } from '../assets/customSvg';
-import { apiConnecter } from '../service/apiConnector';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
+import { apiConnecter } from '../../services/apiConnector';
 
 const FormPage = ({ onCancel, }) => {
     // const userInfo = useSelector((state) => state.userInfo);
@@ -107,9 +107,9 @@ const FormPage = ({ onCancel, }) => {
                 <div className="p-[20px] w-full use-border rounded-2xl backdrop-blur-3xl ">
                     <div className='flex justify-between '>
                         <legend className='font-semibold text-2xl text-white uppercase'>dive into your festival experience</legend>
-                        <div className="cursor-pointer" 
-                            onClick={() => { }}
-                        //  onClick={oncancel}
+                        <div className="cursor-pointer"
+                            // onClick={() => { }}
+                            onClick={onCancel}
                         >
                             <CrossIcon />
                         </div>

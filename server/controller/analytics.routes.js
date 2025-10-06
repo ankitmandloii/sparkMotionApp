@@ -1,5 +1,5 @@
 const axios = require('axios');  // For IP geolocation API requests
-const ClickAnalytics = require('../model/clickAnalytics');  // Analytics model
+const ClickAnalytics = require('../model/clickAnalytics.js');  // Analytics model
 const Event = require('../model/eventSchema');  // Event model
 const { sendResponse } = require('../utils/sendResponse');
 const { statusCode } = require('../constant/statusCodes');

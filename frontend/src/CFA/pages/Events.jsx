@@ -45,7 +45,7 @@ function Events() {
     };
 
     return (
-        <div className="min-h-screen  text-white py-8   px-4 md:px-14 w-full">
+        <div className="min-h-screen  text-white py-8 px-4 md:px-14 w-full">
             <div className="max-w-7xl mx-auto">
                 {/* Header Section */}
                 <div className="mb-12">

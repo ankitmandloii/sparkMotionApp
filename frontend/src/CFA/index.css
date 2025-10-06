@@ -6,7 +6,6 @@
   /* Dark/Off-Black Background */
   --color-primary-dark: #000000;
   /* Pure Black for borders, shadows, etc. */
-
   /* --- Text Colors --- */
   --color-text-base: #FFFFFF;
   /* Standard White Text */
@@ -17,13 +16,7 @@
   --color-gradient-stop1: #E35254;
   /* Lighter Red/Pink */
   --color-gradient-stop2: #A8272C;
-  /* Darker Red */
-  /* #8B5CF6  */
-  /* #E35254 */
-  /* #06B6D4 */
-  /* #10B981 */
-  /* #F4CF42 */
-  /* #EE6200 */
+
   /* --- Shared Gradients (Built from Stops) */
   --button-bg-gradient: linear-gradient(to right, var(--color-gradient-stop1), var(--color-gradient-stop2));
   --text-bg-gradient: linear-gradient(to bottom, var(--color-gradient-stop1), var(--color-gradient-stop2));

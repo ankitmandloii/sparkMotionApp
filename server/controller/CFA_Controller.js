@@ -41,3 +41,22 @@ exports.addFeedback = async (req, res) => {
         res.status(500).json({ message: "An error occurred while signing ." });
     }
 };
+
+exports.getFeedbackData = async (req, res) => {
+    try {
+
+        // Check if a user with the same email already exists
+        const existingUser = await CFAUsers.find({});
+
+        // Send a success response
+        res.status(200).json({
+            message: "Data fetched successfully",
+            data: existingUser
+        });
+
+    } catch (err) {
+        // Handle any errors that occur during the process
+        console.error("Error while fetching user:", err);
+        res.status(500).json({ message: "An error occurred while fetching data." });
+    }
+};

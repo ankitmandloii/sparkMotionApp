@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Calendar, Building2, Settings, icons } from "lucide-react";
+import { Home, Calendar, Building2, Settings, icons,LucideDatabase } from "lucide-react";
 import { href } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -10,7 +10,7 @@ const TabNavigation = ({ currentTab, onTabChange }) => {
     { name: "Overview", href: "Overview", icon: Home },
     { name: "Organizers", href: "#", icon: Building2 },
     { name: "Events", href: "#", icon: Calendar },
-
+    { name: "CFAData", href: "#", icon: LucideDatabase },
     { name: "Settings", href: "#", icon: Settings },
   ];
 
@@ -35,7 +35,7 @@ const TabNavigation = ({ currentTab, onTabChange }) => {
               ) : (
                 // Otherwise show icon
                 <Icon
-                  className={`w-3 h-3 transition-transform duration-200 ${isActive ? "scale-110" : "scale-100" 
+                  className={`w-3 h-3 transition-transform duration-200 ${isActive ? "scale-110" : "scale-100"
                     }`}
                 />
               )}

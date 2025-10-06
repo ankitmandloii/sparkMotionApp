@@ -26,7 +26,10 @@ const API_ENDPOINTS = {
     REACT_APP_TRACK_URL_END_POINT: 'sparkMotion-analytics/e/',
     REACT_APP_GET_CLICK_COUNT_BY_ID_END_POINT: 'sparkMotion-analytics/getEventClickCount',
     REACT_APP_GET_CLICK_ANALYTICS_BY_ID_END_POINT: 'sparkMotion-analytics/getClickAnalytics',
-    REACT_APP_GET_CLICK_TIMELINE_ANALYTICS_BY_ID_END_POINT: 'sparkMotion-analytics/getClickTimeline'
+    REACT_APP_GET_CLICK_TIMELINE_ANALYTICS_BY_ID_END_POINT: 'sparkMotion-analytics/getClickTimeline',
+
+    //CFA
+    REACT_APP_CFA_GET_CAPTCURE_DATA_END_POINT: "CFA/GetFeedbackData"
 };
 
 export default API_ENDPOINTS;

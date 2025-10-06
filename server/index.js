@@ -8,11 +8,14 @@ const cors = require('cors');
 const routes = require("./routes/index.js");
 const { dbConnection } = require('./config/db');
 const { createCronJobs } = require('./utils/cronJob.js');
-
+const path = require('path');
 //process.env.CORS_ORIGIN || '*',
 // Setup middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, '../CFABP/build')));
+
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -31,7 +34,15 @@ app.use("/api", routes);
 
 createCronJobs();
 // Test route
-app.use("/", (req, res) => res.send("✅ Yes, Now you can hit APIs"));
+// app.use("/", (req, res) => res.send("✅ Yes, Now you can hit APIs"));
+
+// app.use('/admin', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+// });
+
+app.use('/dashbaord', (req, res) => {
+  res.sendFile(path.join(__dirname, '../CFABP/build', 'index.html'));
+});
 
 const startServer = async () => {
   try {
